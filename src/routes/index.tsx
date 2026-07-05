@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-import logo from "@/assets/caesar-mark.png.asset.json";
+import logo from "@/assets/caesar-mark.png";
 import heroImg from "@/assets/hero-hajj.jpg";
 import galleryMedina from "@/assets/gallery-medina.jpg";
 import galleryFlight from "@/assets/gallery-flight.jpg";
