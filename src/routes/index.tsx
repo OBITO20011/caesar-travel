@@ -98,7 +98,7 @@ function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
         <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
-          <img src={logo.url} alt="شعار قيصر للسياحة والسفر" className="h-11 w-11 object-contain" />
+          <img src={logo} alt="شعار قيصر للسياحة والسفر" className="h-11 w-11 object-contain" />
           <div className="text-right leading-tight">
             <span className="block text-lg font-black text-teal tracking-tight">قيصر</span>
             <span className="block text-[11px] font-medium text-gold-dark tracking-wide">
@@ -639,7 +639,7 @@ function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={logo.url} alt="شعار قيصر للسياحة" className="h-12 w-12 object-contain" />
+              <img src={logo} alt="شعار قيصر للسياحة" className="h-12 w-12 object-contain" />
               <div className="leading-tight">
                 <span className="block text-xl font-black text-gold">قيصر للسياحة والسفر</span>
                 <span className="block text-xs text-white/50 tracking-wide">CAESAR TRAVEL & TOURISM</span>
