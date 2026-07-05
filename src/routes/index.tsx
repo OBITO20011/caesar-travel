@@ -1,3 +1,7 @@
+import galleryGeorgia from "@/assets/gallery-georgia.jpg";
+import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
+import galleryMaldives from "@/assets/gallery-maldives.jpg";
+import galleryEgypt from "@/assets/gallery-egypt.jpg";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
@@ -193,15 +197,16 @@ function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full bg-gold/15 border border-gold/30 px-4 py-1.5 mb-6 backdrop-blur-sm"
           >
             <Star size={14} className="text-gold fill-gold" />
-            <span className="text-sm font-semibold text-gold-light">تقييم 4.1 · أكثر من 20 عاماً من الثقة</span>
-          </motion.div>
+<span className="text-sm font-semibold text-gold-light">
+  ⭐ تقييم 4.9 من أكثر من 15,000 عميل سعيد
+</span>          </motion.div>
 
           <motion.h1
             variants={fadeInUp}
             className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
           >
-            رحلتك تبدأ
-            <br />
+اكتشف العالم مع
+قيصر للسياحة والسفر            <br />
             <span className="text-gold">مع قيصر للسياحة</span>
           </motion.h1>
 
@@ -209,43 +214,59 @@ function HeroSection() {
             variants={fadeInUp}
             className="mt-6 text-lg md:text-xl text-white/80 leading-relaxed max-w-lg"
           >
-            حج وعمرة بأعلى معايير الجودة، وحجوزات طيران وفنادق وتأشيرات، وسياحة داخلية وخارجية
-            بتجربة فاخرة تليق بك. من الرمثا إلى العالم.
+           رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة احترافية منذ أكثر من 20 عاماً..
           </motion.p>
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
-            <button
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-colors shadow-xl shadow-gold/25"
-            >
-              احجز رحلتك الآن
-            </button>
-            <button
-              onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
-              className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
-            >
-              استكشف خدماتنا
-            </button>
+
+  <button
+    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+    className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
+  >
+    احجز الآن
+  </button>
+
+  <a
+    href="https://wa.me/962795207900"
+    target="_blank"
+    className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
+  >
+    واتساب
+  </a>
+
+  <button
+    onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+    className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
+  >
+    استكشف الوجهات
+  </button>
+
+</motion.div>
           </motion.div>
 
-          {/* Quick info cards */}
-          <motion.div variants={fadeInUp} className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { icon: MapPin, label: "الرمثا، الأردن", sub: "Plus Code: H268+P7" },
-              { icon: Clock, label: "9:30 ص — 7:00 م", sub: "السبت — الخميس" },
-              { icon: Phone, label: PHONES[0].display, sub: "اتصل بنا الآن" },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4"
-              >
-                <item.icon size={20} className="text-gold mb-2" />
-                <p className="text-sm font-bold text-white">{item.label}</p>
-                <p className="text-xs text-white/60 mt-0.5">{item.sub}</p>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
+<div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+
+  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+      <h3 className="text-gold text-xl font-bold">20+</h3>
+      <p className="text-white/80 text-sm">سنة خبرة</p>
+  </div>
+
+  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+      <h3 className="text-gold text-xl font-bold">15000+</h3>
+      <p className="text-white/80 text-sm">عميل سعيد</p>
+  </div>
+
+  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+      <h3 className="text-gold text-xl font-bold">30+</h3>
+      <p className="text-white/80 text-sm">وجهة سياحية</p>
+  </div>
+
+  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+      <h3 className="text-gold text-xl font-bold">24/7</h3>
+      <p className="text-white/80 text-sm">دعم العملاء</p>
+  </div>
+
+</div>
       </div>
     </section>
   );
@@ -317,7 +338,7 @@ function StatsSection() {
   const stats = [
     { value: "20+", label: "سنة خبرة" },
     { value: "5000+", label: "حاج ومعتمر" },
-    { value: "4.1", label: "متوسط التقييم" },
+    { value: "4.9", label: "متوسط التقييم" },
     { value: "50+", label: "وجهة عالمية" },
   ];
 
@@ -359,7 +380,31 @@ function GallerySection() {
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "" },
     { src: galleryHotel, alt: "فندق فاخر", label: "الفنادق", span: "sm:col-span-2" },
-  ];
+  {
+  src: galleryGeorgia,
+  alt: "جبال جورجيا",
+  label: "جورجيا",
+  span: "",
+},
+{
+  src: gallerySwitzerland,
+  alt: "سويسرا",
+  label: "سويسرا",
+  span: "",
+},
+{
+  src: galleryMaldives,
+  alt: "المالديف",
+  label: "المالديف",
+  span: "",
+},
+{
+  src: galleryEgypt,
+  alt: "الأهرامات",
+  label: "مصر",
+  span: "",
+},
+];
 
   return (
     <section id="gallery" className="py-24 md:py-32 bg-cream-dark">
@@ -393,16 +438,16 @@ function GallerySection() {
             <motion.div
               key={i}
               variants={fadeIn}
-              className={`group relative overflow-hidden rounded-2xl md:rounded-3xl ${img.span}`}
+             className={`group relative overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500 ${img.span}`}
             >
               <img
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-teal-dark/80 via-transparent to-transparent opacity-80" />
-              <span className="absolute bottom-3 right-3 text-sm md:text-base font-bold text-white drop-shadow">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <span className="absolute bottom-4 right-4 rounded-full bg-black/40 backdrop-blur-md px-4 py-2 text-sm md:text-base font-bold text-white border border-white/20">
                 {img.label}
               </span>
             </motion.div>
@@ -652,8 +697,8 @@ function Footer() {
             <div className="flex items-center gap-3 mt-5">
               {[
                 { icon: MessageCircle, href: `https://wa.me/${WHATSAPP}`, label: "واتساب" },
-                { icon: Facebook, href: "#", label: "فيسبوك" },
-                { icon: Instagram, href: "#", label: "انستغرام" },
+                { icon: Facebook, href: "https://www.facebook.com/caesartravel?locale=ar_AR", label: "فيسبوك" },
+                { icon: Instagram, href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==", label: "انستغرام" },
               ].map((s, i) => (
                 <a
                   key={i}
