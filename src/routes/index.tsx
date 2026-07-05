@@ -271,6 +271,23 @@ function HeroSection() {
     </section>
   );
 }
+function AboutSection() {
+  return (
+    <section className="py-20 bg-cream">
+      <div className="mx-auto max-w-6xl px-6 text-center">
+        <h2 className="text-4xl font-bold">من نحن</h2>
+
+        <p className="mt-6 text-lg leading-8">
+          قيصر للسياحة والسفر هي وكالة سياحية في الرمثا، الأردن،
+          متخصصة في تنظيم رحلات الحج والعمرة، وحجز تذاكر الطيران،
+          والفنادق، والتأشيرات، والرحلات السياحية الداخلية والخارجية
+          منذ أكثر من 20 عاماً.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 
 /* ──────────────── Services ──────────────── */
 function ServicesSection() {
@@ -810,6 +827,7 @@ function Index() {
     <main className="min-h-screen">
       <Navbar />
       <HeroSection />
+      <AboutSection />
       <ServicesSection />
       <StatsSection />
       <GallerySection />

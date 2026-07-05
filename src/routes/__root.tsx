@@ -75,6 +75,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
+      { httpEquiv: "content-language", content: "ar-JO" },
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "قيصر للسياحة والسفر | حج وعمرة وتذاكر طيران — الرمثا، الأردن" },
@@ -88,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "قيصر للسياحة والسفر | حج وعمرة وتذاكر طيران — الرمثا، الأردن" },
       { property: "og:description", content: "باقات حج وعمرة، حجز طيران وفنادق، تأشيرات، وسياحة داخلية وخارجية بأفضل الأسعار من قيصر للسياحة في الرمثا، الأردن." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://caesar-travel.lovable.app" },
+      { property: "og:url", content: "https://f0911b23.caesar-travel.pages.dev" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "قيصر للسياحة والسفر | حج وعمرة وتذاكر طيران" },
       { name: "twitter:description", content: "باقات حج وعمرة، حجز طيران وفنادق، تأشيرات، وسياحة داخلية وخارجية بأفضل الأسعار من قيصر للسياحة في الرمثا، الأردن." },
@@ -104,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "قيصر للسياحة والسفر والحج والعمرة",
           alternateName: "Caesar Travel & Tourism",
           description: "وكالة سياحة وسفر متخصصة في الحج والعمرة وحجز الطيران والفنادق والتأشيرات والسياحة الداخلية والخارجية.",
-          url: "https://caesar-travel.lovable.app",
+          url: "https://f0911b23.caesar-travel.pages.dev",
           telephone: "+962795207900",
           address: {
             "@type": "PostalAddress",
@@ -128,6 +129,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" },
+      {
+  rel: "canonical",
+  href: "https://f0911b23.caesar-travel.pages.dev",},
     ],
   }),
   shellComponent: RootShell,
