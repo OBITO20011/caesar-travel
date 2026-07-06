@@ -75,7 +75,6 @@ const fadeIn = {
 const NAV_LINKS = [
   { label: "الرئيسية", id: "hero" },
   { label: "خدماتنا", id: "services" },
-  { label: "معرض الصور", id: "gallery" },
   { label: "آراء العملاء", id: "reviews" },
   { label: "تواصل معنا", id: "contact" },
 ];
@@ -124,7 +123,7 @@ function Navbar() {
             </button>
           ))}
           <button
-            onClick={() => scrollTo("contact")}
+            onClick={() => scrollTo("trips")}
             className="rounded-full bg-teal px-6 py-2.5 text-sm font-bold text-primary-foreground hover:bg-teal-dark transition-colors shadow-lg shadow-teal/20"
           >
             احجز الآن
@@ -159,7 +158,7 @@ function Navbar() {
               </button>
             ))}
             <button
-              onClick={() => scrollTo("contact")}
+              onClick={() => scrollTo("trips")}
               className="mt-3 rounded-full bg-teal px-6 py-3 text-sm font-bold text-primary-foreground"
             >
               احجز الآن
@@ -219,7 +218,7 @@ function HeroSection() {
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
 
             <button
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => document.getElementById("trips")?.scrollIntoView({ behavior: "smooth" })}
               className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
             >
               احجز الآن
@@ -403,7 +402,10 @@ function GallerySection() {
   ];
 
   return (
-    <section id="gallery" className="py-24 md:py-32 bg-cream-dark">
+    <section
+  id="trips"
+  className="py-24 md:py-32 bg-cream-dark"
+>
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <motion.div
           initial="hidden"
