@@ -9,38 +9,72 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UmrahRouteImport } from './routes/umrah'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
+import { Route as UmrahIdRouteImport } from './routes/umrah.$id'
 
+const UmrahRoute = UmrahRouteImport.update({
+  id: '/umrah',
+  path: '/umrah',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UmrahIndexRoute = UmrahIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UmrahRoute,
+} as any)
+const UmrahIdRoute = UmrahIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => UmrahRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/umrah': typeof UmrahRouteWithChildren
+  '/umrah/$id': typeof UmrahIdRoute
+  '/umrah/': typeof UmrahIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/umrah/$id': typeof UmrahIdRoute
+  '/umrah': typeof UmrahIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/umrah': typeof UmrahRouteWithChildren
+  '/umrah/$id': typeof UmrahIdRoute
+  '/umrah/': typeof UmrahIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/umrah' | '/umrah/$id' | '/umrah/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/umrah/$id' | '/umrah'
+  id: '__root__' | '/' | '/umrah' | '/umrah/$id' | '/umrah/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UmrahRoute: typeof UmrahRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/umrah': {
+      id: '/umrah'
+      path: '/umrah'
+      fullPath: '/umrah'
+      preLoaderRoute: typeof UmrahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +82,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/umrah/': {
+      id: '/umrah/'
+      path: '/'
+      fullPath: '/umrah/'
+      preLoaderRoute: typeof UmrahIndexRouteImport
+      parentRoute: typeof UmrahRoute
+    }
+    '/umrah/$id': {
+      id: '/umrah/$id'
+      path: '/$id'
+      fullPath: '/umrah/$id'
+      preLoaderRoute: typeof UmrahIdRouteImport
+      parentRoute: typeof UmrahRoute
+    }
   }
 }
 
+interface UmrahRouteChildren {
+  UmrahIdRoute: typeof UmrahIdRoute
+  UmrahIndexRoute: typeof UmrahIndexRoute
+}
+
+const UmrahRouteChildren: UmrahRouteChildren = {
+  UmrahIdRoute: UmrahIdRoute,
+  UmrahIndexRoute: UmrahIndexRoute,
+}
+
+const UmrahRouteWithChildren = UmrahRoute._addFileChildren(UmrahRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UmrahRoute: UmrahRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
