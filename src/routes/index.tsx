@@ -391,35 +391,15 @@ function GallerySection() {
   const images = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
     {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
-    { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
     { src: galleryIstanbul, alt: "اسطنبول تركيا", label: "تركيا", span: "" },
-    { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "" },
-    { src: galleryHotel, alt: "فندق فاخر", label: "الفنادق", span: "sm:col-span-2" },
-    {
-      src: galleryGeorgia,
-      alt: "جبال جورجيا",
-      label: "جورجيا",
-      span: "",
-    },
-    {
-      src: gallerySwitzerland,
-      alt: "سويسرا",
-      label: "سويسرا",
-      span: "",
-    },
-    {
-      src: galleryMaldives,
-      alt: "المالديف",
-      label: "المالديف",
-      span: "",
-    },
-    {
-      src: galleryEgypt,
-      alt: "الأهرامات",
-      label: "مصر",
-      span: "",
-    },
+    {src: gallerySwitzerland,alt: "سويسرا",label: "سويسرا",span: "",},
+    {src: galleryEgypt,alt: "الأهرامات",label: "مصر",span: "",},
+    { src: galleryMaldives,alt: "المالديف",label: "المالديف",span: "",},
+    { src: galleryGeorgia,alt: "جبال جورجيا",label: "جورجيا",span: "",},
+    { src: galleryHotel, alt: "فندق فاخر", label: "حجز الفنادق ", span: "sm:col-span-2" },
+    { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
+    { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
   ];
 
   return (
@@ -450,10 +430,11 @@ function GallerySection() {
           variants={staggerContainer}
           className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] gap-3 md:gap-4"
         >
-          {images.map((img, i) => img.label === "العمرة" ? (
+          {images.map((img, i) =>
+  img.label === "العمرة" || img.label === "الحج" ? (
            <Link
   key={i}
-  to="/umrah"
+  to={img.label === "العمرة" ? "/umrah" : "/hajj"}
   className={`block ${img.span}`}
 
 >
@@ -473,13 +454,18 @@ function GallerySection() {
 
                 <span className="absolute bottom-4 right-4 rounded-xl bg-black/50 backdrop-blur-md px-4 py-2 text-white border border-white/20 text-center">
   {img.label === "العمرة" ? (
-    <>
-      <div className="font-bold text-base">العمرة</div>
-      <div className="text-xs opacity-90">اضغط هنا</div>
-    </>
-  ) : (
-    img.label
-  )}
+  <>
+    <div className="font-bold text-base">العمرة</div>
+    <div className="text-xs opacity-90">اضغط هنا</div>
+  </>
+) : img.label === "الحج" ? (
+  <>
+    <div className="font-bold text-base">الحج</div>
+    <div className="text-xs opacity-90">اضغط هنا</div>
+  </>
+) : (
+  img.label
+)}
 </span>
               </motion.div>
             </Link>
@@ -514,7 +500,7 @@ function GallerySection() {
 /* ──────────────── Reviews ──────────────── */
 function ReviewsSection() {
   const reviews = [
-    { name: "أحمد خالد", rating: 5, text: "تجربة ممتازة في العمرة! التنظيم كان احترافياً والإقامة فاخرة. أنصح الجميع بالتعامل مع قيصر." },
+    { name: "علي الناصر ", rating: 5, text: "تجربة ممتازة في العمرة! التنظيم كان احترافياً والإقامة فاخرة. أنصح الجميع بالتعامل مع قيصر." },
     { name: "سارة محمد", rating: 5, text: "رحلة عائلية إلى تركيا كانت رائعة. كل التفاصيل محسوبة والمرشد كان ممتازاً. شكراً لكم!" },
     { name: "محمد العلي", rating: 4, text: "خدمة جيدة جداً وسعر منافس. التأشيرة والحجوزات تمت بسلاسة. سأتعامل معهم مرة أخرى." },
     { name: "ليلى عبدالله", rating: 5, text: "حج مبارك مع قيصر هذا العام. الجماعة كانت منظمة والخدمات تفوق التوقعات. جزاكم الله خيراً." },
