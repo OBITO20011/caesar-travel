@@ -1,5 +1,6 @@
 import galleryGeorgia from "@/assets/gallery-georgia.jpg";
 import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
+import { Link } from "@tanstack/react-router";
 import galleryMaldives from "@/assets/gallery-maldives.jpg";
 import galleryEgypt from "@/assets/gallery-egypt.jpg";
 import { createFileRoute } from "@tanstack/react-router";
@@ -96,9 +97,8 @@ function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-cream/90 backdrop-blur-md shadow-md shadow-teal/5" : "bg-transparent"
-      }`}
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${scrolled ? "bg-cream/90 backdrop-blur-md shadow-md shadow-teal/5" : "bg-transparent"
+        }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
         <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
@@ -117,9 +117,8 @@ function Navbar() {
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className={`text-sm font-semibold transition-colors ${
-                scrolled ? "text-foreground/80 hover:text-teal" : "text-foreground/90 hover:text-teal"
-              }`}
+              className={`text-sm font-semibold transition-colors ${scrolled ? "text-foreground/80 hover:text-teal" : "text-foreground/90 hover:text-teal"
+                }`}
             >
               {item.label}
             </button>
@@ -197,16 +196,16 @@ function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full bg-gold/15 border border-gold/30 px-4 py-1.5 mb-6 backdrop-blur-sm"
           >
             <Star size={14} className="text-gold fill-gold" />
-<span className="text-sm font-semibold text-gold-light">
-  ⭐ تقييم 4.9 من أكثر من 15,000 عميل سعيد
-</span>          </motion.div>
+            <span className="text-sm font-semibold text-gold-light">
+              ⭐ تقييم 4.9 من أكثر من 15,000 عميل سعيد
+            </span>          </motion.div>
 
           <motion.h1
             variants={fadeInUp}
             className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
           >
-اكتشف العالم مع
-قيصر للسياحة والسفر            <br />
+            اكتشف العالم مع
+            قيصر للسياحة والسفر            <br />
             <span className="text-gold">مع قيصر للسياحة</span>
           </motion.h1>
 
@@ -214,59 +213,59 @@ function HeroSection() {
             variants={fadeInUp}
             className="mt-6 text-lg md:text-xl text-white/80 leading-relaxed max-w-lg"
           >
-           رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة احترافية منذ أكثر من 20 عاماً..
+            رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة احترافية منذ أكثر من 20 عاماً..
           </motion.p>
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
 
-  <button
-    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-    className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
-  >
-    احجز الآن
-  </button>
+            <button
+              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
+            >
+              احجز الآن
+            </button>
 
-  <a
-    href="https://wa.me/962795207900"
-    target="_blank"
-    className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
-  >
-    واتساب
-  </a>
+            <a
+              href="https://wa.me/962795207900"
+              target="_blank"
+              className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
+            >
+              واتساب
+            </a>
 
-  <button
-    onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
-    className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
-  >
-    استكشف الوجهات
-  </button>
+            <button
+              onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+              className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
+            >
+              استكشف الوجهات
+            </button>
 
-</motion.div>
           </motion.div>
+        </motion.div>
 
-<div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
 
-  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-      <h3 className="text-gold text-xl font-bold">20+</h3>
-      <p className="text-white/80 text-sm">سنة خبرة</p>
-  </div>
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+            <h3 className="text-gold text-xl font-bold">20+</h3>
+            <p className="text-white/80 text-sm">سنة خبرة</p>
+          </div>
 
-  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-      <h3 className="text-gold text-xl font-bold">15000+</h3>
-      <p className="text-white/80 text-sm">عميل سعيد</p>
-  </div>
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+            <h3 className="text-gold text-xl font-bold">15000+</h3>
+            <p className="text-white/80 text-sm">عميل سعيد</p>
+          </div>
 
-  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-      <h3 className="text-gold text-xl font-bold">30+</h3>
-      <p className="text-white/80 text-sm">وجهة سياحية</p>
-  </div>
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+            <h3 className="text-gold text-xl font-bold">30+</h3>
+            <p className="text-white/80 text-sm">وجهة سياحية</p>
+          </div>
 
-  <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-      <h3 className="text-gold text-xl font-bold">24/7</h3>
-      <p className="text-white/80 text-sm">دعم العملاء</p>
-  </div>
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
+            <h3 className="text-gold text-xl font-bold">24/7</h3>
+            <p className="text-white/80 text-sm">دعم العملاء</p>
+          </div>
 
-</div>
+        </div>
       </div>
     </section>
   );
@@ -391,37 +390,37 @@ function StatsSection() {
 function GallerySection() {
   const images = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
-    { src: galleryMedina, alt: "المسجد النبوي الشريف", label: "العمرة", span: "" },
+    {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
     { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
     { src: galleryIstanbul, alt: "اسطنبول تركيا", label: "تركيا", span: "" },
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "" },
     { src: galleryHotel, alt: "فندق فاخر", label: "الفنادق", span: "sm:col-span-2" },
-  {
-  src: galleryGeorgia,
-  alt: "جبال جورجيا",
-  label: "جورجيا",
-  span: "",
-},
-{
-  src: gallerySwitzerland,
-  alt: "سويسرا",
-  label: "سويسرا",
-  span: "",
-},
-{
-  src: galleryMaldives,
-  alt: "المالديف",
-  label: "المالديف",
-  span: "",
-},
-{
-  src: galleryEgypt,
-  alt: "الأهرامات",
-  label: "مصر",
-  span: "",
-},
-];
+    {
+      src: galleryGeorgia,
+      alt: "جبال جورجيا",
+      label: "جورجيا",
+      span: "",
+    },
+    {
+      src: gallerySwitzerland,
+      alt: "سويسرا",
+      label: "سويسرا",
+      span: "",
+    },
+    {
+      src: galleryMaldives,
+      alt: "المالديف",
+      label: "المالديف",
+      span: "",
+    },
+    {
+      src: galleryEgypt,
+      alt: "الأهرامات",
+      label: "مصر",
+      span: "",
+    },
+  ];
 
   return (
     <section id="gallery" className="py-24 md:py-32 bg-cream-dark">
@@ -451,24 +450,61 @@ function GallerySection() {
           variants={staggerContainer}
           className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] gap-3 md:gap-4"
         >
-          {images.map((img, i) => (
+          {images.map((img, i) => img.label === "العمرة" ? (
+           <Link
+  key={i}
+  to="/umrah"
+  className={`block ${img.span}`}
+
+>
+
+              <motion.div
+  variants={fadeIn}
+  className="group relative h-full overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500"
+>
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                <span className="absolute bottom-4 right-4 rounded-xl bg-black/50 backdrop-blur-md px-4 py-2 text-white border border-white/20 text-center">
+  {img.label === "العمرة" ? (
+    <>
+      <div className="font-bold text-base">العمرة</div>
+      <div className="text-xs opacity-90">اضغط هنا</div>
+    </>
+  ) : (
+    img.label
+  )}
+</span>
+              </motion.div>
+            </Link>
+          ) : (
             <motion.div
               key={i}
               variants={fadeIn}
-             className={`group relative overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500 ${img.span}`}
+              className={`group relative overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500 ${img.span}`}
             >
               <img
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
-              className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+                className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
               />
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
               <span className="absolute bottom-4 right-4 rounded-full bg-black/40 backdrop-blur-md px-4 py-2 text-sm md:text-base font-bold text-white border border-white/20">
                 {img.label}
               </span>
             </motion.div>
-          ))}
+          )
+          )}
+
         </motion.div>
       </div>
     </section>
