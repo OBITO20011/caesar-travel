@@ -27,7 +27,7 @@ function HotelDetailsPage() {
 },
     meals: "بدون وجبات",
 
-    image: "/images/hotels/fajr/main.jpg",
+    image: "/images/hotels/fajr/main.png",
 
     makkahImages: [
       "/images/hotels/fajr/1.jpg",
@@ -53,7 +53,7 @@ function HotelDetailsPage() {
 },
     meals: "بدون وجبات",
 
-    image: "/images/hotels/violet/main.jpg",
+    image: "/images/hotels/violet/main.png",
 
     makkahImages: [
       "/images/hotels/violet/1.jpg",
@@ -78,7 +78,7 @@ function HotelDetailsPage() {
 },
     meals: "بدون وجبات",
 
-    image: "/images/hotels/ramada/main.jpg",
+    image: "/images/hotels/ramada/main.png",
 
     makkahImages: [
       "/images/hotels/ramada/1.jpg",
@@ -104,7 +104,7 @@ function HotelDetailsPage() {
 },
     meals: "إفطار مكة فقط",
 
-    image: "/images/hotels/tajpark/main.jpg",
+    image: "/images/hotels/tajpark/main.png",
 
     makkahImages: [
       "/images/hotels/tajpark/1.jpg",
@@ -130,7 +130,7 @@ function HotelDetailsPage() {
 },
     meals: "بدون وجبات",
 
-    image: "/images/hotels/alebaa/main.jpg",
+    image: "/images/hotels/alebaa/main.png",
 
     makkahImages: [
       "/images/hotels/alebaa/1.jpg",
@@ -155,7 +155,7 @@ function HotelDetailsPage() {
 },
     meals: "إفطار مكة فقط",
 
-    image: "/images/hotels/anjum/main.jpg",
+    image: "/images/hotels/anjum/main.png",
 
     makkahImages: [
       "/images/hotels/anjum/1.jpg",
