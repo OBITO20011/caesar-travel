@@ -14,7 +14,7 @@ import { Route as UsaRouteImport } from './routes/usa'
 import { Route as UmrahRouteImport } from './routes/umrah'
 import { Route as UkRouteImport } from './routes/uk'
 import { Route as UaeRouteImport } from './routes/uae'
-import { Route as TurkeyRouteImport } from './routes/turkey'
+import { Route as SyriaRouteImport } from './routes/syria'
 import { Route as SchengenRouteImport } from './routes/schengen'
 import { Route as SaudiRouteImport } from './routes/saudi'
 import { Route as QatarRouteImport } from './routes/qatar'
@@ -48,9 +48,9 @@ const UaeRoute = UaeRouteImport.update({
   path: '/uae',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TurkeyRoute = TurkeyRouteImport.update({
-  id: '/turkey',
-  path: '/turkey',
+const SyriaRoute = SyriaRouteImport.update({
+  id: '/syria',
+  path: '/syria',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SchengenRoute = SchengenRouteImport.update({
@@ -95,7 +95,7 @@ export interface FileRoutesByFullPath {
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
-  '/turkey': typeof TurkeyRoute
+  '/syria': typeof SyriaRoute
   '/uae': typeof UaeRoute
   '/uk': typeof UkRoute
   '/umrah': typeof UmrahRouteWithChildren
@@ -110,7 +110,7 @@ export interface FileRoutesByTo {
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
-  '/turkey': typeof TurkeyRoute
+  '/syria': typeof SyriaRoute
   '/uae': typeof UaeRoute
   '/uk': typeof UkRoute
   '/usa': typeof UsaRoute
@@ -125,7 +125,7 @@ export interface FileRoutesById {
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
-  '/turkey': typeof TurkeyRoute
+  '/syria': typeof SyriaRoute
   '/uae': typeof UaeRoute
   '/uk': typeof UkRoute
   '/umrah': typeof UmrahRouteWithChildren
@@ -142,7 +142,7 @@ export interface FileRouteTypes {
     | '/qatar'
     | '/saudi'
     | '/schengen'
-    | '/turkey'
+    | '/syria'
     | '/uae'
     | '/uk'
     | '/umrah'
@@ -157,7 +157,7 @@ export interface FileRouteTypes {
     | '/qatar'
     | '/saudi'
     | '/schengen'
-    | '/turkey'
+    | '/syria'
     | '/uae'
     | '/uk'
     | '/usa'
@@ -171,7 +171,7 @@ export interface FileRouteTypes {
     | '/qatar'
     | '/saudi'
     | '/schengen'
-    | '/turkey'
+    | '/syria'
     | '/uae'
     | '/uk'
     | '/umrah'
@@ -187,7 +187,7 @@ export interface RootRouteChildren {
   QatarRoute: typeof QatarRoute
   SaudiRoute: typeof SaudiRoute
   SchengenRoute: typeof SchengenRoute
-  TurkeyRoute: typeof TurkeyRoute
+  SyriaRoute: typeof SyriaRoute
   UaeRoute: typeof UaeRoute
   UkRoute: typeof UkRoute
   UmrahRoute: typeof UmrahRouteWithChildren
@@ -232,11 +232,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UaeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/turkey': {
-      id: '/turkey'
-      path: '/turkey'
-      fullPath: '/turkey'
-      preLoaderRoute: typeof TurkeyRouteImport
+    '/syria': {
+      id: '/syria'
+      path: '/syria'
+      fullPath: '/syria'
+      preLoaderRoute: typeof SyriaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schengen': {
@@ -309,7 +309,7 @@ const rootRouteChildren: RootRouteChildren = {
   QatarRoute: QatarRoute,
   SaudiRoute: SaudiRoute,
   SchengenRoute: SchengenRoute,
-  TurkeyRoute: TurkeyRoute,
+  SyriaRoute: SyriaRoute,
   UaeRoute: UaeRoute,
   UkRoute: UkRoute,
   UmrahRoute: UmrahRouteWithChildren,

@@ -1,30 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-export const Route = createFileRoute("/uae")({
+export const Route = createFileRoute("/syria")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
+    
   <><section
-      className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/images/uae-banner.png')",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/55"></div>
+  
+     
+  className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
+  style={{
+    backgroundImage: "url('/images/syria-banner.png')",
+  }}
+>
 
-      <div className="relative z-10 text-center text-white max-w-3xl px-6">
+  {/* الشريط الأخضر */}
+  <div className="absolute top-0 left-0 w-full z-30 bg-gradient-to-r from-green-600 to-emerald-500 py-3">
+    <div className="max-w-7xl mx-auto px-4 text-center">
+      <span className="text-white font-bold text-sm md:text-lg">
+         بشرى للسوريين — أصبح بإمكان المواطنين السوريين التقديم على التأشيرة السياحية للمملكة العربية السعودية.
+      </span>
+    </div>
+  </div>
+
+  <div className="absolute inset-0 bg-black/55"></div>
+
+      <div className="relative z-10 text-center text-white max-w-3xl px-6 pt-20">
         <span className="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold">
           خدمات التأشيرات
         </span>
 
         <h1 className="mt-6 text-5xl font-black">
-  تأشيرة الإمارات العربية
+  تأشيرة  سوريا
 </h1>
 
         <p className="mt-6 text-xl leading-9 text-white/90">
-         نوفر إصدار تأشيرات الإمارات العربية المتحدة السياحية والزيارة والأعمال بسرعة
+         نوفر إصدار تأشيرات سوريا السياحية والزيارة والأعمال بسرعة
 وسهولة مع متابعة كاملة حتى صدور التأشيرة.
         </p>
 
@@ -50,9 +63,9 @@ function VisaPage() {
 <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 <div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
   <div className="text-6xl mb-4">🕌</div>
-  <h3 className="text-2xl font-bold">تأشيرة الامارات العربية المتحدة</h3>
+  <h3 className="text-2xl font-bold">تأشيرة سوريا</h3>
   <p className="mt-3 text-gray-600">
-    إصدار تأشيرات الإمارات العربية المتحدة بسرعة مع متابعة كاملة حتى صدورها.
+    إصدار تأشيرات سوريا بسرعة مع متابعة كاملة حتى صدورها.
   </p>
 </div>
 
@@ -84,7 +97,7 @@ function VisaPage() {
   <div className="text-6xl mb-4">✈️</div>
   <h3 className="text-2xl font-bold">ترانزيت</h3>
   <p className="mt-3 text-gray-600">
-    تأشيرة عبور للمسافرين عبر الإمارات العربية المتحدة.
+    تأشيرة عبور للمسافرين عبر سوريا.
   </p>
 </div>
 
@@ -105,7 +118,7 @@ function VisaPage() {
 
     <div className="text-center mb-14">
       <h2 className="text-5xl font-black">
-        متطلبات تأشيرة الإمارات العربية المتحدة
+        متطلبات تأشيرة سوريا
       </h2>
 
       <p className="mt-4 text-gray-600">
@@ -145,7 +158,7 @@ function VisaPage() {
        <div className="mt-10 flex flex-wrap justify-center gap-4">
 
   <a
-    href="https://wa.me/962798337711?text=مرحباً، أود التقديم على تأشيرة الإمارات العربية المتحدة."
+    href="https://wa.me/962798337711?text=مرحباً، أود التقديم على تأشيرة سوريا."
     target="_blank"
     rel="noopener noreferrer"
     className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black hover:scale-105 transition"

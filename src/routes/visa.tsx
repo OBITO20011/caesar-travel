@@ -9,7 +9,7 @@ function VisaPage() {
   <><section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/visa-banner.png')",
+        backgroundImage: "url('/images/visaa-banner.png')",
       }}
     >
       <div className="absolute inset-0 bg-black/55"></div>
@@ -126,10 +126,10 @@ function VisaPage() {
     </div>
   </Link>
 
-  <Link to="/turkey" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-turkey.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
+  <Link to="/syria" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
+    <img src="/images/visa-syria.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
     <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇹🇷 تركيا</h3>
+      <h3 className="text-2xl font-bold">🇸🇾 سوريا</h3>
       <p className="mt-2 text-gray-600">تأشيرات سياحية</p>
     </div>
   </Link>

@@ -9,7 +9,7 @@ function VisaPage() {
   <><section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/visa-banner.png')",
+        backgroundImage: "url('/images/qatar-banner.png')",
       }}
     >
       <div className="absolute inset-0 bg-black/55"></div>
@@ -20,142 +20,152 @@ function VisaPage() {
         </span>
 
         <h1 className="mt-6 text-5xl font-black">
-          التأشيرات السياحية حول العالم
-        </h1>
+  تأشيرة  قطر
+</h1>
 
         <p className="mt-6 text-xl leading-9 text-white/90">
-          نوفر خدمات إصدار التأشيرات السياحية والتجارية والعلاجية مع متابعة
-          كاملة حتى استلام جواز السفر.
+         نوفر إصدار تأشيرات قطر السياحية والزيارة والأعمال بسرعة
+وسهولة مع متابعة كاملة حتى صدور التأشيرة.
         </p>
 
-        <button className="mt-10 rounded-full bg-yellow-400 px-8 py-4 font-bold text-black hover:scale-105 transition">
-          ابدأ طلب التأشيرة
-        </button>
-      </div>
-    </section><section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+        <a
+  href="#requirements"
+  className="mt-10 inline-block rounded-full bg-yellow-400 px-8 py-4 font-bold text-black hover:scale-105 transition"
+>
+  ابدأ طلب التأشيرة
+</a>
+       </div>
+        </section>
 
-          <div className="text-center mb-14">
-            <span className="text-blue-600 font-bold">
-              لماذا نحن؟
-            </span>
-
-            <h2 className="text-4xl font-black mt-3">
-              لماذا تختار قيصر للسياحة والسفر؟
-            </h2>
-
-            <p className="mt-4 text-gray-600">
-              نساعدك في استخراج التأشيرة بسرعة وسهولة مع متابعة كاملة حتى صدورها.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-
-            <div className="rounded-3xl shadow-lg p-8 text-center">
-              <div className="text-5xl mb-4">⚡</div>
-              <h3 className="font-bold text-xl">سرعة الإنجاز</h3>
-              <p className="mt-2 text-gray-600">
-                تقديم ومتابعة الطلب بأسرع وقت.
-              </p>
-            </div>
-
-            <div className="rounded-3xl shadow-lg p-8 text-center">
-              <div className="text-5xl mb-4">📄</div>
-              <h3 className="font-bold text-xl">تجهيز الملف</h3>
-              <p className="mt-2 text-gray-600">
-                مراجعة جميع المستندات قبل التقديم.
-              </p>
-            </div>
-
-            <div className="rounded-3xl shadow-lg p-8 text-center">
-              <div className="text-5xl mb-4">🌍</div>
-              <h3 className="font-bold text-xl">جميع الدول</h3>
-              <p className="mt-2 text-gray-600">
-                تأشيرات سياحية وتجارية لمعظم دول العالم.
-              </p>
-            </div>
-
-            <div className="rounded-3xl shadow-lg p-8 text-center">
-              <div className="text-5xl mb-4">🤝</div>
-              <h3 className="font-bold text-xl">دعم كامل</h3>
-              <p className="mt-2 text-gray-600">
-                نتابع طلبك حتى استلام جواز السفر.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-      <section className="py-20 bg-slate-100">
+    <section id="available-visas" className="py-20 bg-slate-100">
       <div className="mx-auto max-w-7xl px-6">
 
   <h2 className="text-center text-5xl font-black">
-    التأشيرات المتوفرة
+    انواع التأشيرات المتوفرة
   </h2>
 
   <p className="mt-4 text-center text-gray-600">
-    اختر الدولة التي ترغب باستخراج التأشيرة إليها
+   اختر نوع التأشيرة التي  ترغب بالتقديم  عليها
   </p>
 <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">🕌</div>
+  <h3 className="text-2xl font-bold">تأشيرة قطر</h3>
+  <p className="mt-3 text-gray-600">
+    إصدار تأشيرات قطر بسرعة مع متابعة كاملة حتى صدورها.
+  </p>
+</div>
 
-  <Link to="/saudi" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-saudi.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇸🇦 السعودية</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وزيارة وأعمال</p>
-    </div>
-  </Link>
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">🧳</div>
+  <h3 className="text-2xl font-bold">التأشيرة السياحية</h3>
+  <p className="mt-3 text-gray-600">
+    تأشيرات سياحية متعددة أو مفردة حسب المتطلبات.
+  </p>
+</div>
 
-  <Link to="/uae" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-uae.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇦🇪 الإمارات</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وتجارية</p>
-    </div>
-  </Link>
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">👨‍👩‍👧</div>
+  <h3 className="text-2xl font-bold">تأشيرة الزيارة</h3>
+  <p className="mt-3 text-gray-600">
+    زيارة عائلية أو شخصية مع تجهيز كامل للملف.
+  </p>
+</div>
 
-  <Link to="/qatar" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-qatar.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇶🇦 قطر</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وزيارة</p>
-    </div>
-  </Link>
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">💼</div>
+  <h3 className="text-2xl font-bold">تأشيرة الأعمال</h3>
+  <p className="mt-3 text-gray-600">
+    إصدار تأشيرات رجال الأعمال والشركات.
+  </p>
+</div>
 
-  <Link to="/turkey" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-turkey.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇹🇷 تركيا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية</p>
-    </div>
-  </Link>
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">✈️</div>
+  <h3 className="text-2xl font-bold">ترانزيت</h3>
+  <p className="mt-3 text-gray-600">
+    تأشيرة عبور للمسافرين عبر قطر.
+  </p>
+</div>
 
-  <Link to="/schengen" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-schengen.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇪🇺 شنغن</h3>
-      <p className="mt-2 text-gray-600">دول الاتحاد الأوروبي</p>
-    </div>
-  </Link>
-
-  <Link to="/uk" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-uk.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇬🇧 بريطانيا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات زيارة وسياحة</p>
-    </div>
-  </Link>
-
-  <Link to="/usa" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-usa.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇺🇸 أمريكا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وأعمال</p>
-    </div>
-  </Link>
-
+<div className="rounded-3xl bg-white shadow-lg p-8 text-center hover:shadow-2xl transition">
+  <div className="text-6xl mb-4">📋</div>
+  <h3 className="text-2xl font-bold">استشارة مجانية</h3>
+  <p className="mt-3 text-gray-600">
+    تواصل معنا لمعرفة أفضل نوع تأشيرة يناسبك.
+  </p>
+</div>
+  
 </div>
 </div>
+</section>
+    
+    <section id="requirements" className="py-20 bg-white">
+  <div className="max-w-7xl mx-auto px-6">
+
+    <div className="text-center mb-14">
+      <h2 className="text-5xl font-black">
+        متطلبات تأشيرة قطر
+      </h2>
+
+      <p className="mt-4 text-gray-600">
+        تأكد من تجهيز المستندات التالية قبل تقديم الطلب.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-8">
+
+      <div className="rounded-3xl bg-slate-50 p-8 shadow-lg">
+        <h3 className="text-2xl font-bold mb-6">
+          📄 المستندات المطلوبة
+        </h3>
+
+        <ul className="space-y-4 text-lg">
+          <li>✅ جواز سفر ساري لمدة 6 أشهر.</li>
+          <li>✅ صورة شخصية بخلفية بيضاء.</li>
+          <li>✅ تعبئة نموذج الطلب.</li>
+          <li>✅ حجز فندقي (عند الحاجة).</li>
+          <li>✅ حجز طيران مبدئي.</li>
+        </ul>
+      </div>
+
+      <div className="rounded-3xl bg-blue-600 text-white p-8 shadow-xl">
+
+        <h3 className="text-2xl font-bold mb-6">
+          معلومات التأشيرة
+        </h3>
+
+        <div className="space-y-4 text-lg">
+          <p>⏱ مدة الإنجاز: 1 - 3 أيام عمل</p>
+          <p>📅 صلاحية التأشيرة حسب النوع</p>
+          <p>🌍 متاحة لمعظم الجنسيات</p>
+          <p>📞 متابعة كاملة حتى إصدار التأشيرة</p>
+        </div>
+
+       <div className="mt-10 flex flex-wrap justify-center gap-4">
+
+  <a
+    href="https://wa.me/962798337711?text=مرحباً، أود التقديم على تأشيرة قطر."
+    target="_blank"
+    rel="noopener noreferrer"
+    className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black hover:scale-105 transition"
+  >
+    💬 التقديم عبر واتساب
+  </a>
+
+  <a
+    href="tel:+962798337711"
+    className="rounded-full border-2 border-white px-8 py-4 font-bold text-white hover:bg-white hover:text-black transition"
+  >
+    📞 اتصل الآن
+  </a>
+
+</div>
+
+      </div>
+
+    </div>
+  </div>
 </section>
       </>
   );
