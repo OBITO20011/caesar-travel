@@ -3,6 +3,7 @@ import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
 import { Link } from "@tanstack/react-router";
 import galleryMaldives from "@/assets/gallery-maldives.jpg";
 import galleryEgypt from "@/assets/gallery-egypt.jpg";
+import galleryVisa from "@/assets/gallery-visa.png";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
@@ -390,6 +391,7 @@ function GallerySection() {
   const images = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
     {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
+    {src: galleryVisa,alt: "خدمة التأشيرات",label: "التأشيرات",span: "",},
     { src: galleryIstanbul, alt: "اسطنبول تركيا", label: "تركيا", span: "" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "" },
     {src: gallerySwitzerland,alt: "سويسرا",label: "سويسرا",span: "",},
@@ -433,10 +435,12 @@ function GallerySection() {
           className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] gap-3 md:gap-4"
         >
           {images.map((img, i) =>
-  img.label === "العمرة" || img.label === "الحج" ? (
+  img.label === "العمرة" ||
+img.label === "الحج" ||
+img.label === "التأشيرات" ? (
            <Link
   key={i}
-  to={img.label === "العمرة" ? "/umrah" : "/hajj"}
+  to={img.label === "العمرة" ? "/umrah" : img.label === "الحج" ? "/hajj" : "/visa"}
   className={`block ${img.span}`}
 
 >
@@ -455,19 +459,26 @@ function GallerySection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                 <span className="absolute bottom-4 right-4 rounded-xl bg-black/50 backdrop-blur-md px-4 py-2 text-white border border-white/20 text-center">
-  {img.label === "العمرة" ? (
-  <>
-    <div className="font-bold text-base">العمرة</div>
-    <div className="text-xs opacity-90">اضغط هنا</div>
-  </>
-) : img.label === "الحج" ? (
-  <>
-    <div className="font-bold text-base">الحج</div>
-    <div className="text-xs opacity-90">اضغط هنا</div>
-  </>
-) : (
-  img.label
-)}
+  {
+  img.label === "العمرة" ? (
+    <>
+      <div className="font-bold text-base">العمرة</div>
+      <div className="text-xs opacity-90">اضغط هنا</div>
+    </>
+  ) : img.label === "الحج" ? (
+    <>
+      <div className="font-bold text-base">الحج</div>
+      <div className="text-xs opacity-90">اضغط هنا</div>
+    </>
+  ) : img.label === "التأشيرات" ? (
+    <>
+      <div className="font-bold text-base">التأشيرات</div>
+      <div className="text-xs opacity-90">اضغط هنا</div>
+    </>
+  ) : (
+    img.label
+  )
+}
 </span>
               </motion.div>
             </Link>

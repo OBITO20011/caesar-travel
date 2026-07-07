@@ -9,15 +9,63 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VisaRouteImport } from './routes/visa'
+import { Route as UsaRouteImport } from './routes/usa'
 import { Route as UmrahRouteImport } from './routes/umrah'
+import { Route as UkRouteImport } from './routes/uk'
+import { Route as UaeRouteImport } from './routes/uae'
+import { Route as TurkeyRouteImport } from './routes/turkey'
+import { Route as SchengenRouteImport } from './routes/schengen'
+import { Route as SaudiRouteImport } from './routes/saudi'
+import { Route as QatarRouteImport } from './routes/qatar'
 import { Route as HajjRouteImport } from './routes/hajj'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
 import { Route as UmrahIdRouteImport } from './routes/umrah.$id'
 
+const VisaRoute = VisaRouteImport.update({
+  id: '/visa',
+  path: '/visa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsaRoute = UsaRouteImport.update({
+  id: '/usa',
+  path: '/usa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UmrahRoute = UmrahRouteImport.update({
   id: '/umrah',
   path: '/umrah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UkRoute = UkRouteImport.update({
+  id: '/uk',
+  path: '/uk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UaeRoute = UaeRouteImport.update({
+  id: '/uae',
+  path: '/uae',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TurkeyRoute = TurkeyRouteImport.update({
+  id: '/turkey',
+  path: '/turkey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchengenRoute = SchengenRouteImport.update({
+  id: '/schengen',
+  path: '/schengen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaudiRoute = SaudiRouteImport.update({
+  id: '/saudi',
+  path: '/saudi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QatarRoute = QatarRouteImport.update({
+  id: '/qatar',
+  path: '/qatar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HajjRoute = HajjRouteImport.update({
@@ -44,13 +92,29 @@ const UmrahIdRoute = UmrahIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/hajj': typeof HajjRoute
+  '/qatar': typeof QatarRoute
+  '/saudi': typeof SaudiRoute
+  '/schengen': typeof SchengenRoute
+  '/turkey': typeof TurkeyRoute
+  '/uae': typeof UaeRoute
+  '/uk': typeof UkRoute
   '/umrah': typeof UmrahRouteWithChildren
+  '/usa': typeof UsaRoute
+  '/visa': typeof VisaRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/umrah/': typeof UmrahIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/hajj': typeof HajjRoute
+  '/qatar': typeof QatarRoute
+  '/saudi': typeof SaudiRoute
+  '/schengen': typeof SchengenRoute
+  '/turkey': typeof TurkeyRoute
+  '/uae': typeof UaeRoute
+  '/uk': typeof UkRoute
+  '/usa': typeof UsaRoute
+  '/visa': typeof VisaRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/umrah': typeof UmrahIndexRoute
 }
@@ -58,31 +122,142 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/hajj': typeof HajjRoute
+  '/qatar': typeof QatarRoute
+  '/saudi': typeof SaudiRoute
+  '/schengen': typeof SchengenRoute
+  '/turkey': typeof TurkeyRoute
+  '/uae': typeof UaeRoute
+  '/uk': typeof UkRoute
   '/umrah': typeof UmrahRouteWithChildren
+  '/usa': typeof UsaRoute
+  '/visa': typeof VisaRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/umrah/': typeof UmrahIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hajj' | '/umrah' | '/umrah/$id' | '/umrah/'
+  fullPaths:
+    | '/'
+    | '/hajj'
+    | '/qatar'
+    | '/saudi'
+    | '/schengen'
+    | '/turkey'
+    | '/uae'
+    | '/uk'
+    | '/umrah'
+    | '/usa'
+    | '/visa'
+    | '/umrah/$id'
+    | '/umrah/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hajj' | '/umrah/$id' | '/umrah'
-  id: '__root__' | '/' | '/hajj' | '/umrah' | '/umrah/$id' | '/umrah/'
+  to:
+    | '/'
+    | '/hajj'
+    | '/qatar'
+    | '/saudi'
+    | '/schengen'
+    | '/turkey'
+    | '/uae'
+    | '/uk'
+    | '/usa'
+    | '/visa'
+    | '/umrah/$id'
+    | '/umrah'
+  id:
+    | '__root__'
+    | '/'
+    | '/hajj'
+    | '/qatar'
+    | '/saudi'
+    | '/schengen'
+    | '/turkey'
+    | '/uae'
+    | '/uk'
+    | '/umrah'
+    | '/usa'
+    | '/visa'
+    | '/umrah/$id'
+    | '/umrah/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HajjRoute: typeof HajjRoute
+  QatarRoute: typeof QatarRoute
+  SaudiRoute: typeof SaudiRoute
+  SchengenRoute: typeof SchengenRoute
+  TurkeyRoute: typeof TurkeyRoute
+  UaeRoute: typeof UaeRoute
+  UkRoute: typeof UkRoute
   UmrahRoute: typeof UmrahRouteWithChildren
+  UsaRoute: typeof UsaRoute
+  VisaRoute: typeof VisaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/visa': {
+      id: '/visa'
+      path: '/visa'
+      fullPath: '/visa'
+      preLoaderRoute: typeof VisaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usa': {
+      id: '/usa'
+      path: '/usa'
+      fullPath: '/usa'
+      preLoaderRoute: typeof UsaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/umrah': {
       id: '/umrah'
       path: '/umrah'
       fullPath: '/umrah'
       preLoaderRoute: typeof UmrahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uk': {
+      id: '/uk'
+      path: '/uk'
+      fullPath: '/uk'
+      preLoaderRoute: typeof UkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uae': {
+      id: '/uae'
+      path: '/uae'
+      fullPath: '/uae'
+      preLoaderRoute: typeof UaeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/turkey': {
+      id: '/turkey'
+      path: '/turkey'
+      fullPath: '/turkey'
+      preLoaderRoute: typeof TurkeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schengen': {
+      id: '/schengen'
+      path: '/schengen'
+      fullPath: '/schengen'
+      preLoaderRoute: typeof SchengenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saudi': {
+      id: '/saudi'
+      path: '/saudi'
+      fullPath: '/saudi'
+      preLoaderRoute: typeof SaudiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qatar': {
+      id: '/qatar'
+      path: '/qatar'
+      fullPath: '/qatar'
+      preLoaderRoute: typeof QatarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hajj': {
@@ -131,7 +306,15 @@ const UmrahRouteWithChildren = UmrahRoute._addFileChildren(UmrahRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HajjRoute: HajjRoute,
+  QatarRoute: QatarRoute,
+  SaudiRoute: SaudiRoute,
+  SchengenRoute: SchengenRoute,
+  TurkeyRoute: TurkeyRoute,
+  UaeRoute: UaeRoute,
+  UkRoute: UkRoute,
   UmrahRoute: UmrahRouteWithChildren,
+  UsaRoute: UsaRoute,
+  VisaRoute: VisaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
