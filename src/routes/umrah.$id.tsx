@@ -171,13 +171,12 @@ if (!trip) {
   return <h1>الفندق غير موجود</h1>;
 }
 return (
-  <main className="min-h-screen bg-slate-100 p-8">
-    <div className="mx-auto max-w-6xl">
-
+<main className="min-h-screen bg-[#F5EFD9] p-8">
+<div className="mx-auto max-w-6xl rounded-3xl bg-[#F8F4EA] backdrop-blur-md p-8 shadow-2xl">
    <img
   src={trip.image}
   alt={trip.hotelMakkah}
-  className="w-full h-[550px] rounded-3xl object-contain bg-white"
+  className="w-full h-[650px] rounded-3xl object-contain bg-[#F8F4EA]"
 />
 
   
