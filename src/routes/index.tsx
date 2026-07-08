@@ -437,10 +437,19 @@ function GallerySection() {
           {images.map((img, i) =>
   img.label === "العمرة" ||
 img.label === "الحج" ||
-img.label === "التأشيرات" ? (
+img.label === "التأشيرات" ||
+img.label === "تركيا" ? (
            <Link
   key={i}
-  to={img.label === "العمرة" ? "/umrah" : img.label === "الحج" ? "/hajj" : "/visa"}
+  to={
+  img.label === "العمرة"
+    ? "/umrah"
+    : img.label === "الحج"
+    ? "/hajj"
+    : img.label === "تركيا"
+    ? "/turkey-trip"
+    : "/visa"
+}
   className={`block ${img.span}`}
 
 >
@@ -475,9 +484,15 @@ img.label === "التأشيرات" ? (
       <div className="font-bold text-base">التأشيرات</div>
       <div className="text-xs opacity-90">اضغط هنا</div>
     </>
-  ) : (
-    img.label
-  )
+    
+  ) : img.label === "تركيا" ? (
+  <>
+    <div className="font-bold text-base">تركيا</div>
+    <div className="text-xs opacity-90">اضغط هنا</div>
+  </>
+) : (
+  img.label
+)
 }
 </span>
               </motion.div>

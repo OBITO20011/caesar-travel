@@ -113,7 +113,7 @@ function HotelDetailsPage() {
       "/images/hotels/tajpark/4.jpg",
     ],
 
-    cityImage: "/images/madinah.jpg"
+    cityImage: "/images/madinah.jpg/madinah.jpg"
   },
 
   {
@@ -182,14 +182,13 @@ return (
 
   
 
-
+<p className="mt-3 text-xl text-gray-600">
+        📍 فندق مكه
+      </p>
       <h1 className="mt-8 text-4xl font-bold">
-        {trip.hotelMakkah}
+        {trip.hotelMakkah} 
       </h1>
 
-      <p className="mt-3 text-xl text-gray-600">
-        📍 فندق المدينة: {trip.hotelMadinah}
-      </p>
 
       <h2 className="mt-8 mb-5 text-2xl font-bold">
   أسعار الغرف
