@@ -1,6 +1,7 @@
 import galleryGeorgia from "@/assets/gallery-georgia.jpg";
 import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
 import { Link } from "@tanstack/react-router";
+  import { Helmet } from "react-helmet-async";
 import galleryMaldives from "@/assets/gallery-maldives.jpg";
 import galleryEgypt from "@/assets/gallery-egypt.jpg";
 import galleryVisa from "@/assets/gallery-visa.png";
@@ -893,18 +894,39 @@ function BackToTop() {
 /* ──────────────── Main Page ──────────────── */
 function Index() {
   return (
-    <main className="min-h-screen">
-      <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <StatsSection />
-      <GallerySection />
-      <ReviewsSection />
-      <ContactSection />
-      <Footer />
-      <WhatsAppButton />
-      <BackToTop />
-    </main>
+    <>
+      <Helmet>
+        <title>قيصر للسياحة والسفر | رحلات الحج والعمرة والسياحة</title>
+
+        <meta
+          name="description"
+          content="قيصر للسياحة والسفر في الأردن - رحلات الحج والعمرة، حجوزات الطيران، الفنادق، والتأشيرات بأفضل الأسعار."
+        />
+
+        <meta
+          name="keywords"
+          content="قيصر للسياحة، الحج، العمرة، رحلات، الأردن، حجز طيران، فنادق، تأشيرات"
+        />
+
+        <link
+          rel="canonical"
+          href="https://caesar-travel.pages.dev/"
+        />
+      </Helmet>
+
+      <main className="min-h-screen">
+        <Navbar />
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <StatsSection />
+        <GallerySection />
+        <ReviewsSection />
+        <ContactSection />
+        <Footer />
+        <WhatsAppButton />
+        <BackToTop />
+      </main>
+    </>
   );
 }

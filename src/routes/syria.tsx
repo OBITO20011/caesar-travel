@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+  import { Helmet } from "react-helmet-async";
 export const Route = createFileRoute("/syria")({
   component: VisaPage,
 });
@@ -7,7 +8,34 @@ export const Route = createFileRoute("/syria")({
 function VisaPage() {
   return (
     
-  <><section
+  <><Helmet>
+      <title>رحلات سوريا | قصر للسياحة والسفر</title>
+      <meta
+        name="description"
+        content="أفضل عروض السفر إلى سوريا مع قصر للسياحة والسفر."
+      />
+      <meta
+        name="keywords"
+        content="سوريا, السياحة, السفر, قصر للسياحة"
+      />
+      <link
+        rel="canonical"
+        href="https://caesar-travel.pages.dev/syria"
+      />
+      <meta
+        property="og:title"
+        content="رحلات سوريا | قصر للسياحة"
+      />
+      <meta
+        property="og:description"
+        content="احجز أفضل عروض السفر إلى سوريا مع قصر للسياحة والسفر."
+      />
+      <meta
+        property="og:url"
+        content="https://caesar-travel.pages.dev/syria"
+      />
+    </Helmet>
+    <section
   
      
   className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"

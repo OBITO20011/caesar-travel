@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Helmet } from "react-helmet-async";
 import dubaiHero from "@/assets/dubai-gb.png";
 import burjArab from "@/assets/burj-al-arab.png";
 import dubaiAlamia from "@/assets/dubai-alalmia.png";
@@ -46,6 +47,42 @@ const hotels = [
 ];
 function DubaiPage() {
   return (
+<>
+    <Helmet>
+      <title>رحلات دبي | قصر للسياحة والسفر</title>
+
+      <meta
+        name="description"
+        content="أفضل عروض دبي مع قصر للسياحة والسفر، برج خليفة، دبي مول، برج العرب، رحلات وسكن فاخر بأفضل الأسعار."
+      />
+
+      <meta
+        name="keywords"
+        content="دبي، رحلات دبي، برج خليفة، برج العرب، دبي مول، نخلة جميرا، قصر للسياحة"
+      />
+
+      <link
+        rel="canonical"
+        href="https://caesar-travel.pages.dev/dubai"
+      />
+
+      <meta
+        property="og:title"
+        content="رحلات دبي | قصر للسياحة"
+      />
+
+      <meta
+        property="og:description"
+        content="اكتشف أفضل عروض السفر إلى دبي مع قصر للسياحة والسفر."
+      />
+
+      <meta
+        property="og:url"
+        content="https://caesar-travel.pages.dev/dubai"
+      />
+    </Helmet>
+
+    
     <main className="bg-[#0B0B0B] text-white">
 
       {/* Hero */}
@@ -180,5 +217,6 @@ function DubaiPage() {
   </div>
 </section>
     </main>
+    </>
   );
 }

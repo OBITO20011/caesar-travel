@@ -1,4 +1,5 @@
   import { createFileRoute } from "@tanstack/react-router";
+  import { Helmet } from "react-helmet-async";
  import egyptHero from "@/assets/egypt-bg.png";
 import egyptKhaleg from "@/assets/egypt-khaleg.png";
 import egyptSoha from "@/assets/egypt-soha.png";
@@ -46,6 +47,37 @@ import egyptMsmd from "@/assets/egypt-msmd.png";
   ];
 function EgyptPage() {
   return (
+    <>
+  <Helmet>
+    <title>رحلات شرم الشيخ والغردقة | قيصر للسياحة والسفر</title>
+
+    <meta
+      name="description"
+      content="احجز أفضل عروض السفر إلى شرم الشيخ والغردقة مع قيصر للسياحة والسفر. فنادق فاخرة، برامج سياحية، وأسعار مميزة."
+    />
+
+    <meta
+      name="keywords"
+      content="شرم الشيخ، الغردقة، مصر، رحلات مصر، فنادق شرم الشيخ، قيصر للسياحة"
+    />
+
+    <link
+      rel="canonical"
+      href="https://caesar-travel.pages.dev/egypt"
+    />
+
+    <meta property="og:title" content="رحلات شرم الشيخ | قيصر للسياحة" />
+
+    <meta
+      property="og:description"
+      content="أفضل عروض السفر إلى مصر مع قيصر للسياحة والسفر."
+    />
+
+    <meta
+      property="og:url"
+      content="https://caesar-travel.pages.dev/egypt"
+    />
+  </Helmet>
     <main className="bg-[#0B0B0B] text-white">
   
         {/* Hero */}
@@ -180,5 +212,6 @@ function EgyptPage() {
     </div>
   </section>
        </main>
+       </>
   );
 }

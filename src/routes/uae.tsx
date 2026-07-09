@@ -1,12 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+  import { Helmet } from "react-helmet-async";
 export const Route = createFileRoute("/uae")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
-  <><section
+  <><Helmet>
+      <title>رحلات الإمارات العربية المتحدة | قصر للسياحة والسفر</title>
+      <meta
+        name="description"
+        content="أفضل عروض السفر إلى الإمارات العربية المتحدة، دبي، أبوظبي، الشارقة مع قصر للسياحة والسفر."
+      />
+      <meta
+        name="keywords"
+        content="الإمارات، دبي، أبوظبي، الشارقة، رحلات الإمارات، قصر للسياحة"
+      />
+      <link
+        rel="canonical"
+        href="https://caesar-travel.pages.dev/uae"
+      />
+      <meta
+        property="og:title"
+        content="رحلات الإمارات العربية المتحدة | قصر للسياحة"
+      />
+      <meta
+        property="og:description"
+        content="احجز أفضل عروض السفر إلى الإمارات العربية المتحدة مع قصر للسياحة والسفر."
+      />
+      <meta
+        property="og:url"
+        content="https://caesar-travel.pages.dev/uae"
+      />
+    </Helmet>
+    <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: "url('/images/uae-banner.png')",

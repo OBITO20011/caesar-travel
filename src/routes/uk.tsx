@@ -1,12 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+  import { Helmet } from "react-helmet-async";
 export const Route = createFileRoute("/uk")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
-  <><section
+  <><Helmet>
+      <title>رحلات المملكة المتحدة | قصر للسياحة والسفر</title>
+      <meta
+        name="description"
+        content="أفضل عروض السفر إلى المملكة المتحدة، لندن، باريس، روما مع قصر للسياحة والسفر."
+      />
+      <meta
+        name="keywords"
+        content="المملكة المتحدة، لندن، باريس، روما، رحلات المملكة المتحدة، قصر للسياحة"
+      />
+      <link
+        rel="canonical"
+        href="https://caesar-travel.pages.dev/uk"
+      />
+      <meta
+        property="og:title"
+        content="رحلات المملكة المتحدة | قصر للسياحة"
+      />
+      <meta
+        property="og:description"
+        content="احجز أفضل عروض السفر إلى المملكة المتحدة مع قصر للسياحة والسفر."
+      />
+      <meta
+        property="og:url"
+        content="https://caesar-travel.pages.dev/uk"
+      />
+    </Helmet>
+    <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: "url('/images/uk-banner.png')",
