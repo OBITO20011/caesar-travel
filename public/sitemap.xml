@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://caesar-travel.pages.dev/</loc>
-    <lastmod>2026-07-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+<?xml-stylesheet type="text/css" href="https://www.xml-sitemaps.com/css/sitemap.css"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://caesar-travel.pages.dev/</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/hajj</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/visa</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/turkey-trip</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/dubai</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/egypt</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/1</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/2</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/3</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/4</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/5</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/umrah/6</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/saudi</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/uae</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/qatar</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/syria</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/schengen</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/uk</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://caesar-travel.pages.dev/usa</loc>
+  <lastmod>2026-07-09T04:51:50+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
 </urlset>
