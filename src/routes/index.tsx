@@ -1,4 +1,5 @@
 import galleryGeorgia from "@/assets/gallery-georgia.jpg";
+import { supabase } from "@/lib/supabase";
 import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
 import { Link } from "@tanstack/react-router";
   import { Helmet } from "react-helmet-async";
@@ -609,19 +610,34 @@ function ReviewsSection() {
 function ContactSection() {
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const name = String(data.get("name") || "");
-    const phone = String(data.get("phone") || "");
-    const message = String(data.get("message") || "");
-    const text = `مرحباً، أنا ${name}%0Aالهاتف: ${phone}%0A${encodeURIComponent(message)}`;
-    window.open(`https://wa.me/${WHATSAPP}?text=${text}`, "_blank");
-    setSent(true);
-    form.reset();
-    setTimeout(() => setSent(false), 4000);
-  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const data = new FormData(form);
+
+  const { error } = await supabase.from("bookings").insert([
+    {
+      full_name: String(data.get("name") || ""),
+      phone: String(data.get("phone") || ""),
+      service: "",
+      destination: "",
+      travel_date: null,
+      notes: String(data.get("message") || ""),
+      status: "new",
+    },
+  ]);
+
+  if (error) {
+    console.error(error);
+    alert(JSON.stringify(error, null, 2));
+    return;
+  }
+
+  setSent(true);
+  form.reset();
+  setTimeout(() => setSent(false), 4000);
+};
 
   return (
     <section id="contact" className="py-24 md:py-32 bg-gradient-to-b from-cream to-cream-dark relative">
