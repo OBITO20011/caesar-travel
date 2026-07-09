@@ -896,6 +896,7 @@ function Index() {
   return (
     <>
       <Helmet>
+
         <title>قيصر للسياحة والسفر | رحلات الحج والعمرة والسياحة</title>
 
         <meta
@@ -912,6 +913,28 @@ function Index() {
           rel="canonical"
           href="https://caesar-travel.pages.dev/"
         />
+        <meta property="og:type" content="website" />
+<meta property="og:title" content="قيصر للسياحة والسفر" />
+<meta
+  property="og:description"
+  content="قيصر للسياحة والسفر في الرمثا - إربد. خدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
+/>
+<meta property="og:url" content="https://caesar-travel.pages.dev/" />
+<meta
+  property="og:image"
+  content="https://caesar-travel.pages.dev/og-image.png"
+/>
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="قيصر للسياحة والسفر" />
+<meta
+  name="twitter:description"
+  content="الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
+/>
+<meta
+  name="twitter:image"
+  content="https://caesar-travel.pages.dev/og-image.png"
+/>
       </Helmet>
 <script
   type="application/ld+json"
