@@ -913,7 +913,33 @@ function Index() {
           href="https://caesar-travel.pages.dev/"
         />
       </Helmet>
-
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      name: "قيصر للسياحة والسفر",
+      url: "https://caesar-travel.pages.dev",
+      logo: "https://caesar-travel.pages.dev/logo.png",
+      telephone: "+962795207900",
+      description:
+        "وكالة سفر وسياحة في الرمثا - إربد متخصصة في الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والرحلات السياحية.",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "الرمثا",
+        addressLocality: "الرمثا",
+        addressRegion: "إربد",
+        addressCountry: "JO"
+      },
+      areaServed: "Jordan",
+      sameAs: [
+  "https://www.facebook.com/caesartravel",
+  "https://www.instagram.com/caesar__travel/"
+]
+    }),
+  }}
+/>
       <main className="min-h-screen">
         <Navbar />
         <HeroSection />
