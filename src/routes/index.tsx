@@ -438,17 +438,23 @@ function GallerySection() {
   img.label === "العمرة" ||
 img.label === "الحج" ||
 img.label === "التأشيرات" ||
-img.label === "تركيا" ? (
+img.label === "تركيا" ||
+img.label === "دبي" ||
+img.label === "مصر" ? (
            <Link
   key={i}
   to={
   img.label === "العمرة"
-    ? "/umrah"
-    : img.label === "الحج"
-    ? "/hajj"
-    : img.label === "تركيا"
-    ? "/turkey-trip"
-    : "/visa"
+? "/umrah"
+: img.label === "الحج"
+? "/hajj"
+: img.label === "تركيا"
+? "/turkey-trip"
+: img.label === "دبي"
+? "/dubai"
+: img.label === "مصر"
+? "/egypt"
+: "/visa"
 }
   className={`block ${img.span}`}
 
@@ -490,7 +496,20 @@ img.label === "تركيا" ? (
     <div className="font-bold text-base">تركيا</div>
     <div className="text-xs opacity-90">اضغط هنا</div>
   </>
-) : (
+  )
+  : img.label === "دبي" ? (
+  <>
+    <div className="font-bold text-base">دبي</div>
+    <div className="text-xs opacity-90">اضغط هنا</div>
+  </>
+)
+: img.label === "مصر" ? (
+  <>
+    <div className="font-bold text-base">مصر</div>
+    <div className="text-xs opacity-90">اضغط هنا</div>
+  </>
+)
+ : (
   img.label
 )
 }

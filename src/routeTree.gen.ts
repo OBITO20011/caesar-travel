@@ -20,6 +20,7 @@ import { Route as SchengenRouteImport } from './routes/schengen'
 import { Route as SaudiRouteImport } from './routes/saudi'
 import { Route as QatarRouteImport } from './routes/qatar'
 import { Route as HajjRouteImport } from './routes/hajj'
+import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as DubaiRouteImport } from './routes/dubai'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
@@ -80,6 +81,11 @@ const HajjRoute = HajjRouteImport.update({
   path: '/hajj',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EgyptRoute = EgyptRouteImport.update({
+  id: '/egypt',
+  path: '/egypt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DubaiRoute = DubaiRouteImport.update({
   id: '/dubai',
   path: '/dubai',
@@ -104,6 +110,7 @@ const UmrahIdRoute = UmrahIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
+  '/egypt': typeof EgyptRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
+  '/egypt': typeof EgyptRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
+  '/egypt': typeof EgyptRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dubai'
+    | '/egypt'
     | '/hajj'
     | '/qatar'
     | '/saudi'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dubai'
+    | '/egypt'
     | '/hajj'
     | '/qatar'
     | '/saudi'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dubai'
+    | '/egypt'
     | '/hajj'
     | '/qatar'
     | '/saudi'
@@ -208,6 +220,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DubaiRoute: typeof DubaiRoute
+  EgyptRoute: typeof EgyptRoute
   HajjRoute: typeof HajjRoute
   QatarRoute: typeof QatarRoute
   SaudiRoute: typeof SaudiRoute
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HajjRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/egypt': {
+      id: '/egypt'
+      path: '/egypt'
+      fullPath: '/egypt'
+      preLoaderRoute: typeof EgyptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dubai': {
       id: '/dubai'
       path: '/dubai'
@@ -346,6 +366,7 @@ const UmrahRouteWithChildren = UmrahRoute._addFileChildren(UmrahRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DubaiRoute: DubaiRoute,
+  EgyptRoute: EgyptRoute,
   HajjRoute: HajjRoute,
   QatarRoute: QatarRoute,
   SaudiRoute: SaudiRoute,
