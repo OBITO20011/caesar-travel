@@ -40,6 +40,8 @@ import galleryPetra from "@/assets/gallery-petra.jpg";
 import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
+import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
+import type { SiteSettings } from "@/types/admin";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -55,6 +57,14 @@ const WHATSAPP = "962795207900";
 const MAP_QUERY = "H268%2BP7%20Ramtha%20Jordan";
 const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_QUERY}&z=16&output=embed`;
 const MAP_DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${MAP_QUERY}`;
+
+function phoneList(settings?: SiteSettings) {
+  if (!settings?.phone) return PHONES;
+
+  const digits = settings.phone.replace(/\D/g, "");
+  const intl = digits.startsWith("0") ? `962${digits.slice(1)}` : digits;
+  return [{ display: settings.phone, intl }];
+}
 
 /* ──────────────── Animation helpers ──────────────── */
 const fadeInUp = {
@@ -85,13 +95,13 @@ function scrollTo(id: string) {
 }
 
 /* ──────────────── Hero ──────────────── */
-function HeroSection() {
+function HeroSection({ settings }: { settings?: SiteSettings }) {
   return (
     <section id="hero" className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden">
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
-          src={heroImg}
+          src={settings?.hero_background_image_url || heroImg}
           alt="الكعبة المشرفة في المسجد الحرام"
           className="h-full w-full object-cover"
           width={1920}
@@ -117,9 +127,9 @@ function HeroSection() {
             variants={fadeInUp}
             className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
           >
-            اكتشف العالم مع
-            قيصر للسياحة والسفر            <br />
-            <span className="text-gold">مع قيصر للسياحة</span>
+            {settings?.hero_title || "اكتشف العالم مع قيصر للسياحة والسفر"}
+            <br />
+            <span className="text-gold">{settings?.hero_subtitle || "مع قيصر للسياحة"}</span>
           </motion.h1>
 
           <motion.p
@@ -139,7 +149,7 @@ function HeroSection() {
             </Link>
 
             <a
-              href="https://wa.me/962795207900"
+              href={`https://wa.me/${settings?.whatsapp || WHATSAPP}`}
               target="_blank"
               className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
             >
@@ -159,22 +169,22 @@ function HeroSection() {
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">20+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.years_experience ?? 20}+</h3>
             <p className="text-white/80 text-sm">سنة خبرة</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">15000+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.happy_clients ?? 15000}+</h3>
             <p className="text-white/80 text-sm">عميل سعيد</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">30+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.trips_completed ?? 30}+</h3>
             <p className="text-white/80 text-sm">وجهة سياحية</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">24/7</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.support_hours || "24/7"}</h3>
             <p className="text-white/80 text-sm">دعم العملاء</p>
           </div>
 
@@ -263,12 +273,12 @@ function ServicesSection() {
 }
 
 /* ──────────────── Stats ──────────────── */
-function StatsSection() {
+function StatsSection({ settings }: { settings?: SiteSettings }) {
   const stats = [
-    { value: "20+", label: "سنة خبرة" },
-    { value: "5000+", label: "حاج ومعتمر" },
-    { value: "4.9", label: "متوسط التقييم" },
-    { value: "50+", label: "وجهة عالمية" },
+    { value: `${settings?.years_experience ?? 20}+`, label: "سنة خبرة" },
+    { value: `${settings?.happy_clients ?? 15000}+`, label: "عميل سعيد" },
+    { value: `${settings?.trips_completed ?? 30}+`, label: "رحلة مكتملة" },
+    { value: settings?.support_hours || "24/7", label: "دعم العملاء" },
   ];
 
   return (
@@ -301,7 +311,8 @@ function StatsSection() {
 
 /* ──────────────── Gallery ──────────────── */
 function GallerySection() {
-  const images = [
+  const { data: cmsImages } = useGalleryImages();
+  const fallbackImages = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
     {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
     {src: galleryVisa,alt: "خدمة التأشيرات",label: "التأشيرات",span: "",},
@@ -315,6 +326,14 @@ function GallerySection() {
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
   ];
+  const images = cmsImages?.length
+    ? cmsImages.map((image) => ({
+        src: image.image_url,
+        alt: image.title,
+        label: image.title,
+        span: "",
+      }))
+    : fallbackImages;
 
   return (
     <section
@@ -518,8 +537,9 @@ function ReviewsSection() {
 }
 
 /* ──────────────── Contact ──────────────── */
-function ContactSection() {
+function ContactSection({ settings }: { settings?: SiteSettings }) {
   const [sent, setSent] = useState(false);
+  const phones = phoneList(settings);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -582,7 +602,7 @@ function ContactSection() {
                 <h3 className="font-bold text-foreground text-lg">أرقام الهاتف</h3>
               </div>
               <div className="grid sm:grid-cols-3 gap-2">
-                {PHONES.map((p) => (
+                {phones.map((p) => (
                   <a
                     key={p.intl}
                     href={`tel:+${p.intl}`}
@@ -602,7 +622,18 @@ function ContactSection() {
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-foreground">العنوان</h3>
-                <p className="text-sm text-muted-foreground mt-1">الرمثا، الأردن — Plus Code: H268+P7</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {settings?.address || "الرمثا، الأردن — Plus Code: H268+P7"}
+                </p>
+                {settings?.email ? (
+                  <a
+                    href={`mailto:${settings.email}`}
+                    className="mt-2 block text-sm text-teal hover:text-teal-dark"
+                    dir="ltr"
+                  >
+                    {settings.email}
+                  </a>
+                ) : null}
                 <a
                   href={MAP_DIRECTIONS}
                   target="_blank"
@@ -687,8 +718,9 @@ function ContactSection() {
 }
 
 /* ──────────────── Footer ──────────────── */
-function Footer() {
+function Footer({ settings }: { settings?: SiteSettings }) {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const phones = phoneList(settings);
 
   return (
     <footer className="bg-teal-dark text-white/80">
@@ -697,7 +729,11 @@ function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="شعار قيصر للسياحة" className="h-12 w-12 object-contain" />
+              <img
+                src={settings?.logo_url || logo}
+                alt="شعار قيصر للسياحة"
+                className="h-12 w-12 object-contain"
+              />
               <div className="leading-tight">
                 <span className="block text-xl font-black text-gold">قيصر للسياحة والسفر</span>
                 <span className="block text-xs text-white/50 tracking-wide">CAESAR TRAVEL & TOURISM</span>
@@ -709,7 +745,11 @@ function Footer() {
             </p>
             <div className="flex items-center gap-3 mt-5">
               {[
-                { icon: MessageCircle, href: `https://wa.me/${WHATSAPP}`, label: "واتساب" },
+                {
+                  icon: MessageCircle,
+                  href: `https://wa.me/${settings?.whatsapp || WHATSAPP}`,
+                  label: "واتساب",
+                },
                 { icon: Facebook, href: "https://www.facebook.com/caesartravel?locale=ar_AR", label: "فيسبوك" },
                 { icon: Instagram, href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==", label: "انستغرام" },
               ].map((s, i) => (
@@ -746,7 +786,7 @@ function Footer() {
           <div>
             <h4 className="font-bold text-white mb-4">تواصل معنا</h4>
             <ul className="space-y-2.5 text-sm">
-              {PHONES.map((p) => (
+              {phones.map((p) => (
                 <li key={p.intl}>
                   <a href={`tel:+${p.intl}`} dir="ltr" className="hover:text-gold transition-colors block text-right">
                     {p.display}
@@ -755,8 +795,16 @@ function Footer() {
               ))}
               <li className="flex items-start gap-2 pt-1">
                 <MapPin size={15} className="text-gold shrink-0 mt-0.5" />
-                <span>الرمثا، الأردن — H268+P7</span>
+                <span>{settings?.address || "الرمثا، الأردن — H268+P7"}</span>
               </li>
+              {settings?.email ? (
+                <li className="flex items-center gap-2">
+                  <Mail size={15} className="text-gold shrink-0" />
+                  <a href={`mailto:${settings.email}`} dir="ltr" className="hover:text-gold">
+                    {settings.email}
+                  </a>
+                </li>
+              ) : null}
               <li className="flex items-center gap-2">
                 <Clock size={15} className="text-gold shrink-0" />
                 <span>السبت — الخميس: 9:30 ص — 7:00 م</span>
@@ -779,10 +827,10 @@ function Footer() {
 }
 
 /* ──────────────── Floating WhatsApp ──────────────── */
-function WhatsAppButton() {
+function WhatsAppButton({ whatsapp }: { whatsapp?: string }) {
   return (
     <a
-      href={`https://wa.me/${WHATSAPP}`}
+      href={`https://wa.me/${whatsapp || WHATSAPP}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل عبر واتساب"
@@ -819,6 +867,8 @@ function BackToTop() {
 
 /* ──────────────── Main Page ──────────────── */
 function Index() {
+  const { data: settings } = useSiteSettings();
+
   return (
     <>
       <Helmet>
@@ -892,15 +942,15 @@ function Index() {
   }}
 />
       <main className="min-h-screen">
-        <HeroSection />
+        <HeroSection settings={settings} />
         <AboutSection />
         <ServicesSection />
-        <StatsSection />
+        <StatsSection settings={settings} />
         <GallerySection />
         <ReviewsSection />
-        <ContactSection />
-        <Footer />
-        <WhatsAppButton />
+        <ContactSection settings={settings} />
+        <Footer settings={settings} />
+        <WhatsAppButton whatsapp={settings?.whatsapp} />
         <BackToTop />
       </main>
     </>

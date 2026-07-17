@@ -5,13 +5,9 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 const navigationItems = [
-  { label: "لوحة التحكم", to: "/admin/dashboard" },
   { label: "الرحلات", to: "/admin/trips" },
   { label: "العمرة", to: "/admin/umrah" },
-  { label: "الفنادق", to: "/admin/hotels" },
-  { label: "التأشيرات", to: "/admin/visa" },
-  { label: "الطلبات", to: "/admin/orders" },
-  { label: "الموظفون", to: "/admin/users" },
+  { label: "معرض الصور", to: "/admin/gallery" },
   { label: "الإعدادات", to: "/admin/settings" },
 ] as const;
 

@@ -10,8 +10,9 @@ export const Route = createFileRoute("/admin/trips/")({
 function RouteComponent() {
   return (
     <TripManager
+      category="trip"
       title="إدارة الرحلات"
-      description="أضف الرحلات السياحية وبرامج الحج والطيران، وحدّث الأسعار والمقاعد وحالة العرض من مكان واحد."
+      description="أضف الرحلات وعدّل تفاصيلها وأسعارها وصورها وحالة عرضها."
     />
   );
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "@/assets/caesar-mark.png";
+import { useSiteSettings } from "@/hooks/use-site-content";
 
 const NAV_LINKS = [
   { label: "الرئيسية", path: "/" },
@@ -22,6 +23,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const { data: settings } = useSiteSettings();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -36,7 +38,7 @@ export function Header() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleLinkClick = (item: typeof NAV_LINKS[0]) => {
+  const handleLinkClick = (item: (typeof NAV_LINKS)[0]) => {
     if (item.hash) {
       // إذا كان هناك hash، انتظر قليلاً ثم تمرر إلى العنصر
       setTimeout(() => scrollToElement(item.hash), 100);
@@ -53,7 +55,11 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
         {/* Logo and brand */}
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <img src={logo} alt="شعار قيصر للسياحة والسفر" className="h-11 w-11 object-contain" />
+          <img
+            src={settings?.logo_url || logo}
+            alt="شعار قيصر للسياحة والسفر"
+            className="h-11 w-11 object-contain"
+          />
           <div className="text-right leading-tight">
             <span className="block text-lg font-black text-teal tracking-tight">قيصر</span>
             <span className="block text-[11px] font-medium text-gold-dark tracking-wide">
@@ -112,9 +118,7 @@ export function Header() {
                 to={item.path}
                 onClick={() => handleLinkClick(item)}
                 className={`text-right text-base font-semibold transition-colors py-2.5 ${
-                  isActive(item.path)
-                    ? "text-teal"
-                    : "text-foreground/80 hover:text-teal"
+                  isActive(item.path) ? "text-teal" : "text-foreground/80 hover:text-teal"
                 }`}
               >
                 {item.label}

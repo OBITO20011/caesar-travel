@@ -15,6 +15,7 @@ import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
 import heroImg from "@/assets/hero-hajj.jpg";
+import { useGalleryImages } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/gallery")({
   component: GalleryPage,
@@ -35,8 +36,22 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.8 } },
 };
 
+function galleryLink(title: string) {
+  const links: Record<string, "/hajj" | "/umrah" | "/visa" | "/turkey-trip" | "/dubai" | "/egypt"> = {
+    الحج: "/hajj",
+    العمرة: "/umrah",
+    التأشيرات: "/visa",
+    تركيا: "/turkey-trip",
+    دبي: "/dubai",
+    مصر: "/egypt",
+  };
+
+  return links[title] || "/gallery";
+}
+
 function GalleryPage() {
-  const images = [
+  const { data: cmsImages } = useGalleryImages();
+  const fallbackImages = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2", link: "/hajj" },
     { src: galleryMedina, alt: "المسجد النبوي الشريف", label: "العمرة", span: "", link: "/umrah" },
     { src: galleryVisa, alt: "خدمة التأشيرات", label: "التأشيرات", span: "", link: "/visa" },
@@ -50,6 +65,15 @@ function GalleryPage() {
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "", link: "/" },
     { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "", link: "/" },
   ];
+  const images = cmsImages?.length
+    ? cmsImages.map((image, index) => ({
+        src: image.image_url,
+        alt: image.title,
+        label: image.title,
+        span: index === 0 ? "sm:col-span-2 sm:row-span-2" : "",
+        link: galleryLink(image.title),
+      }))
+    : fallbackImages;
 
   return (
     <>
