@@ -21,7 +21,7 @@ const PAGE_SIZE = 10;
 
 const categoryLabels: Record<TripCategory, string> = {
   umrah: "عمرة",
-  trip: "رحلة",
+  tourism: "رحلة",
 };
 
 const statusLabels: Record<TripStatus, string> = {
@@ -41,7 +41,7 @@ const statusClasses: Record<TripStatus, string> = {
 };
 
 type TripForm = {
-  name: string;
+  title: string;
   category: TripCategory;
   description: string;
   start_date: string;
@@ -52,14 +52,17 @@ type TripForm = {
   madinah_hotel: string;
   meals: string;
   airline: string;
-  seats: string;
+  nights: string;
+  total_seats: string;
+  remaining_seats: string;
   main_image_url: string;
   status: TripStatus;
+  is_featured: boolean;
 };
 
 function emptyForm(category: TripCategory): TripForm {
   return {
-    name: "",
+    title: "",
     category,
     description: "",
     start_date: "",
@@ -70,15 +73,18 @@ function emptyForm(category: TripCategory): TripForm {
     madinah_hotel: "",
     meals: "",
     airline: "",
-    seats: "0",
+    nights: "0",
+    total_seats: "0",
+    remaining_seats: "0",
     main_image_url: "",
     status: "available",
+    is_featured: false,
   };
 }
 
 function formFromTrip(trip: Trip): TripForm {
   return {
-    name: trip.name,
+    title: trip.title,
     category: trip.category,
     description: trip.description ?? "",
     start_date: trip.start_date ?? "",
@@ -89,15 +95,18 @@ function formFromTrip(trip: Trip): TripForm {
     madinah_hotel: trip.madinah_hotel ?? "",
     meals: trip.meals ?? "",
     airline: trip.airline ?? "",
-    seats: trip.seats.toString(),
+    nights: trip.nights.toString(),
+    total_seats: trip.total_seats.toString(),
+    remaining_seats: trip.remaining_seats.toString(),
     main_image_url: trip.main_image_url ?? "",
     status: trip.status,
+    is_featured: trip.is_featured,
   };
 }
 
 function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "updated_at"> {
   return {
-    name: form.name.trim(),
+    title: form.title.trim(),
     category: form.category,
     description: form.description.trim() || undefined,
     start_date: form.start_date || undefined,
@@ -108,9 +117,12 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     madinah_hotel: form.madinah_hotel.trim() || undefined,
     meals: form.meals.trim() || undefined,
     airline: form.airline.trim() || undefined,
-    seats: Number(form.seats) || 0,
+    nights: Number(form.nights) || 0,
+    total_seats: Number(form.total_seats) || 0,
+    remaining_seats: Number(form.remaining_seats) || 0,
     main_image_url: form.main_image_url.trim() || undefined,
     status: form.status,
+    is_featured: form.is_featured,
   };
 }
 
@@ -223,7 +235,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
     event.preventDefault();
     setFormError(null);
 
-    if (!form.name.trim()) {
+    if (!form.title.trim()) {
       setFormError("اسم الرحلة مطلوب.");
       return;
     }
@@ -343,12 +355,14 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                                 />
                               ) : null}
                             </div>
-                            <p className="font-semibold text-slate-900">{trip.name}</p>
+                            <p className="font-semibold text-slate-900">{trip.title}</p>
                           </div>
                         </td>
                         <td className="px-5 py-4">{trip.start_date || "—"}</td>
                         <td className="px-5 py-4 font-medium">{formatPrice(trip)}</td>
-                        <td className="px-5 py-4">{trip.seats}</td>
+                        <td className="px-5 py-4">
+                          {trip.remaining_seats}/{trip.total_seats}
+                        </td>
                         <td className="px-5 py-4">
                           <Badge className={statusClasses[trip.status]}>
                             {statusLabels[trip.status]}
@@ -369,7 +383,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                               variant="ghost"
                               className="text-rose-600 hover:text-rose-700"
                               onClick={() => {
-                                if (window.confirm(`حذف ${trip.name}؟`))
+                                if (window.confirm(`حذف ${trip.title}؟`))
                                   deleteMutation.mutate(trip.id);
                               }}
                               aria-label="حذف"
@@ -424,8 +438,8 @@ export function TripManager({ title, description, category }: TripManagerProps) 
           <form onSubmit={submitForm} className="grid gap-4">
             <Field label="اسم الرحلة" required>
               <Input
-                value={form.name}
-                onChange={(event) => setForm({ ...form, name: event.target.value })}
+                value={form.title}
+                onChange={(event) => setForm({ ...form, title: event.target.value })}
               />
             </Field>
             <Field label="الوصف">
@@ -510,14 +524,41 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                 />
               </Field>
             </div>
-            <Field label="عدد المقاعد">
-              <Input
-                type="number"
-                min="0"
-                value={form.seats}
-                onChange={(event) => setForm({ ...form, seats: event.target.value })}
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="عدد الليالي">
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.nights}
+                  onChange={(event) => setForm({ ...form, nights: event.target.value })}
+                />
+              </Field>
+              <Field label="إجمالي المقاعد">
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.total_seats}
+                  onChange={(event) => setForm({ ...form, total_seats: event.target.value })}
+                />
+              </Field>
+              <Field label="المقاعد المتبقية">
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.remaining_seats}
+                  onChange={(event) => setForm({ ...form, remaining_seats: event.target.value })}
+                />
+              </Field>
+            </div>
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <input
+                type="checkbox"
+                checked={form.is_featured}
+                onChange={(event) => setForm({ ...form, is_featured: event.target.checked })}
+                className="h-4 w-4 rounded border-slate-300"
               />
-            </Field>
+              إظهار كرحلة مميزة
+            </label>
             <Field label="الصورة الرئيسية">
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Input

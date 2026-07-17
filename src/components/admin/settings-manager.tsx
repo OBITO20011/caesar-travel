@@ -46,7 +46,7 @@ export function SettingsManager() {
       setSettings((current) =>
         field === "logo"
           ? { ...current, logo_url: imageUrl }
-          : { ...current, hero_background_image_url: imageUrl },
+          : { ...current, hero_image_url: imageUrl },
       );
       setFeedback("تم رفع الصورة. اضغط حفظ لتثبيت التغيير.");
     } catch (error) {
@@ -127,11 +127,11 @@ export function SettingsManager() {
                     <div className="flex flex-col gap-2 sm:flex-row">
                       <Input
                         dir="ltr"
-                        value={settings.hero_background_image_url ?? ""}
+                        value={settings.hero_image_url ?? ""}
                         onChange={(event) =>
                           setSettings({
                             ...settings,
-                            hero_background_image_url: event.target.value,
+                            hero_image_url: event.target.value,
                           })
                         }
                       />
@@ -149,6 +149,14 @@ export function SettingsManager() {
             <TabsContent value="contact">
               <SettingsCard title="الشعار ومعلومات التواصل">
                 <form onSubmit={submit} className="grid gap-4">
+                  <Field label="اسم الشركة">
+                    <Input
+                      value={settings.company_name ?? ""}
+                      onChange={(event) =>
+                        setSettings({ ...settings, company_name: event.target.value })
+                      }
+                    />
+                  </Field>
                   <Field label="الشعار">
                     <div className="flex flex-col gap-2 sm:flex-row">
                       <Input
@@ -201,6 +209,15 @@ export function SettingsManager() {
                         }
                       />
                     </Field>
+                    <Field label="رابط تضمين الخريطة">
+                      <Input
+                        dir="ltr"
+                        value={settings.map_embed_url ?? ""}
+                        onChange={(event) =>
+                          setSettings({ ...settings, map_embed_url: event.target.value })
+                        }
+                      />
+                    </Field>
                   </div>
                   <SaveButton loading={saveMutation.isPending || uploadingField === "logo"} />
                 </form>
@@ -218,14 +235,14 @@ export function SettingsManager() {
                   </Field>
                   <Field label="العملاء السعداء">
                     <NumberInput
-                      value={settings.happy_clients}
-                      onChange={(value) => setSettings({ ...settings, happy_clients: value })}
+                      value={settings.happy_customers}
+                      onChange={(value) => setSettings({ ...settings, happy_customers: value })}
                     />
                   </Field>
                   <Field label="الرحلات المكتملة">
                     <NumberInput
-                      value={settings.trips_completed}
-                      onChange={(value) => setSettings({ ...settings, trips_completed: value })}
+                      value={settings.completed_trips}
+                      onChange={(value) => setSettings({ ...settings, completed_trips: value })}
                     />
                   </Field>
                   <Field label="ساعات الدعم">

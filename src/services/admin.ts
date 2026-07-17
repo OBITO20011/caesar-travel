@@ -12,7 +12,7 @@ export const tripsService = {
     if (filters?.category) query = query.eq("category", filters.category);
     if (filters?.status) query = query.eq("status", filters.status);
     if (filters?.search) {
-      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+      query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
     }
 
     const from = (page - 1) * pageSize;
@@ -62,7 +62,7 @@ export const galleryService = {
     return (data as GalleryImage[]) || [];
   },
 
-  async create(image: Omit<GalleryImage, "id" | "created_at" | "updated_at">) {
+  async create(image: Omit<GalleryImage, "id" | "created_at">) {
     const { data, error } = await supabase.from("gallery").insert([image]).select().single();
 
     if (error) throw error;
@@ -72,7 +72,7 @@ export const galleryService = {
   async update(id: string, image: Partial<GalleryImage>) {
     const { data, error } = await supabase
       .from("gallery")
-      .update({ ...image, updated_at: new Date().toISOString() })
+      .update(image)
       .eq("id", id)
       .select()
       .single();

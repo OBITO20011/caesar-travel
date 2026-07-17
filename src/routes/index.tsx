@@ -101,7 +101,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
-          src={settings?.hero_background_image_url || heroImg}
+          src={settings?.hero_image_url || heroImg}
           alt="الكعبة المشرفة في المسجد الحرام"
           className="h-full w-full object-cover"
           width={1920}
@@ -174,12 +174,12 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.happy_clients ?? 15000}+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.happy_customers ?? 15000}+</h3>
             <p className="text-white/80 text-sm">عميل سعيد</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.trips_completed ?? 30}+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.completed_trips ?? 30}+</h3>
             <p className="text-white/80 text-sm">وجهة سياحية</p>
           </div>
 
@@ -276,8 +276,8 @@ function ServicesSection() {
 function StatsSection({ settings }: { settings?: SiteSettings }) {
   const stats = [
     { value: `${settings?.years_experience ?? 20}+`, label: "سنة خبرة" },
-    { value: `${settings?.happy_clients ?? 15000}+`, label: "عميل سعيد" },
-    { value: `${settings?.trips_completed ?? 30}+`, label: "رحلة مكتملة" },
+    { value: `${settings?.happy_customers ?? 15000}+`, label: "عميل سعيد" },
+    { value: `${settings?.completed_trips ?? 30}+`, label: "رحلة مكتملة" },
     { value: settings?.support_hours || "24/7", label: "دعم العملاء" },
   ];
 
@@ -550,11 +550,9 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
   const { error } = await supabase.from("bookings").insert([
     {
       customer_name: String(data.get("name") || ""),
-      customer_phone: String(data.get("phone") || ""),
-      trip_name: "طلب تواصل من الموقع",
+      phone: String(data.get("phone") || ""),
       people_count: 1,
       notes: String(data.get("message") || ""),
-      status: "new",
     },
   ]);
 
@@ -695,7 +693,7 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
           >
             <iframe
               title="موقع قيصر للسياحة والسفر على الخريطة"
-              src={MAP_EMBED}
+              src={settings?.map_embed_url || MAP_EMBED}
               className="absolute inset-0 w-full h-full border-0"
               allowFullScreen
               loading="lazy"
@@ -735,7 +733,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
                 className="h-12 w-12 object-contain"
               />
               <div className="leading-tight">
-                <span className="block text-xl font-black text-gold">قيصر للسياحة والسفر</span>
+                <span className="block text-xl font-black text-gold">{settings?.company_name || "قيصر للسياحة والسفر"}</span>
                 <span className="block text-xs text-white/50 tracking-wide">CAESAR TRAVEL & TOURISM</span>
               </div>
             </div>

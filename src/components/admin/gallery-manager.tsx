@@ -20,12 +20,14 @@ type GalleryForm = {
   title: string;
   image_url: string;
   display_order: string;
+  is_active: boolean;
 };
 
 const emptyForm: GalleryForm = {
   title: "",
   image_url: "",
   display_order: "0",
+  is_active: true,
 };
 
 function errorMessage(error: unknown) {
@@ -54,6 +56,7 @@ export function GalleryManager() {
         title: form.title.trim(),
         image_url: form.image_url.trim(),
         display_order: Number(form.display_order) || 0,
+        is_active: form.is_active,
       };
 
       return editing ? galleryService.update(editing.id, payload) : galleryService.create(payload);
@@ -89,6 +92,7 @@ export function GalleryManager() {
       title: image.title,
       image_url: image.image_url,
       display_order: String(image.display_order),
+      is_active: image.is_active,
     });
     setFormError(null);
     setDialogOpen(true);
@@ -174,7 +178,9 @@ export function GalleryManager() {
                 <CardContent className="flex items-center justify-between gap-3 p-4">
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-slate-900">{image.title}</p>
-                    <p className="text-xs text-slate-500">الترتيب: {image.display_order}</p>
+                    <p className="text-xs text-slate-500">
+                      الترتيب: {image.display_order} · {image.is_active ? "ظاهرة" : "مخفية"}
+                    </p>
                   </div>
                   <div className="flex gap-1">
                     <Button size="icon" variant="ghost" onClick={() => openEdit(image)}>
@@ -252,6 +258,15 @@ export function GalleryManager() {
                 onChange={(event) => setForm({ ...form, display_order: event.target.value })}
               />
             </Field>
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <input
+                type="checkbox"
+                checked={form.is_active}
+                onChange={(event) => setForm({ ...form, is_active: event.target.checked })}
+                className="h-4 w-4 rounded border-slate-300"
+              />
+              إظهار الصورة في الموقع
+            </label>
             {formError ? (
               <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</p>
             ) : null}
