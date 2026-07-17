@@ -16,10 +16,12 @@ import { Route as UkRouteImport } from './routes/uk'
 import { Route as UaeRouteImport } from './routes/uae'
 import { Route as TurkeyTripRouteImport } from './routes/turkey-trip'
 import { Route as SyriaRouteImport } from './routes/syria'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SchengenRouteImport } from './routes/schengen'
 import { Route as SaudiRouteImport } from './routes/saudi'
 import { Route as QatarRouteImport } from './routes/qatar'
 import { Route as HajjRouteImport } from './routes/hajj'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as DubaiRouteImport } from './routes/dubai'
 import { Route as IndexRouteImport } from './routes/index'
@@ -71,6 +73,11 @@ const SyriaRoute = SyriaRouteImport.update({
   path: '/syria',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SchengenRoute = SchengenRouteImport.update({
   id: '/schengen',
   path: '/schengen',
@@ -89,6 +96,11 @@ const QatarRoute = QatarRouteImport.update({
 const HajjRoute = HajjRouteImport.update({
   id: '/hajj',
   path: '/hajj',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EgyptRoute = EgyptRouteImport.update({
@@ -171,10 +183,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
   '/egypt': typeof EgyptRoute
+  '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
+  '/services': typeof ServicesRoute
   '/syria': typeof SyriaRoute
   '/turkey-trip': typeof TurkeyTripRoute
   '/uae': typeof UaeRoute
@@ -199,10 +213,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
   '/egypt': typeof EgyptRoute
+  '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
+  '/services': typeof ServicesRoute
   '/syria': typeof SyriaRoute
   '/turkey-trip': typeof TurkeyTripRoute
   '/uae': typeof UaeRoute
@@ -227,10 +243,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dubai': typeof DubaiRoute
   '/egypt': typeof EgyptRoute
+  '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
+  '/services': typeof ServicesRoute
   '/syria': typeof SyriaRoute
   '/turkey-trip': typeof TurkeyTripRoute
   '/uae': typeof UaeRoute
@@ -257,10 +275,12 @@ export interface FileRouteTypes {
     | '/'
     | '/dubai'
     | '/egypt'
+    | '/gallery'
     | '/hajj'
     | '/qatar'
     | '/saudi'
     | '/schengen'
+    | '/services'
     | '/syria'
     | '/turkey-trip'
     | '/uae'
@@ -285,10 +305,12 @@ export interface FileRouteTypes {
     | '/'
     | '/dubai'
     | '/egypt'
+    | '/gallery'
     | '/hajj'
     | '/qatar'
     | '/saudi'
     | '/schengen'
+    | '/services'
     | '/syria'
     | '/turkey-trip'
     | '/uae'
@@ -312,10 +334,12 @@ export interface FileRouteTypes {
     | '/'
     | '/dubai'
     | '/egypt'
+    | '/gallery'
     | '/hajj'
     | '/qatar'
     | '/saudi'
     | '/schengen'
+    | '/services'
     | '/syria'
     | '/turkey-trip'
     | '/uae'
@@ -341,10 +365,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DubaiRoute: typeof DubaiRoute
   EgyptRoute: typeof EgyptRoute
+  GalleryRoute: typeof GalleryRoute
   HajjRoute: typeof HajjRoute
   QatarRoute: typeof QatarRoute
   SaudiRoute: typeof SaudiRoute
   SchengenRoute: typeof SchengenRoute
+  ServicesRoute: typeof ServicesRoute
   SyriaRoute: typeof SyriaRoute
   TurkeyTripRoute: typeof TurkeyTripRoute
   UaeRoute: typeof UaeRoute
@@ -415,6 +441,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SyriaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schengen': {
       id: '/schengen'
       path: '/schengen'
@@ -441,6 +474,13 @@ declare module '@tanstack/react-router' {
       path: '/hajj'
       fullPath: '/hajj'
       preLoaderRoute: typeof HajjRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/egypt': {
@@ -567,10 +607,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DubaiRoute: DubaiRoute,
   EgyptRoute: EgyptRoute,
+  GalleryRoute: GalleryRoute,
   HajjRoute: HajjRoute,
   QatarRoute: QatarRoute,
   SaudiRoute: SaudiRoute,
   SchengenRoute: SchengenRoute,
+  ServicesRoute: ServicesRoute,
   SyriaRoute: SyriaRoute,
   TurkeyTripRoute: TurkeyTripRoute,
   UaeRoute: UaeRoute,

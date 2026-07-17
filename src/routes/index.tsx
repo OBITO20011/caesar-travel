@@ -22,8 +22,6 @@ import {
   FileCheck,
   Moon,
   ChevronUp,
-  Menu,
-  X,
   Navigation,
   Send,
   Mail,
@@ -74,7 +72,7 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.8 } },
 };
 
-/* ──────────────── Navbar ──────────────── */
+/* ──────────────── Navigation Links for Footer ──────────────── */
 const NAV_LINKS = [
   { label: "الرئيسية", id: "hero" },
   { label: "خدماتنا", id: "services" },
@@ -82,101 +80,14 @@ const NAV_LINKS = [
   { label: "تواصل معنا", id: "contact" },
 ];
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
-  return (
-    <nav
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${scrolled ? "bg-cream/90 backdrop-blur-md shadow-md shadow-teal/5" : "bg-transparent"
-        }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
-        <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
-          <img src={logo} alt="شعار قيصر للسياحة والسفر" className="h-11 w-11 object-contain" />
-          <div className="text-right leading-tight">
-            <span className="block text-lg font-black text-teal tracking-tight">قيصر</span>
-            <span className="block text-[11px] font-medium text-gold-dark tracking-wide">
-              CAESAR TRAVEL
-            </span>
-          </div>
-        </button>
-
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-7">
-          {NAV_LINKS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className={`text-sm font-semibold transition-colors ${scrolled ? "text-foreground/80 hover:text-teal" : "text-foreground/90 hover:text-teal"
-                }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          <button
-            onClick={() => scrollTo("trips")}
-            className="rounded-full bg-teal px-6 py-2.5 text-sm font-bold text-primary-foreground hover:bg-teal-dark transition-colors shadow-lg shadow-teal/20"
-          >
-            احجز الآن
-          </button>
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-lg text-foreground hover:bg-cream-dark transition-colors"
-          aria-label="القائمة"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-cream/98 backdrop-blur-md border-t border-border px-6 py-5"
-        >
-          <div className="flex flex-col gap-1">
-            {NAV_LINKS.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="text-right text-base font-semibold text-foreground/80 hover:text-teal transition-colors py-2.5"
-              >
-                {item.label}
-              </button>
-            ))}
-            <button
-              onClick={() => scrollTo("trips")}
-              className="mt-3 rounded-full bg-teal px-6 py-3 text-sm font-bold text-primary-foreground"
-            >
-              احجز الآن
-            </button>
-          </div>
-        </motion.div>
-      )}
-    </nav>
-  );
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 /* ──────────────── Hero ──────────────── */
 function HeroSection() {
   return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="hero" className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden">
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
@@ -220,12 +131,12 @@ function HeroSection() {
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
 
-            <button
-              onClick={() => document.getElementById("trips")?.scrollIntoView({ behavior: "smooth" })}
+            <Link
+              to="/gallery"
               className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
             >
               احجز الآن
-            </button>
+            </Link>
 
             <a
               href="https://wa.me/962795207900"
@@ -235,12 +146,12 @@ function HeroSection() {
               واتساب
             </a>
 
-            <button
-              onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+            <Link
+              to="/services"
               className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
             >
-              استكشف الوجهات
-            </button>
+              استكشف الخدمات
+            </Link>
 
           </motion.div>
         </motion.div>
@@ -982,7 +893,6 @@ function Index() {
   }}
 />
       <main className="min-h-screen">
-        <Navbar />
         <HeroSection />
         <AboutSection />
         <ServicesSection />
