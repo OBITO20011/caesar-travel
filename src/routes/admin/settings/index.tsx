@@ -1,9 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/admin/settings/')({
-  component: RouteComponent,
-})
+import { withAdminAuth } from "@/components/admin/admin-auth";
+import { SettingsManager } from "@/components/admin/settings-manager";
+
+export const Route = createFileRoute("/admin/settings/")({
+  component: withAdminAuth(RouteComponent),
+});
 
 function RouteComponent() {
-  return <div>Hello "/admin/settings/"!</div>
+  return <SettingsManager />;
 }

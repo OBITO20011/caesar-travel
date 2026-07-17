@@ -61,19 +61,15 @@ function formatMoney(value: unknown, currency = "SAR") {
   }).format(asNumber(value));
 }
 
-function getTable(kind: ShowcaseKind) {
-  if (kind === "hajj") return "hajj_packages";
-  if (kind === "umrah") return "umrah_packages";
-  return "packages";
-}
-
 export function TravelProgramShowcase({ kind }: TravelProgramShowcaseProps) {
   const content = copyByKind[kind];
-  const table = getTable(kind);
-  const { data, isLoading } = useErpList(table, { limit: 6 });
+  const filters = kind === "packages" ? undefined : { category: kind };
+  const { data, isLoading } = useErpList("trips", { limit: 6, filters });
   const rows: ErpRow[] = data?.data ?? [];
-  const activeCount = rows.filter((row: ErpRow) => String(row.status ?? "Active") === "Active").length;
-  const totalSlots = rows.reduce<number>((sum, row) => sum + asNumber(row.available_slots), 0);
+  const activeCount = rows.filter(
+    (row: ErpRow) => String(row.status ?? "available") === "available",
+  ).length;
+  const totalSlots = rows.reduce<number>((sum, row) => sum + asNumber(row.remaining_seats), 0);
   const averagePrice = rows.length
     ? rows.reduce<number>((sum, row) => sum + asNumber(row.price), 0) / rows.length
     : 0;
@@ -146,7 +142,15 @@ export function TravelProgramShowcase({ kind }: TravelProgramShowcaseProps) {
       <div className="grid gap-4 px-4 pb-5 md:grid-cols-3 md:px-6">
         {(rows.length
           ? rows.slice(0, 3)
-          : [{ name: "باقة نموذجية", destination: "مكة المكرمة", duration_days: 7, price: 0 }]
+          : [
+              {
+                name: "باقة نموذجية",
+                description: "أضف أول رحلة من قسم إدارة الرحلات",
+                start_date: "مدة مرنة",
+                price: 0,
+                currency: "JOD",
+              },
+            ]
         ).map((row: ErpRow, index: number) => (
           <motion.div
             key={String(row.id ?? row.name ?? index)}
@@ -163,24 +167,24 @@ export function TravelProgramShowcase({ kind }: TravelProgramShowcaseProps) {
                   {String(row.destination ?? row.description ?? "جاهز للتخصيص")}
                 </p>
               </div>
-              <Badge variant="secondary">{String(row.status ?? "Active")}</Badge>
+              <Badge variant="secondary">{String(row.status ?? "متاحة")}</Badge>
             </div>
             <div className="grid gap-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" />{" "}
-                {String(row.duration_days ?? row.start_date ?? "مدة مرنة")}
+                {String(row.start_date ?? "مدة مرنة")}
               </div>
               <div className="flex items-center gap-2">
                 <Plane className="h-4 w-4" />{" "}
-                {row.includes_flight === false ? "بدون طيران" : "يشمل خيارات الطيران"}
+                {String(row.airline ?? "خيارات الطيران حسب البرنامج")}
               </div>
               <div className="flex items-center gap-2">
                 <Hotel className="h-4 w-4" />{" "}
-                {row.includes_hotel === false ? "بدون فندق" : "يشمل خيارات الفنادق"}
+                {String(row.makkah_hotel ?? row.madinah_hotel ?? "خيارات الفنادق حسب البرنامج")}
               </div>
               <div className="flex items-center gap-2">
                 <Route className="h-4 w-4" />{" "}
-                {formatMoney(row.price, String(row.currency ?? "SAR"))}
+                {formatMoney(row.price, String(row.currency ?? "JOD"))}
               </div>
             </div>
           </motion.div>

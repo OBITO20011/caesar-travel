@@ -1,9 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/admin/users/')({
-  component: RouteComponent,
-})
+import { withAdminAuth } from "@/components/admin/admin-auth";
+import { EmployeeManager } from "@/components/admin/employee-manager";
+
+export const Route = createFileRoute("/admin/users/")({
+  component: withAdminAuth(RouteComponent),
+});
 
 function RouteComponent() {
-  return <div>Hello "/admin/users/"!</div>
+  return <EmployeeManager />;
 }

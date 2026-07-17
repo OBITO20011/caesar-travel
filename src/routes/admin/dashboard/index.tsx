@@ -1,15 +1,23 @@
 import { DirectBookingForm } from "@/components/ui/erp/booking-form";
 import { TravelProgramShowcase } from "@/components/ui/erp/travel-program-showcase";
+import { withAdminAuth } from "@/components/admin/admin-auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  bookingsService,
+  employeesService,
+  hotelsService,
+  notificationsService,
+  tripsService,
+  visasService,
+} from "@/services/admin";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
-  Banknote,
   BriefcaseBusiness,
-  Building2,
   CalendarClock,
   FileText,
   Hotel,
@@ -22,30 +30,18 @@ import {
   Sparkles,
   Ticket,
   Users,
-  Wallet,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/dashboard/")({
-  component: AdminHome,
+  component: withAdminAuth(AdminHome),
 });
-
-const statCards = [
-  { title: "مبيعات اليوم", value: "SAR 18,420", change: "+12%", icon: Banknote, accent: "from-amber-500 to-orange-500" },
-  { title: "الإيرادات الشهرية", value: "SAR 142,900", change: "+8.4%", icon: Wallet, accent: "from-emerald-500 to-teal-500" },
-  { title: "إجمالي العملاء", value: "2,840", change: "+18%", icon: Users, accent: "from-sky-500 to-cyan-500" },
-  { title: "الرحلات النشطة", value: "36", change: "+5", icon: Plane, accent: "from-violet-500 to-fuchsia-500" },
-  { title: "طلبات التأشيرة", value: "94", change: "12 جديد", icon: Ticket, accent: "from-rose-500 to-pink-500" },
-  { title: "حجوزات الفنادق", value: "128", change: "9 قيد المراجعة", icon: Hotel, accent: "from-blue-500 to-indigo-500" },
-  { title: "باقات العمرة", value: "21", change: "3 موسمية", icon: Sparkles, accent: "from-amber-600 to-yellow-500" },
-  { title: "طلبات جديدة", value: "57", change: "24 منذ 24h", icon: FileText, accent: "from-slate-700 to-slate-500" },
-];
 
 const actionCards = [
   { title: "إضافة رحلة جديدة", description: "إنشاء رحلة جديدة", icon: Plane, href: "/admin/trips" },
   { title: "إضافة تأشيرة", description: "إدارة متطلبات التأشيرة", icon: Ticket, href: "/admin/visa" },
   { title: "إضافة فندق", description: "إدارة الفنادق والصور", icon: Hotel, href: "/admin/hotels" },
   { title: "إضافة باقة", description: "باقات الحج والعمرة", icon: Sparkles, href: "/admin/umrah" },
-  { title: "إضافة عميل", description: "ملف العميل والحجز", icon: Users, href: "/admin/users" },
+  { title: "إدارة الموظفين", description: "الحسابات والأدوار والصلاحيات", icon: Users, href: "/admin/users" },
   { title: "إنشاء حجز", description: "حجز مباشر من الموظف", icon: CalendarClock, href: "/admin/dashboard" },
 ];
 
@@ -112,14 +108,116 @@ const accountingSections = [
 const customerSections = ["العملاء", "الحجوزات", "ملفات الجوازات", "الوثائق", "سجل الحجوزات"];
 const employeeSections = ["الموظفون", "الأدوار", "الصلاحيات", "سجل الأنشطة"];
 const reportSections = ["تقارير المبيعات", "تقارير العملاء", "تقارير التأشيرات", "تقارير الرحلات", "التقارير المالية"];
-const notificationItems = [
-  "مراجعة 3 طلبات جديدة",
-  "رحلات قادمة خلال 72 ساعة",
-  "انتهاء صلاحية 5 تأشيرات قريبا",
-  "تحديث أسعار الفنادق",
-];
-
 function AdminHome() {
+  const queryClient = useQueryClient();
+  const dashboardQuery = useQuery({
+    queryKey: ["admin-dashboard-summary"],
+    queryFn: async () => {
+      const [
+        trips,
+        activeTrips,
+        umrahTrips,
+        bookings,
+        newBookings,
+        hotels,
+        visas,
+        employees,
+        notifications,
+      ] = await Promise.all([
+        tripsService.getAll(undefined, 1, 1),
+        tripsService.getAll({ status: "available" }, 1, 1),
+        tripsService.getAll({ category: "umrah" }, 1, 1),
+        bookingsService.getAll(undefined, 1, 1),
+        bookingsService.getAll({ status: "new" }, 1, 1),
+        hotelsService.getAll(),
+        visasService.getAll(),
+        employeesService.getAll(),
+        notificationsService.getAll(true),
+      ]);
+
+      return {
+        trips: trips.count,
+        activeTrips: activeTrips.count,
+        umrahTrips: umrahTrips.count,
+        bookings: bookings.count,
+        newBookings: newBookings.count,
+        hotels: hotels.length,
+        visas: visas.length,
+        employees: employees.length,
+        notifications,
+      };
+    },
+  });
+
+  const markNotificationsReadMutation = useMutation({
+    mutationFn: (ids: string[]) =>
+      Promise.all(ids.map((id) => notificationsService.markAsRead(id))),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-dashboard-summary"] });
+    },
+  });
+
+  const summary = dashboardQuery.data;
+  const value = (count?: number) =>
+    dashboardQuery.isLoading ? "..." : (count ?? 0).toLocaleString("ar-JO");
+  const statCards = [
+    {
+      title: "إجمالي الرحلات",
+      value: value(summary?.trips),
+      change: "كل البرامج",
+      icon: Plane,
+      accent: "from-amber-500 to-orange-500",
+    },
+    {
+      title: "الرحلات النشطة",
+      value: value(summary?.activeTrips),
+      change: "متاحة الآن",
+      icon: Sparkles,
+      accent: "from-emerald-500 to-teal-500",
+    },
+    {
+      title: "باقات العمرة",
+      value: value(summary?.umrahTrips),
+      change: "ضمن الرحلات",
+      icon: Sparkles,
+      accent: "from-sky-500 to-cyan-500",
+    },
+    {
+      title: "التأشيرات",
+      value: value(summary?.visas),
+      change: "خدمات مسجلة",
+      icon: Ticket,
+      accent: "from-violet-500 to-fuchsia-500",
+    },
+    {
+      title: "الفنادق",
+      value: value(summary?.hotels),
+      change: "فنادق مسجلة",
+      icon: Hotel,
+      accent: "from-rose-500 to-pink-500",
+    },
+    {
+      title: "طلبات جديدة",
+      value: value(summary?.newBookings),
+      change: "تحتاج متابعة",
+      icon: FileText,
+      accent: "from-blue-500 to-indigo-500",
+    },
+    {
+      title: "إجمالي الطلبات",
+      value: value(summary?.bookings),
+      change: "كل الحالات",
+      icon: Users,
+      accent: "from-amber-600 to-yellow-500",
+    },
+    {
+      title: "الموظفون",
+      value: value(summary?.employees),
+      change: "حسابات الإدارة",
+      icon: BriefcaseBusiness,
+      accent: "from-slate-700 to-slate-500",
+    },
+  ];
   const cards = [
     { title: "📊 لوحة التحكم", link: "/admin/dashboard" },
     { title: "🛂 التأشيرات", link: "/admin/visa" },
@@ -147,7 +245,13 @@ function AdminHome() {
             </div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" className="rounded-full border-slate-200 bg-white/80">إدارة العمليات</Button>
-              <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800">تحديث البيانات</Button>
+              <Button
+                className="rounded-full bg-slate-900 text-white hover:bg-slate-800"
+                onClick={() => void dashboardQuery.refetch()}
+                disabled={dashboardQuery.isFetching}
+              >
+                {dashboardQuery.isFetching ? "جاري التحديث..." : "تحديث البيانات"}
+              </Button>
             </div>
           </div>
         </header>
@@ -298,17 +402,58 @@ function AdminHome() {
           </Card>
 
           <Card className="border-none bg-white/85 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
-            <CardHeader>
-              <CardTitle className="text-xl">الإشعارات والتنبيهات</CardTitle>
-              <CardDescription>نشاطات حديثة وطلبات تحتاج متابعة.</CardDescription>
+            <CardHeader className="flex-row items-start justify-between gap-3 space-y-0">
+              <div>
+                <CardTitle className="text-xl">الإشعارات والتنبيهات</CardTitle>
+                <CardDescription>نشاطات حديثة وطلبات تحتاج متابعة.</CardDescription>
+              </div>
+              {summary?.notifications.length ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={markNotificationsReadMutation.isPending}
+                  onClick={() =>
+                    markNotificationsReadMutation.mutate(
+                      summary.notifications.map((notification) => notification.id),
+                    )
+                  }
+                >
+                  تعيين الكل كمقروء
+                </Button>
+              ) : null}
             </CardHeader>
             <CardContent className="space-y-2">
-              {notificationItems.map((item) => (
-                <div key={item} className="flex items-start gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  <span>{item}</span>
+              {summary?.notifications.length ? (
+                summary.notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="flex items-start gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700"
+                  >
+                    <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-slate-900">{notification.title}</p>
+                      {notification.message ? <p className="mt-1">{notification.message}</p> : null}
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      disabled={markNotificationsReadMutation.isPending}
+                      onClick={() => markNotificationsReadMutation.mutate([notification.id])}
+                    >
+                      تمت القراءة
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">
+                  لا توجد إشعارات غير مقروءة حالياً
                 </div>
-              ))}
+              )}
+              {markNotificationsReadMutation.isError ? (
+                <p className="text-sm text-rose-600">تعذر تحديث حالة الإشعار. حاول مرة أخرى.</p>
+              ) : null}
             </CardContent>
           </Card>
         </section>

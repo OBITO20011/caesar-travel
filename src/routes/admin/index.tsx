@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { withAdminAuth } from "@/components/admin/admin-auth";
 
 export const Route = createFileRoute("/admin/")({
-  component: AdminHome,
+  component: withAdminAuth(AdminHome),
 });
 
 function AdminHome() {

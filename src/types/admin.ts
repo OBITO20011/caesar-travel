@@ -94,6 +94,39 @@ export interface TripImage {
   created_at: string;
 }
 
+// Hotel
+export interface Hotel {
+  id: string;
+  name: string;
+  city: string;
+  description?: string;
+  star_rating: number;
+  price_per_night?: number;
+  currency: string;
+  image_url?: string;
+  facilities: string[];
+  enabled: boolean;
+  featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Visa
+export interface Visa {
+  id: string;
+  country: string;
+  description?: string;
+  requirements?: string;
+  processing_time?: string;
+  price?: number;
+  currency: string;
+  image_url?: string;
+  enabled: boolean;
+  featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // Booking
 export interface Booking {
   id: string;

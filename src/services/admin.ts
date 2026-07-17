@@ -12,6 +12,8 @@ import {
   Service,
   Notification,
   TripImage,
+  Hotel,
+  Visa,
 } from '@/types/admin';
 
 // ==================== TRIPS ====================
@@ -100,6 +102,18 @@ export const tripsService = {
 // ==================== TRIP IMAGES ====================
 
 export const tripImagesService = {
+  async getAll(tripId: string) {
+    const { data, error } = await supabase
+      .from('trip_images')
+      .select('*')
+      .eq('trip_id', tripId)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return (data as TripImage[]) || [];
+  },
+
   async add(tripId: string, imageUrl: string, displayOrder = 0) {
     const { data, error } = await supabase
       .from('trip_images')
@@ -126,6 +140,90 @@ export const tripImagesService = {
 
     if (error) throw error;
     return data;
+  },
+};
+
+// ==================== HOTELS ====================
+
+export const hotelsService = {
+  async getAll(filters?: { search?: string; enabled?: boolean }) {
+    let query = supabase.from('hotels').select('*').order('created_at', { ascending: false });
+
+    if (filters?.search) {
+      query = query.or(`name.ilike.%${filters.search}%,city.ilike.%${filters.search}%`);
+    }
+    if (filters?.enabled !== undefined) {
+      query = query.eq('enabled', filters.enabled);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data as Hotel[]) || [];
+  },
+
+  async create(hotel: Omit<Hotel, 'id' | 'created_at' | 'updated_at'>) {
+    const { data, error } = await supabase.from('hotels').insert([hotel]).select().single();
+    if (error) throw error;
+    return data as Hotel;
+  },
+
+  async update(id: string, hotel: Partial<Hotel>) {
+    const { data, error } = await supabase
+      .from('hotels')
+      .update({ ...hotel, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Hotel;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase.from('hotels').delete().eq('id', id);
+    if (error) throw error;
+  },
+};
+
+// ==================== VISAS ====================
+
+export const visasService = {
+  async getAll(filters?: { search?: string; enabled?: boolean }) {
+    let query = supabase.from('visas').select('*').order('created_at', { ascending: false });
+
+    if (filters?.search) {
+      query = query.or(`country.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+    }
+    if (filters?.enabled !== undefined) {
+      query = query.eq('enabled', filters.enabled);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data as Visa[]) || [];
+  },
+
+  async create(visa: Omit<Visa, 'id' | 'created_at' | 'updated_at'>) {
+    const { data, error } = await supabase.from('visas').insert([visa]).select().single();
+    if (error) throw error;
+    return data as Visa;
+  },
+
+  async update(id: string, visa: Partial<Visa>) {
+    const { data, error } = await supabase
+      .from('visas')
+      .update({ ...visa, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Visa;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase.from('visas').delete().eq('id', id);
+    if (error) throw error;
   },
 };
 

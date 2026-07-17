@@ -35,12 +35,13 @@ export function DirectBookingForm() {
 
     const { error: insertError } = await supabase.from("bookings").insert([
       {
-        full_name: form.full_name,
-        phone: form.phone,
-        service: form.service,
-        destination: form.destination,
-        travel_date: form.travel_date || null,
-        notes: form.notes,
+        customer_name: form.full_name,
+        customer_phone: form.phone,
+        trip_name: [form.service, form.destination].filter(Boolean).join(" - "),
+        people_count: 1,
+        notes: [form.travel_date ? `تاريخ السفر: ${form.travel_date}` : "", form.notes]
+          .filter(Boolean)
+          .join("\n"),
         status: "new",
       },
     ]);

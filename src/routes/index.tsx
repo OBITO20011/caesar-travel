@@ -529,11 +529,10 @@ function ContactSection() {
 
   const { error } = await supabase.from("bookings").insert([
     {
-      full_name: String(data.get("name") || ""),
-      phone: String(data.get("phone") || ""),
-      service: "",
-      destination: "",
-      travel_date: null,
+      customer_name: String(data.get("name") || ""),
+      customer_phone: String(data.get("phone") || ""),
+      trip_name: "طلب تواصل من الموقع",
+      people_count: 1,
       notes: String(data.get("message") || ""),
       status: "new",
     },
