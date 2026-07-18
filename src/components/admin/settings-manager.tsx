@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ImagePlus, Loader2, Save } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,7 @@ function errorMessage(error: unknown) {
 }
 
 export function SettingsManager() {
+  const queryClient = useQueryClient();
   const settingsQuery = useQuery({
     queryKey: ["admin-site-settings"],
     queryFn: siteSettingsService.get,
@@ -31,6 +32,8 @@ export function SettingsManager() {
     mutationFn: () => siteSettingsService.update(settings),
     onSuccess: (saved) => {
       setSettings(saved);
+      queryClient.setQueryData(["admin-site-settings"], saved);
+      queryClient.setQueryData(["site-settings"], saved);
       setFeedback("تم حفظ إعدادات الموقع.");
     },
     onError: (error) => setFeedback(errorMessage(error)),

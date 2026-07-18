@@ -29,7 +29,14 @@ export function formatTripPrice(trip: Pick<Trip, "price" | "currency">) {
   return `${amount} ${currencyLabel[trip.currency] || trip.currency}`;
 }
 
-export function buildWhatsAppUrl(whatsapp: string | undefined, message: string) {
-  const number = (whatsapp || "962798337711").replace(/\D/g, "");
-  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+export function normalizeJordanPhoneNumber(value: string | undefined, fallback = "") {
+  const number = (value?.trim() || fallback).replace(/\D/g, "");
+  if (number.startsWith("00")) return number.slice(2);
+  if (number.startsWith("0")) return `962${number.slice(1)}`;
+  return number;
+}
+
+export function buildWhatsAppUrl(whatsapp: string | undefined, message?: string) {
+  const number = normalizeJordanPhoneNumber(whatsapp, "962798337711");
+  return `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
 }

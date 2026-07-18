@@ -42,6 +42,7 @@ import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
+import { buildWhatsAppUrl } from "@/lib/trip-format";
 import type { SiteSettings } from "@/types/admin";
 
 export const Route = createFileRoute("/")({
@@ -103,6 +104,9 @@ function scrollTo(id: string) {
 
 /* ──────────────── Hero ──────────────── */
 function HeroSection({ settings }: { settings?: SiteSettings }) {
+  const heroTitle = settings?.hero_title ?? "اكتشف العالم مع قيصر للسياحة والسفر";
+  const heroSubtitle = settings?.hero_subtitle ?? "مع قيصر للسياحة";
+
   return (
     <section id="hero" className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden">
       {/* Background image + overlay */}
@@ -134,9 +138,13 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             variants={fadeInUp}
             className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
           >
-            {settings?.hero_title || "اكتشف العالم مع قيصر للسياحة والسفر"}
-            <br />
-            <span className="text-gold">{settings?.hero_subtitle || "مع قيصر للسياحة"}</span>
+            {heroTitle}
+            {heroSubtitle ? (
+              <>
+                <br />
+                <span className="text-gold">{heroSubtitle}</span>
+              </>
+            ) : null}
           </motion.h1>
 
           <motion.p
@@ -156,7 +164,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             </Link>
 
             <a
-              href={`https://wa.me/${settings?.whatsapp || WHATSAPP}`}
+              href={buildWhatsAppUrl(settings?.whatsapp || WHATSAPP)}
               target="_blank"
               className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
             >
@@ -752,7 +760,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
               {[
                 {
                   icon: MessageCircle,
-                  href: `https://wa.me/${settings?.whatsapp || WHATSAPP}`,
+                  href: buildWhatsAppUrl(settings?.whatsapp || WHATSAPP),
                   label: "واتساب",
                 },
                 { icon: Facebook, href: "https://www.facebook.com/caesartravel?locale=ar_AR", label: "فيسبوك" },
@@ -835,7 +843,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
 function WhatsAppButton({ whatsapp }: { whatsapp?: string }) {
   return (
     <a
-      href={`https://wa.me/${whatsapp || WHATSAPP}`}
+      href={buildWhatsAppUrl(whatsapp || WHATSAPP)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل عبر واتساب"

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import { getFallbackVisa } from "@/data/visas";
 import { usePublicVisa, useSiteSettings } from "@/hooks/use-site-content";
+import { buildWhatsAppUrl, normalizeJordanPhoneNumber } from "@/lib/trip-format";
 import type { Visa } from "@/types/admin";
 
 const legacyPaths = new Set(["saudi", "uae", "qatar", "syria", "schengen", "uk", "usa"]);
@@ -15,17 +16,6 @@ function formatPrice(visa: Visa) {
     currency: visa.currency || "JOD",
     maximumFractionDigits: 2,
   }).format(visa.price);
-}
-
-function digits(value?: string) {
-  return value?.replace(/\D/g, "") ?? "";
-}
-
-function internationalNumber(value?: string) {
-  const valueDigits = digits(value);
-  if (valueDigits.startsWith("00")) return valueDigits.slice(2);
-  if (valueDigits.startsWith("0")) return `962${valueDigits.slice(1)}`;
-  return valueDigits;
 }
 
 export function VisaCountryPage({
@@ -61,11 +51,13 @@ export function VisaCountryPage({
   }
 
   const settings = settingsQuery.data;
-  const whatsapp = internationalNumber(settings?.whatsapp) || "962798337711";
   const phoneDisplay = settings?.phone?.split(/[,،;\n]+/)[0]?.trim() || "0798 337 711";
-  const phone = internationalNumber(phoneDisplay);
+  const phone = normalizeJordanPhoneNumber(phoneDisplay);
   const detailPath = legacyPaths.has(slug) ? `/${slug}` : `/visa/${slug}`;
-  const whatsappText = encodeURIComponent(`مرحباً، أود التقديم على ${visa.headline}.`);
+  const whatsappUrl = buildWhatsAppUrl(
+    settings?.whatsapp,
+    `مرحباً، أود التقديم على ${visa.headline}.`,
+  );
 
   return (
     <>
@@ -154,7 +146,7 @@ export function VisaCountryPage({
               </div>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <a
-                  href={`https://wa.me/${whatsapp}?text=${whatsappText}`}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black transition hover:scale-105"
