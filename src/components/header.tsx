@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "@/assets/caesar-mark.png";
 import { useSiteSettings } from "@/hooks/use-site-content";
+import { BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 
 const NAV_LINKS = [
   { label: "الرئيسية", path: "/" },
@@ -56,7 +57,7 @@ export function Header() {
         {/* Logo and brand */}
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img
-            src={settings?.logo_url || logo}
+            src={resolveSiteAsset(settings?.logo_url, BUILTIN_LOGO_URL, logo)}
             alt="شعار قيصر للسياحة والسفر"
             className="h-11 w-11 object-contain"
           />

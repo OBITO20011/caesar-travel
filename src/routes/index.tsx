@@ -41,6 +41,7 @@ import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
+import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 import type { SiteSettings } from "@/types/admin";
 
 export const Route = createFileRoute("/")({
@@ -61,9 +62,15 @@ const MAP_DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${MAP
 function phoneList(settings?: SiteSettings) {
   if (!settings?.phone) return PHONES;
 
-  const digits = settings.phone.replace(/\D/g, "");
-  const intl = digits.startsWith("0") ? `962${digits.slice(1)}` : digits;
-  return [{ display: settings.phone, intl }];
+  return settings.phone
+    .split(/[,،;\n]+/)
+    .map((phone) => phone.trim())
+    .filter(Boolean)
+    .map((display) => {
+      const digits = display.replace(/\D/g, "");
+      const intl = digits.startsWith("0") ? `962${digits.slice(1)}` : digits;
+      return { display, intl };
+    });
 }
 
 /* ──────────────── Animation helpers ──────────────── */
@@ -101,7 +108,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
-          src={settings?.hero_image_url || heroImg}
+          src={resolveSiteAsset(settings?.hero_image_url, BUILTIN_HERO_URL, heroImg)}
           alt="الكعبة المشرفة في المسجد الحرام"
           className="h-full w-full object-cover"
           width={1920}
@@ -728,7 +735,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <img
-                src={settings?.logo_url || logo}
+                src={resolveSiteAsset(settings?.logo_url, BUILTIN_LOGO_URL, logo)}
                 alt="شعار قيصر للسياحة"
                 className="h-12 w-12 object-contain"
               />
