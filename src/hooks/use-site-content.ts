@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { galleryService, siteSettingsService, tripsService } from "@/services/admin";
+import { galleryService, siteSettingsService, tripsService, visasService } from "@/services/admin";
 import type { TripPageKey } from "@/types/admin";
 
 export function useSiteSettings() {
@@ -34,6 +34,24 @@ export function usePublicTrip(id: string) {
   return useQuery({
     queryKey: ["public-trip", id],
     queryFn: () => tripsService.getPublicById(id),
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+}
+
+export function usePublicVisas() {
+  return useQuery({
+    queryKey: ["public-visas"],
+    queryFn: visasService.getPublic,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+}
+
+export function usePublicVisa(slug: string) {
+  return useQuery({
+    queryKey: ["public-visa", slug],
+    queryFn: () => visasService.getPublicBySlug(slug),
     staleTime: 60 * 1000,
     retry: false,
   });

@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { GalleryImage, SiteSettings, Trip, TripPageKey } from "@/types/admin";
+import type { GalleryImage, SiteSettings, Trip, TripPageKey, Visa } from "@/types/admin";
 
 export const tripsService = {
   async getAll(
@@ -109,6 +109,67 @@ export const galleryService = {
 
   async delete(id: string) {
     const { error } = await supabase.from("gallery").delete().eq("id", id);
+    if (error) throw error;
+  },
+};
+
+export const visasService = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from("visas")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    return (data as Visa[]) || [];
+  },
+
+  async getPublic() {
+    const { data, error } = await supabase
+      .from("visas")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    return (data as Visa[]) || [];
+  },
+
+  async getPublicBySlug(slug: string) {
+    const { data, error } = await supabase
+      .from("visas")
+      .select("*")
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as Visa | null;
+  },
+
+  async create(visa: Omit<Visa, "id" | "created_at" | "updated_at">) {
+    const { data, error } = await supabase.from("visas").insert([visa]).select().single();
+
+    if (error) throw error;
+    return data as Visa;
+  },
+
+  async update(id: string, visa: Partial<Visa>) {
+    const { data, error } = await supabase
+      .from("visas")
+      .update({ ...visa, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Visa;
+  },
+
+  async delete(id: string) {
+    const { error } = await supabase.from("visas").delete().eq("id", id);
     if (error) throw error;
   },
 };

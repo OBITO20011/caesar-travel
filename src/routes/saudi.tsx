@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Helmet } from "react-helmet-async";
 import { Link } from "@tanstack/react-router";
+import { VisaCountryPage } from "@/components/visa-country-page";
 export const Route = createFileRoute("/saudi")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
+  <VisaCountryPage slug="saudi" fallbackContent={
   <>
   <Helmet>
     <title>رحلات السعودية | قصر للسياحة والسفر</title>
@@ -204,5 +206,6 @@ function VisaPage() {
   </div>
 </section>
       </>
+  } />
   );
 }

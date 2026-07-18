@@ -43,6 +43,35 @@ export interface GalleryImage {
   created_at: string;
 }
 
+export interface VisaTypeOption {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface Visa {
+  id: string;
+  country_name: string;
+  slug: string;
+  headline: string;
+  summary: string;
+  description: string;
+  price?: number;
+  currency: string;
+  card_image_url?: string;
+  banner_image_url?: string;
+  visa_types: VisaTypeOption[];
+  requirements: string[];
+  processing_time: string;
+  validity: string;
+  availability: string;
+  notice?: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SiteSettings {
   id: number;
   company_name: string;

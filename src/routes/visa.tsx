@@ -1,11 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
   import { Helmet } from "react-helmet-async";
+import { fallbackVisas } from "@/data/visas";
+import { usePublicVisas } from "@/hooks/use-site-content";
+import type { Visa } from "@/types/admin";
+
+const visaFlags: Record<string, string> = {
+  saudi: "🇸🇦",
+  uae: "🇦🇪",
+  qatar: "🇶🇦",
+  syria: "🇸🇾",
+  schengen: "🇪🇺",
+  uk: "🇬🇧",
+  usa: "🇺🇸",
+};
+
+const legacyVisaPaths = new Set(Object.keys(visaFlags));
+
+function visaPrice(visa: Visa) {
+  if (visa.price === undefined || visa.price === null) return "تواصل معنا لمعرفة السعر";
+
+  return new Intl.NumberFormat("ar-JO", {
+    style: "currency",
+    currency: visa.currency || "JOD",
+    maximumFractionDigits: 2,
+  }).format(visa.price);
+}
 export const Route = createFileRoute("/visa")({
   component: VisaPage,
 });
 
 function VisaPage() {
+  const visasQuery = usePublicVisas();
+  const visas = visasQuery.isError || visasQuery.isPending ? fallbackVisas : visasQuery.data ?? [];
+
   return (
   <><Helmet>
       <title>رحلات التأشيرات السياحية | قصر للسياحة والسفر</title>
@@ -129,63 +156,28 @@ function VisaPage() {
     اختر الدولة التي ترغب باستخراج التأشيرة إليها
   </p>
 <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
-  <Link to="/saudi" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-saudi.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇸🇦 السعودية</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وزيارة وأعمال</p>
-    </div>
-  </Link>
-
-  <Link to="/uae" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-uae.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇦🇪 الإمارات</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وتجارية</p>
-    </div>
-  </Link>
-
-  <Link to="/qatar" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-qatar.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇶🇦 قطر</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وزيارة</p>
-    </div>
-  </Link>
-
-  <Link to="/syria" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-syria.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇸🇾 سوريا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية</p>
-    </div>
-  </Link>
-
-  <Link to="/schengen" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-schengen.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇪🇺 شنغن</h3>
-      <p className="mt-2 text-gray-600">دول الاتحاد الأوروبي</p>
-    </div>
-  </Link>
-
-  <Link to="/uk" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-uk.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇬🇧 بريطانيا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات زيارة وسياحة</p>
-    </div>
-  </Link>
-
-  <Link to="/usa" className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition">
-    <img src="/images/visa-usa.jpg" className="h-64 w-full object-cover group-hover:scale-105 transition duration-300" />
-    <div className="p-6 text-center">
-      <h3 className="text-2xl font-bold">🇺🇸 أمريكا</h3>
-      <p className="mt-2 text-gray-600">تأشيرات سياحية وأعمال</p>
-    </div>
-  </Link>
-
+  {visas.map((visa) => (
+    <a
+      key={visa.id}
+      href={legacyVisaPaths.has(visa.slug) ? `/${visa.slug}` : `/visa/${visa.slug}`}
+      className="group overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition"
+    >
+      {visa.card_image_url ? (
+        <img
+          src={visa.card_image_url}
+          alt={visa.country_name}
+          className="h-64 w-full object-cover group-hover:scale-105 transition duration-300"
+        />
+      ) : null}
+      <div className="p-6 text-center">
+        <h3 className="text-2xl font-bold">
+          {visaFlags[visa.slug] || "🛂"} {visa.country_name}
+        </h3>
+        <p className="mt-2 text-gray-600">{visa.summary}</p>
+        <p className="mt-3 font-bold text-blue-700">{visaPrice(visa)}</p>
+      </div>
+    </a>
+  ))}
 </div>
 </div>
 </section>
