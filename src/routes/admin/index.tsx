@@ -28,6 +28,10 @@ function AdminHome() {
       link: "/admin/dubai",
     },
     {
+      title: "🌍 باقات إضافية",
+      link: "/admin/packages",
+    },
+    {
       title: "🛂 التأشيرات",
       link: "/admin/visas",
     },

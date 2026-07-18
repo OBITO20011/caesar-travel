@@ -10,6 +10,7 @@ const navigationItems = [
   { label: "الحج", to: "/admin/hajj" },
   { label: "مصر", to: "/admin/egypt" },
   { label: "دبي", to: "/admin/dubai" },
+  { label: "باقات إضافية", to: "/admin/packages" },
   { label: "التأشيرات", to: "/admin/visas" },
   { label: "معرض الصور", to: "/admin/gallery" },
   { label: "الإعدادات", to: "/admin/settings" },

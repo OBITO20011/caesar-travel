@@ -30,6 +30,12 @@ const pageLabels: Record<TripPageKey, string> = {
   hajj: "الحج",
   egypt: "مصر",
   dubai: "دبي",
+  switzerland: "سويسرا",
+  maldives: "المالديف",
+  georgia: "جورجيا",
+  domestic: "السياحة الداخلية",
+  flights: "الطيران",
+  hotels: "حجز الفنادق",
 };
 
 const statusLabels: Record<TripStatus, string> = {

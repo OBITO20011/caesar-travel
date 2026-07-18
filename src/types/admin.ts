@@ -1,7 +1,18 @@
 // Minimal type definitions for the public website CMS.
 
 export type TripCategory = "tourism" | "umrah";
-export type TripPageKey = "general" | "umrah" | "hajj" | "egypt" | "dubai";
+export type TripPageKey =
+  | "general"
+  | "umrah"
+  | "hajj"
+  | "egypt"
+  | "dubai"
+  | "switzerland"
+  | "maldives"
+  | "georgia"
+  | "domestic"
+  | "flights"
+  | "hotels";
 export type TripStatus = "available" | "fully_booked" | "cancelled" | "completed" | "hidden";
 
 export interface Trip {

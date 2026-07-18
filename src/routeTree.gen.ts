@@ -29,15 +29,18 @@ import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as VisaSlugRouteImport } from './routes/visa.$slug'
 import { Route as UmrahIdRouteImport } from './routes/umrah.$id'
+import { Route as PackagesSlugRouteImport } from './routes/packages.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminVisasIndexRouteImport } from './routes/admin/visas/index'
 import { Route as AdminUmrahIndexRouteImport } from './routes/admin/umrah/index'
 import { Route as AdminTripsIndexRouteImport } from './routes/admin/trips/index'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
+import { Route as AdminPackagesIndexRouteImport } from './routes/admin/packages/index'
 import { Route as AdminHajjIndexRouteImport } from './routes/admin/hajj/index'
 import { Route as AdminGalleryIndexRouteImport } from './routes/admin/gallery/index'
 import { Route as AdminEgyptIndexRouteImport } from './routes/admin/egypt/index'
 import { Route as AdminDubaiIndexRouteImport } from './routes/admin/dubai/index'
+import { Route as AdminPackagesSlugRouteImport } from './routes/admin/packages/$slug'
 
 const VisaRoute = VisaRouteImport.update({
   id: '/visa',
@@ -139,6 +142,11 @@ const UmrahIdRoute = UmrahIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => UmrahRoute,
 } as any)
+const PackagesSlugRoute = PackagesSlugRouteImport.update({
+  id: '/packages/$slug',
+  path: '/packages/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -164,6 +172,11 @@ const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
   path: '/admin/settings/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPackagesIndexRoute = AdminPackagesIndexRouteImport.update({
+  id: '/admin/packages/',
+  path: '/admin/packages/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminHajjIndexRoute = AdminHajjIndexRouteImport.update({
   id: '/admin/hajj/',
   path: '/admin/hajj/',
@@ -182,6 +195,11 @@ const AdminEgyptIndexRoute = AdminEgyptIndexRouteImport.update({
 const AdminDubaiIndexRoute = AdminDubaiIndexRouteImport.update({
   id: '/admin/dubai/',
   path: '/admin/dubai/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPackagesSlugRoute = AdminPackagesSlugRouteImport.update({
+  id: '/admin/packages/$slug',
+  path: '/admin/packages/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -203,14 +221,17 @@ export interface FileRoutesByFullPath {
   '/usa': typeof UsaRoute
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/packages/$slug': typeof PackagesSlugRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/umrah/': typeof UmrahIndexRoute
+  '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai/': typeof AdminDubaiIndexRoute
   '/admin/egypt/': typeof AdminEgyptIndexRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/hajj/': typeof AdminHajjIndexRoute
+  '/admin/packages/': typeof AdminPackagesIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
   '/admin/trips/': typeof AdminTripsIndexRoute
   '/admin/umrah/': typeof AdminUmrahIndexRoute
@@ -233,14 +254,17 @@ export interface FileRoutesByTo {
   '/usa': typeof UsaRoute
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/packages/$slug': typeof PackagesSlugRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin': typeof AdminIndexRoute
   '/umrah': typeof UmrahIndexRoute
+  '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai': typeof AdminDubaiIndexRoute
   '/admin/egypt': typeof AdminEgyptIndexRoute
   '/admin/gallery': typeof AdminGalleryIndexRoute
   '/admin/hajj': typeof AdminHajjIndexRoute
+  '/admin/packages': typeof AdminPackagesIndexRoute
   '/admin/settings': typeof AdminSettingsIndexRoute
   '/admin/trips': typeof AdminTripsIndexRoute
   '/admin/umrah': typeof AdminUmrahIndexRoute
@@ -265,14 +289,17 @@ export interface FileRoutesById {
   '/usa': typeof UsaRoute
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/packages/$slug': typeof PackagesSlugRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/umrah/': typeof UmrahIndexRoute
+  '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai/': typeof AdminDubaiIndexRoute
   '/admin/egypt/': typeof AdminEgyptIndexRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/hajj/': typeof AdminHajjIndexRoute
+  '/admin/packages/': typeof AdminPackagesIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
   '/admin/trips/': typeof AdminTripsIndexRoute
   '/admin/umrah/': typeof AdminUmrahIndexRoute
@@ -298,14 +325,17 @@ export interface FileRouteTypes {
     | '/usa'
     | '/visa'
     | '/admin/login'
+    | '/packages/$slug'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin/'
     | '/umrah/'
+    | '/admin/packages/$slug'
     | '/admin/dubai/'
     | '/admin/egypt/'
     | '/admin/gallery/'
     | '/admin/hajj/'
+    | '/admin/packages/'
     | '/admin/settings/'
     | '/admin/trips/'
     | '/admin/umrah/'
@@ -328,14 +358,17 @@ export interface FileRouteTypes {
     | '/usa'
     | '/visa'
     | '/admin/login'
+    | '/packages/$slug'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin'
     | '/umrah'
+    | '/admin/packages/$slug'
     | '/admin/dubai'
     | '/admin/egypt'
     | '/admin/gallery'
     | '/admin/hajj'
+    | '/admin/packages'
     | '/admin/settings'
     | '/admin/trips'
     | '/admin/umrah'
@@ -359,14 +392,17 @@ export interface FileRouteTypes {
     | '/usa'
     | '/visa'
     | '/admin/login'
+    | '/packages/$slug'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin/'
     | '/umrah/'
+    | '/admin/packages/$slug'
     | '/admin/dubai/'
     | '/admin/egypt/'
     | '/admin/gallery/'
     | '/admin/hajj/'
+    | '/admin/packages/'
     | '/admin/settings/'
     | '/admin/trips/'
     | '/admin/umrah/'
@@ -391,11 +427,14 @@ export interface RootRouteChildren {
   UsaRoute: typeof UsaRoute
   VisaRoute: typeof VisaRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
+  PackagesSlugRoute: typeof PackagesSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminPackagesSlugRoute: typeof AdminPackagesSlugRoute
   AdminDubaiIndexRoute: typeof AdminDubaiIndexRoute
   AdminEgyptIndexRoute: typeof AdminEgyptIndexRoute
   AdminGalleryIndexRoute: typeof AdminGalleryIndexRoute
   AdminHajjIndexRoute: typeof AdminHajjIndexRoute
+  AdminPackagesIndexRoute: typeof AdminPackagesIndexRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
   AdminTripsIndexRoute: typeof AdminTripsIndexRoute
   AdminUmrahIndexRoute: typeof AdminUmrahIndexRoute
@@ -544,6 +583,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UmrahIdRouteImport
       parentRoute: typeof UmrahRoute
     }
+    '/packages/$slug': {
+      id: '/packages/$slug'
+      path: '/packages/$slug'
+      fullPath: '/packages/$slug'
+      preLoaderRoute: typeof PackagesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -579,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/packages/': {
+      id: '/admin/packages/'
+      path: '/admin/packages'
+      fullPath: '/admin/packages/'
+      preLoaderRoute: typeof AdminPackagesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/hajj/': {
       id: '/admin/hajj/'
       path: '/admin/hajj'
@@ -605,6 +658,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/dubai'
       fullPath: '/admin/dubai/'
       preLoaderRoute: typeof AdminDubaiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/packages/$slug': {
+      id: '/admin/packages/$slug'
+      path: '/admin/packages/$slug'
+      fullPath: '/admin/packages/$slug'
+      preLoaderRoute: typeof AdminPackagesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -650,11 +710,14 @@ const rootRouteChildren: RootRouteChildren = {
   UsaRoute: UsaRoute,
   VisaRoute: VisaRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
+  PackagesSlugRoute: PackagesSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminPackagesSlugRoute: AdminPackagesSlugRoute,
   AdminDubaiIndexRoute: AdminDubaiIndexRoute,
   AdminEgyptIndexRoute: AdminEgyptIndexRoute,
   AdminGalleryIndexRoute: AdminGalleryIndexRoute,
   AdminHajjIndexRoute: AdminHajjIndexRoute,
+  AdminPackagesIndexRoute: AdminPackagesIndexRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
   AdminTripsIndexRoute: AdminTripsIndexRoute,
   AdminUmrahIndexRoute: AdminUmrahIndexRoute,

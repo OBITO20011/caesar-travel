@@ -2,7 +2,7 @@ import galleryGeorgia from "@/assets/gallery-georgia.jpg";
 import { supabase } from "@/lib/supabase";
 import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
 import { Link } from "@tanstack/react-router";
-  import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import galleryMaldives from "@/assets/gallery-maldives.jpg";
 import galleryEgypt from "@/assets/gallery-egypt.jpg";
 import galleryVisa from "@/assets/gallery-visa.png";
@@ -40,6 +40,7 @@ import galleryPetra from "@/assets/gallery-petra.jpg";
 import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
+import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 import { buildWhatsAppUrl } from "@/lib/trip-format";
@@ -108,7 +109,10 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
   const heroSubtitle = settings?.hero_subtitle ?? "مع قيصر للسياحة";
 
   return (
-    <section id="hero" className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden">
+    <section
+      id="hero"
+      className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden"
+    >
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
@@ -124,7 +128,12 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-8 py-32 md:py-40 w-full">
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-2xl">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="max-w-2xl"
+        >
           <motion.div
             variants={fadeInUp}
             className="inline-flex items-center gap-2 rounded-full bg-gold/15 border border-gold/30 px-4 py-1.5 mb-6 backdrop-blur-sm"
@@ -132,7 +141,8 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             <Star size={14} className="text-gold fill-gold" />
             <span className="text-sm font-semibold text-gold-light">
               ⭐ تقييم 4.9 من أكثر من 15,000 عميل سعيد
-            </span>          </motion.div>
+            </span>{" "}
+          </motion.div>
 
           <motion.h1
             variants={fadeInUp}
@@ -151,11 +161,11 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             variants={fadeInUp}
             className="mt-6 text-lg md:text-xl text-white/80 leading-relaxed max-w-lg"
           >
-            رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة احترافية منذ أكثر من 20 عاماً..
+            رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة
+            احترافية منذ أكثر من 20 عاماً..
           </motion.p>
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
-
             <Link
               to="/gallery"
               className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
@@ -177,12 +187,10 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             >
               استكشف الخدمات
             </Link>
-
           </motion.div>
         </motion.div>
 
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
             <h3 className="text-gold text-xl font-bold">{settings?.years_experience ?? 20}+</h3>
             <p className="text-white/80 text-sm">سنة خبرة</p>
@@ -202,7 +210,6 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             <h3 className="text-gold text-xl font-bold">{settings?.support_hours || "24/7"}</h3>
             <p className="text-white/80 text-sm">دعم العملاء</p>
           </div>
-
         </div>
       </div>
     </section>
@@ -215,28 +222,60 @@ function AboutSection() {
         <h2 className="text-4xl font-bold">من نحن</h2>
 
         <p className="mt-6 text-lg leading-8">
-          قيصر للسياحة والسفر هي وكالة سياحية في الرمثا، الأردن،
-          متخصصة في تنظيم رحلات الحج والعمرة، وحجز تذاكر الطيران،
-          والفنادق، والتأشيرات، والرحلات السياحية الداخلية والخارجية
-          منذ أكثر من 20 عاماً.
+          قيصر للسياحة والسفر هي وكالة سياحية في الرمثا، الأردن، متخصصة في تنظيم رحلات الحج والعمرة،
+          وحجز تذاكر الطيران، والفنادق، والتأشيرات، والرحلات السياحية الداخلية والخارجية منذ أكثر من
+          20 عاماً.
         </p>
       </div>
     </section>
   );
 }
 
-
 /* ──────────────── Services ──────────────── */
 function ServicesSection() {
   const services = [
-    { icon: Compass, title: "الحج", description: "برامج حج متكاملة تشمل الإقامة القريبة والنقل والإرشاد، بتنظيم يليق بضيوف الرحمن." },
-    { icon: Moon, title: "العمرة", description: "باقات عمرة مرنة على مدار العام بأسعار تنافسية وخدمة راقية من الوصول حتى العودة." },
-    { icon: Plane, title: "حجز الطيران", description: "أفضل أسعار تذاكر الطيران لجميع الوجهات مع خطوط عالمية وإقليمية موثوقة." },
-    { icon: Hotel, title: "حجز الفنادق", description: "فنادق مختارة بعناية في كل الوجهات، من الاقتصادي إلى الفاخر خمس نجوم." },
-    { icon: Mountain, title: "السياحة الداخلية", description: "اكتشف كنوز الأردن: البتراء، وادي رم، البحر الميت وجرش، ببرامج عائلية وشبابية." },
-    { icon: Globe2, title: "السياحة الخارجية", description: "رحلات عالمية إلى تركيا، دبي، مصر، أوروبا وآسيا بتجارب لا تُنسى." },
-    { icon: FileCheck, title: "خدمات التأشيرات", description: "استخراج التأشيرات السياحية والعلاجية بسرعة وموثوقية ومتابعة كاملة لطلبك." },
-    { icon: Building2, title: "رحلات الشركات", description: "تنظيم رحلات ومؤتمرات ووفود العمل بترتيبات احترافية متكاملة." },
+    {
+      icon: Compass,
+      title: "الحج",
+      description:
+        "برامج حج متكاملة تشمل الإقامة القريبة والنقل والإرشاد، بتنظيم يليق بضيوف الرحمن.",
+    },
+    {
+      icon: Moon,
+      title: "العمرة",
+      description:
+        "باقات عمرة مرنة على مدار العام بأسعار تنافسية وخدمة راقية من الوصول حتى العودة.",
+    },
+    {
+      icon: Plane,
+      title: "حجز الطيران",
+      description: "أفضل أسعار تذاكر الطيران لجميع الوجهات مع خطوط عالمية وإقليمية موثوقة.",
+    },
+    {
+      icon: Hotel,
+      title: "حجز الفنادق",
+      description: "فنادق مختارة بعناية في كل الوجهات، من الاقتصادي إلى الفاخر خمس نجوم.",
+    },
+    {
+      icon: Mountain,
+      title: "السياحة الداخلية",
+      description: "اكتشف كنوز الأردن: البتراء، وادي رم، البحر الميت وجرش، ببرامج عائلية وشبابية.",
+    },
+    {
+      icon: Globe2,
+      title: "السياحة الخارجية",
+      description: "رحلات عالمية إلى تركيا، دبي، مصر، أوروبا وآسيا بتجارب لا تُنسى.",
+    },
+    {
+      icon: FileCheck,
+      title: "خدمات التأشيرات",
+      description: "استخراج التأشيرات السياحية والعلاجية بسرعة وموثوقية ومتابعة كاملة لطلبك.",
+    },
+    {
+      icon: Building2,
+      title: "رحلات الشركات",
+      description: "تنظيم رحلات ومؤتمرات ووفود العمل بترتيبات احترافية متكاملة.",
+    },
   ];
 
   return (
@@ -249,13 +288,19 @@ function ServicesSection() {
           variants={staggerContainer}
           className="text-center mb-16"
         >
-          <motion.span variants={fadeInUp} className="text-sm font-bold text-gold-dark tracking-widest uppercase">
+          <motion.span
+            variants={fadeInUp}
+            className="text-sm font-bold text-gold-dark tracking-widest uppercase"
+          >
             ما نقدمه
           </motion.span>
           <motion.h2 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
             خدماتنا المميزة
           </motion.h2>
-          <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
+          <motion.p
+            variants={fadeInUp}
+            className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg"
+          >
             تجربة سفر متكاملة من لحظة التخطيط حتى العودة، بعناية واحترافية تليق باسم قيصر.
           </motion.p>
         </motion.div>
@@ -329,14 +374,14 @@ function GallerySection() {
   const { data: cmsImages } = useGalleryImages();
   const fallbackImages = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
-    {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
-    {src: galleryVisa,alt: "خدمة التأشيرات",label: "التأشيرات",span: "",},
+    { src: galleryMedina, alt: "المسجد النبوي الشريف", label: "العمرة", span: "" },
+    { src: galleryVisa, alt: "خدمة التأشيرات", label: "التأشيرات", span: "" },
     { src: galleryIstanbul, alt: "اسطنبول تركيا", label: "تركيا", span: "" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "" },
-    {src: gallerySwitzerland,alt: "سويسرا",label: "سويسرا",span: "",},
-    {src: galleryEgypt,alt: "الأهرامات",label: "مصر",span: "",},
-    { src: galleryMaldives,alt: "المالديف",label: "المالديف",span: "",},
-    { src: galleryGeorgia,alt: "جبال جورجيا",label: "جورجيا",span: "",},
+    { src: gallerySwitzerland, alt: "سويسرا", label: "سويسرا", span: "" },
+    { src: galleryEgypt, alt: "الأهرامات", label: "مصر", span: "" },
+    { src: galleryMaldives, alt: "المالديف", label: "المالديف", span: "" },
+    { src: galleryGeorgia, alt: "جبال جورجيا", label: "جورجيا", span: "" },
     { src: galleryHotel, alt: "فندق فاخر", label: "حجز الفنادق ", span: "sm:col-span-2" },
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
@@ -349,12 +394,18 @@ function GallerySection() {
         span: "",
       }))
     : fallbackImages;
+  const galleryPaths: Record<string, string> = {
+    العمرة: "/umrah",
+    الحج: "/hajj",
+    التأشيرات: "/visa",
+    تركيا: "/turkey-trip",
+    دبي: "/dubai",
+    مصر: "/egypt",
+    ...galleryPackagePaths,
+  };
 
   return (
-    <section
-  id="trips"
-  className="py-24 md:py-32 bg-cream-dark"
->
+    <section id="trips" className="py-24 md:py-32 bg-cream-dark">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <motion.div
           initial="hidden"
@@ -363,13 +414,19 @@ function GallerySection() {
           variants={staggerContainer}
           className="text-center mb-14"
         >
-          <motion.span variants={fadeInUp} className="text-sm font-bold text-gold-dark tracking-widest uppercase">
+          <motion.span
+            variants={fadeInUp}
+            className="text-sm font-bold text-gold-dark tracking-widest uppercase"
+          >
             معرض الصور
           </motion.span>
           <motion.h2 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
             لمحات من رحلاتنا
           </motion.h2>
-          <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
+          <motion.p
+            variants={fadeInUp}
+            className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg"
+          >
             وجهات مقدسة وسياحية اخترناها لك بعناية حول العالم.
           </motion.p>
         </motion.div>
@@ -381,110 +438,37 @@ function GallerySection() {
           variants={staggerContainer}
           className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] gap-3 md:gap-4"
         >
-          {images.map((img, i) =>
-  img.label === "العمرة" ||
-img.label === "الحج" ||
-img.label === "التأشيرات" ||
-img.label === "تركيا" ||
-img.label === "دبي" ||
-img.label === "مصر" ? (
-           <Link
-  key={i}
-  to={
-  img.label === "العمرة"
-? "/umrah"
-: img.label === "الحج"
-? "/hajj"
-: img.label === "تركيا"
-? "/turkey-trip"
-: img.label === "دبي"
-? "/dubai"
-: img.label === "مصر"
-? "/egypt"
-: "/visa"
-}
-  className={`block ${img.span}`}
-
->
-
+          {images.map((img, i) => {
+            const destinationPath = galleryPaths[img.label.trim()];
+            const card = (
               <motion.div
-  variants={fadeIn}
-  className="group relative h-full overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500"
->
+                variants={fadeIn}
+                className={`group relative h-full overflow-hidden rounded-3xl border border-white/10 shadow-xl transition-all duration-500 hover:shadow-2xl ${destinationPath ? "" : img.span}`}
+              >
                 <img
                   src={img.src}
                   alt={img.alt}
                   loading="lazy"
                   className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                 />
-
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                <span className="absolute bottom-4 right-4 rounded-xl bg-black/50 backdrop-blur-md px-4 py-2 text-white border border-white/20 text-center">
-  {
-  img.label === "العمرة" ? (
-    <>
-      <div className="font-bold text-base">العمرة</div>
-      <div className="text-xs opacity-90">اضغط هنا</div>
-    </>
-  ) : img.label === "الحج" ? (
-    <>
-      <div className="font-bold text-base">الحج</div>
-      <div className="text-xs opacity-90">اضغط هنا</div>
-    </>
-  ) : img.label === "التأشيرات" ? (
-    <>
-      <div className="font-bold text-base">التأشيرات</div>
-      <div className="text-xs opacity-90">اضغط هنا</div>
-    </>
-    
-  ) : img.label === "تركيا" ? (
-  <>
-    <div className="font-bold text-base">تركيا</div>
-    <div className="text-xs opacity-90">اضغط هنا</div>
-  </>
-  )
-  : img.label === "دبي" ? (
-  <>
-    <div className="font-bold text-base">دبي</div>
-    <div className="text-xs opacity-90">اضغط هنا</div>
-  </>
-)
-: img.label === "مصر" ? (
-  <>
-    <div className="font-bold text-base">مصر</div>
-    <div className="text-xs opacity-90">اضغط هنا</div>
-  </>
-)
- : (
-  img.label
-)
-}
-</span>
+                <span className="absolute bottom-4 right-4 rounded-xl border border-white/20 bg-black/50 px-4 py-2 text-center text-white backdrop-blur-md">
+                  <div className="text-base font-bold">{img.label.trim()}</div>
+                  {destinationPath ? <div className="text-xs opacity-90">اضغط هنا</div> : null}
+                </span>
               </motion.div>
-            </Link>
-          ) : (
-            <motion.div
-              key={i}
-              variants={fadeIn}
-              className={`group relative overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500 ${img.span}`}
-            >
-              <img
-                src={img.src}
-                alt={img.alt}
-                loading="lazy"
-                className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
-              />
+            );
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              <span className="absolute bottom-4 right-4 rounded-full bg-black/40 backdrop-blur-md px-4 py-2 text-sm md:text-base font-bold text-white border border-white/20">
-                {img.label}
-              </span>
-            </motion.div>
-          )
-          )}
-
+            return destinationPath ? (
+              <a key={i} href={destinationPath} className={`block ${img.span}`}>
+                {card}
+              </a>
+            ) : (
+              <div key={i} className={img.span}>
+                {card}
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
@@ -494,10 +478,26 @@ img.label === "مصر" ? (
 /* ──────────────── Reviews ──────────────── */
 function ReviewsSection() {
   const reviews = [
-    { name: "علي الناصر ", rating: 5, text: "تجربة ممتازة في العمرة! التنظيم كان احترافياً والإقامة فاخرة. أنصح الجميع بالتعامل مع قيصر." },
-    { name: "سارة محمد", rating: 5, text: "رحلة عائلية إلى تركيا كانت رائعة. كل التفاصيل محسوبة والمرشد كان ممتازاً. شكراً لكم!" },
-    { name: "محمد العلي", rating: 4, text: "خدمة جيدة جداً وسعر منافس. التأشيرة والحجوزات تمت بسلاسة. سأتعامل معهم مرة أخرى." },
-    { name: "ليلى عبدالله", rating: 5, text: "حج مبارك مع قيصر هذا العام. الجماعة كانت منظمة والخدمات تفوق التوقعات. جزاكم الله خيراً." },
+    {
+      name: "علي الناصر ",
+      rating: 5,
+      text: "تجربة ممتازة في العمرة! التنظيم كان احترافياً والإقامة فاخرة. أنصح الجميع بالتعامل مع قيصر.",
+    },
+    {
+      name: "سارة محمد",
+      rating: 5,
+      text: "رحلة عائلية إلى تركيا كانت رائعة. كل التفاصيل محسوبة والمرشد كان ممتازاً. شكراً لكم!",
+    },
+    {
+      name: "محمد العلي",
+      rating: 4,
+      text: "خدمة جيدة جداً وسعر منافس. التأشيرة والحجوزات تمت بسلاسة. سأتعامل معهم مرة أخرى.",
+    },
+    {
+      name: "ليلى عبدالله",
+      rating: 5,
+      text: "حج مبارك مع قيصر هذا العام. الجماعة كانت منظمة والخدمات تفوق التوقعات. جزاكم الله خيراً.",
+    },
   ];
 
   return (
@@ -510,7 +510,10 @@ function ReviewsSection() {
           variants={staggerContainer}
           className="text-center mb-16"
         >
-          <motion.span variants={fadeInUp} className="text-sm font-bold text-gold-dark tracking-widest uppercase">
+          <motion.span
+            variants={fadeInUp}
+            className="text-sm font-bold text-gold-dark tracking-widest uppercase"
+          >
             آراء العملاء
           </motion.span>
           <motion.h2 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
@@ -533,7 +536,11 @@ function ReviewsSection() {
             >
               <div className="flex items-center gap-1 mb-4">
                 {Array.from({ length: 5 }).map((_, j) => (
-                  <Star key={j} size={16} className={j < r.rating ? "text-gold fill-gold" : "text-border"} />
+                  <Star
+                    key={j}
+                    size={16}
+                    className={j < r.rating ? "text-gold fill-gold" : "text-border"}
+                  />
                 ))}
               </div>
               <p className="text-foreground leading-relaxed mb-5 text-base">{r.text}</p>
@@ -557,33 +564,36 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
   const phones = phoneList(settings);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const form = e.currentTarget;
-  const data = new FormData(form);
+    const form = e.currentTarget;
+    const data = new FormData(form);
 
-  const { error } = await supabase.from("bookings").insert([
-    {
-      customer_name: String(data.get("name") || ""),
-      phone: String(data.get("phone") || ""),
-      people_count: 1,
-      notes: String(data.get("message") || ""),
-    },
-  ]);
+    const { error } = await supabase.from("bookings").insert([
+      {
+        customer_name: String(data.get("name") || ""),
+        phone: String(data.get("phone") || ""),
+        people_count: 1,
+        notes: String(data.get("message") || ""),
+      },
+    ]);
 
-  if (error) {
-    console.error(error);
-    alert(JSON.stringify(error, null, 2));
-    return;
-  }
+    if (error) {
+      console.error(error);
+      alert(JSON.stringify(error, null, 2));
+      return;
+    }
 
-  setSent(true);
-  form.reset();
-  setTimeout(() => setSent(false), 4000);
-};
+    setSent(true);
+    form.reset();
+    setTimeout(() => setSent(false), 4000);
+  };
 
   return (
-    <section id="contact" className="py-24 md:py-32 bg-gradient-to-b from-cream to-cream-dark relative">
+    <section
+      id="contact"
+      className="py-24 md:py-32 bg-gradient-to-b from-cream to-cream-dark relative"
+    >
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <motion.div
           initial="hidden"
@@ -592,13 +602,19 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
           variants={staggerContainer}
           className="text-center mb-16"
         >
-          <motion.span variants={fadeInUp} className="text-sm font-bold text-gold-dark tracking-widest uppercase">
+          <motion.span
+            variants={fadeInUp}
+            className="text-sm font-bold text-gold-dark tracking-widest uppercase"
+          >
             تواصل معنا
           </motion.span>
           <motion.h2 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
             زرنا أو راسلنا
           </motion.h2>
-          <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
+          <motion.p
+            variants={fadeInUp}
+            className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg"
+          >
             نحن هنا لخدمتك — اتصل بنا، راسلنا عبر واتساب، أو زر مكتبنا في الرمثا.
           </motion.p>
         </motion.div>
@@ -660,7 +676,10 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
             </div>
 
             {/* Contact form */}
-            <form onSubmit={handleSubmit} className="rounded-3xl bg-card border border-border p-6 space-y-4">
+            <form
+              onSubmit={handleSubmit}
+              className="rounded-3xl bg-card border border-border p-6 space-y-4"
+            >
               <div className="flex items-center gap-3 mb-1">
                 <div className="h-11 w-11 rounded-2xl bg-teal/10 flex items-center justify-center shrink-0">
                   <Mail size={20} className="text-teal" />
@@ -732,7 +751,8 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
 
 /* ──────────────── Footer ──────────────── */
 function Footer({ settings }: { settings?: SiteSettings }) {
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   const phones = phoneList(settings);
 
   return (
@@ -748,8 +768,12 @@ function Footer({ settings }: { settings?: SiteSettings }) {
                 className="h-12 w-12 object-contain"
               />
               <div className="leading-tight">
-                <span className="block text-xl font-black text-gold">{settings?.company_name || "قيصر للسياحة والسفر"}</span>
-                <span className="block text-xs text-white/50 tracking-wide">CAESAR TRAVEL & TOURISM</span>
+                <span className="block text-xl font-black text-gold">
+                  {settings?.company_name || "قيصر للسياحة والسفر"}
+                </span>
+                <span className="block text-xs text-white/50 tracking-wide">
+                  CAESAR TRAVEL & TOURISM
+                </span>
               </div>
             </div>
             <p className="text-sm text-white/60 leading-relaxed max-w-md">
@@ -763,8 +787,16 @@ function Footer({ settings }: { settings?: SiteSettings }) {
                   href: buildWhatsAppUrl(settings?.whatsapp || WHATSAPP),
                   label: "واتساب",
                 },
-                { icon: Facebook, href: "https://www.facebook.com/caesartravel?locale=ar_AR", label: "فيسبوك" },
-                { icon: Instagram, href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==", label: "انستغرام" },
+                {
+                  icon: Facebook,
+                  href: "https://www.facebook.com/caesartravel?locale=ar_AR",
+                  label: "فيسبوك",
+                },
+                {
+                  icon: Instagram,
+                  href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==",
+                  label: "انستغرام",
+                },
               ].map((s, i) => (
                 <a
                   key={i}
@@ -786,7 +818,10 @@ function Footer({ settings }: { settings?: SiteSettings }) {
             <ul className="space-y-2.5 text-sm">
               {NAV_LINKS.map((l) => (
                 <li key={l.id}>
-                  <button onClick={() => scrollTo(l.id)} className="hover:text-gold transition-colors flex items-center gap-1.5">
+                  <button
+                    onClick={() => scrollTo(l.id)}
+                    className="hover:text-gold transition-colors flex items-center gap-1.5"
+                  >
                     <ArrowLeft size={12} />
                     {l.label}
                   </button>
@@ -801,7 +836,11 @@ function Footer({ settings }: { settings?: SiteSettings }) {
             <ul className="space-y-2.5 text-sm">
               {phones.map((p) => (
                 <li key={p.intl}>
-                  <a href={`tel:+${p.intl}`} dir="ltr" className="hover:text-gold transition-colors block text-right">
+                  <a
+                    href={`tel:+${p.intl}`}
+                    dir="ltr"
+                    className="hover:text-gold transition-colors block text-right"
+                  >
                     {p.display}
                   </a>
                 </li>
@@ -827,11 +866,17 @@ function Footer({ settings }: { settings?: SiteSettings }) {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
-          <span>جميع الحقوق محفوظة © {new Date().getFullYear()} قيصر للسياحة والسفر والحج والعمرة</span>
+          <span>
+            جميع الحقوق محفوظة © {new Date().getFullYear()} قيصر للسياحة والسفر والحج والعمرة
+          </span>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-gold transition-colors">سياسة الخصوصية</a>
+            <a href="#" className="hover:text-gold transition-colors">
+              سياسة الخصوصية
+            </a>
             <span className="text-white/20">|</span>
-            <a href="#" className="hover:text-gold transition-colors">الشروط والأحكام</a>
+            <a href="#" className="hover:text-gold transition-colors">
+              الشروط والأحكام
+            </a>
           </div>
         </div>
       </div>
@@ -885,7 +930,6 @@ function Index() {
   return (
     <>
       <Helmet>
-
         <title>قيصر للسياحة والسفر | رحلات الحج والعمرة والسياحة</title>
 
         <meta
@@ -898,62 +942,53 @@ function Index() {
           content="قيصر للسياحة، الحج، العمرة، رحلات، الأردن، حجز طيران، فنادق، تأشيرات"
         />
 
-        <link
-          rel="canonical"
-          href="https://caesar-travel.pages.dev/"
-        />
+        <link rel="canonical" href="https://caesar-travel.pages.dev/" />
         <meta property="og:type" content="website" />
-<meta property="og:title" content="قيصر للسياحة والسفر" />
-<meta
-  property="og:description"
-  content="قيصر للسياحة والسفر في الرمثا - إربد. خدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
-/>
-<meta property="og:url" content="https://caesar-travel.pages.dev/" />
-<meta
-  property="og:image"
-  content="https://caesar-travel.pages.dev/og-image.png"
-/>
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:type" content="image/png" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="قيصر للسياحة والسفر" />
-<meta
-  name="twitter:description"
-  content="الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
-/>
-<meta
-  name="twitter:image"
-  content="https://caesar-travel.pages.dev/og-image.png"
-/>
+        <meta property="og:title" content="قيصر للسياحة والسفر" />
+        <meta
+          property="og:description"
+          content="قيصر للسياحة والسفر في الرمثا - إربد. خدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
+        />
+        <meta property="og:url" content="https://caesar-travel.pages.dev/" />
+        <meta property="og:image" content="https://caesar-travel.pages.dev/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="قيصر للسياحة والسفر" />
+        <meta
+          name="twitter:description"
+          content="الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
+        />
+        <meta name="twitter:image" content="https://caesar-travel.pages.dev/og-image.png" />
       </Helmet>
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "TravelAgency",
-      name: "قيصر للسياحة والسفر",
-      url: "https://caesar-travel.pages.dev",
-      logo: "https://caesar-travel.pages.dev/logo.png",
-      telephone: "+962795207900",
-      description:
-        "وكالة سفر وسياحة في الرمثا - إربد متخصصة في الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والرحلات السياحية.",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "الرمثا",
-        addressLocality: "الرمثا",
-        addressRegion: "إربد",
-        addressCountry: "JO"
-      },
-      areaServed: "Jordan",
-      sameAs: [
-  "https://www.facebook.com/caesartravel",
-  "https://www.instagram.com/caesar__travel/"
-]
-    }),
-  }}
-/>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TravelAgency",
+            name: "قيصر للسياحة والسفر",
+            url: "https://caesar-travel.pages.dev",
+            logo: "https://caesar-travel.pages.dev/logo.png",
+            telephone: "+962795207900",
+            description:
+              "وكالة سفر وسياحة في الرمثا - إربد متخصصة في الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والرحلات السياحية.",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "الرمثا",
+              addressLocality: "الرمثا",
+              addressRegion: "إربد",
+              addressCountry: "JO",
+            },
+            areaServed: "Jordan",
+            sameAs: [
+              "https://www.facebook.com/caesartravel",
+              "https://www.instagram.com/caesar__travel/",
+            ],
+          }),
+        }}
+      />
       <main className="min-h-screen">
         <HeroSection settings={settings} />
         <AboutSection />

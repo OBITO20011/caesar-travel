@@ -1,10 +1,13 @@
 import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
 import { buildWhatsAppUrl, formatTripDate, formatTripPrice } from "@/lib/trip-format";
+import type { ReactNode } from "react";
+
 import type { TripPageKey } from "@/types/admin";
 
 interface PublicTripGridProps {
   pageKey: TripPageKey;
   fallbackImage: string;
+  emptyContent?: ReactNode;
 }
 
 const unavailableLabels = {
@@ -13,7 +16,7 @@ const unavailableLabels = {
   completed: "مكتملة",
 } as const;
 
-export function PublicTripGrid({ pageKey, fallbackImage }: PublicTripGridProps) {
+export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicTripGridProps) {
   const tripsQuery = usePublicTrips(pageKey);
   const { data: settings } = useSiteSettings();
 
@@ -31,6 +34,8 @@ export function PublicTripGrid({ pageKey, fallbackImage }: PublicTripGridProps) 
 
   const trips = tripsQuery.data ?? [];
   if (trips.length === 0) {
+    if (emptyContent) return <>{emptyContent}</>;
+
     return (
       <p className="col-span-full py-10 text-center text-gray-400">لا توجد رحلات معروضة حالياً.</p>
     );
