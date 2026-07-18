@@ -30,6 +30,15 @@ export function usePublicTrips(pageKey: TripPageKey) {
   });
 }
 
+export function useFeaturedTrips() {
+  return useQuery({
+    queryKey: ["featured-trips"],
+    queryFn: tripsService.getFeatured,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+}
+
 export function usePublicTrip(id: string) {
   return useQuery({
     queryKey: ["public-trip", id],

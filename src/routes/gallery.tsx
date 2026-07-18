@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 
-import galleryGeorgia from "@/assets/gallery-georgia.jpg";
-import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
-import galleryMaldives from "@/assets/gallery-maldives.jpg";
-import galleryEgypt from "@/assets/gallery-egypt.jpg";
-import galleryVisa from "@/assets/gallery-visa.png";
+import galleryGeorgia from "@/assets/gallery-georgia.webp";
+import gallerySwitzerland from "@/assets/gallery-switzerland.webp";
+import galleryMaldives from "@/assets/gallery-maldives.webp";
+import galleryEgypt from "@/assets/gallery-egypt.webp";
+import galleryVisa from "@/assets/gallery-visa.webp";
 import galleryMedina from "@/assets/gallery-medina.jpg";
 import galleryFlight from "@/assets/gallery-flight.jpg";
 import galleryPetra from "@/assets/gallery-petra.jpg";

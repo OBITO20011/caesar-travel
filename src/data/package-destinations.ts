@@ -1,9 +1,9 @@
 import galleryFlight from "@/assets/gallery-flight.jpg";
-import galleryGeorgia from "@/assets/gallery-georgia.jpg";
+import galleryGeorgia from "@/assets/gallery-georgia.webp";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
-import galleryMaldives from "@/assets/gallery-maldives.jpg";
+import galleryMaldives from "@/assets/gallery-maldives.webp";
 import galleryPetra from "@/assets/gallery-petra.jpg";
-import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
+import gallerySwitzerland from "@/assets/gallery-switzerland.webp";
 import type { TripPageKey } from "@/types/admin";
 
 export type PackageDestinationSlug =

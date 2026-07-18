@@ -1,11 +1,11 @@
-import galleryGeorgia from "@/assets/gallery-georgia.jpg";
+import galleryGeorgia from "@/assets/gallery-georgia.webp";
 import { supabase } from "@/lib/supabase";
-import gallerySwitzerland from "@/assets/gallery-switzerland.jpg";
+import gallerySwitzerland from "@/assets/gallery-switzerland.webp";
 import { Link } from "@tanstack/react-router";
 import { Helmet } from "react-helmet-async";
-import galleryMaldives from "@/assets/gallery-maldives.jpg";
-import galleryEgypt from "@/assets/gallery-egypt.jpg";
-import galleryVisa from "@/assets/gallery-visa.png";
+import galleryMaldives from "@/assets/gallery-maldives.webp";
+import galleryEgypt from "@/assets/gallery-egypt.webp";
+import galleryVisa from "@/assets/gallery-visa.webp";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
@@ -40,6 +40,8 @@ import galleryPetra from "@/assets/gallery-petra.jpg";
 import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
+import { FeaturedTripsSection } from "@/components/featured-trips-section";
+import { QuickQuoteSection } from "@/components/quick-quote-section";
 import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
@@ -140,7 +142,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
           >
             <Star size={14} className="text-gold fill-gold" />
             <span className="text-sm font-semibold text-gold-light">
-              ⭐ تقييم 4.9 من أكثر من 15,000 عميل سعيد
+              ثقة أكثر من {(settings?.happy_customers ?? 15000).toLocaleString("ar-JO")} عميل سعيد
             </span>{" "}
           </motion.div>
 
@@ -568,13 +570,28 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
 
     const form = e.currentTarget;
     const data = new FormData(form);
+    const customerName = String(data.get("name") || "").trim();
+    const customerPhone = String(data.get("phone") || "").trim();
+    const customerMessage = String(data.get("message") || "").trim();
+    const whatsappMessage = [
+      "السلام عليكم، لدي استفسار من موقع قيصر للسياحة.",
+      `الاسم: ${customerName}`,
+      `رقم الهاتف: ${customerPhone}`,
+      `الاستفسار: ${customerMessage}`,
+    ].join("\n");
+
+    window.open(
+      buildWhatsAppUrl(settings?.whatsapp || WHATSAPP, whatsappMessage),
+      "_blank",
+      "noopener,noreferrer",
+    );
 
     const { error } = await supabase.from("bookings").insert([
       {
-        customer_name: String(data.get("name") || ""),
-        phone: String(data.get("phone") || ""),
+        customer_name: customerName,
+        phone: customerPhone,
         people_count: 1,
-        notes: String(data.get("message") || ""),
+        notes: customerMessage,
       },
     ]);
 
@@ -892,10 +909,11 @@ function WhatsAppButton({ whatsapp }: { whatsapp?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل عبر واتساب"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center h-14 w-14 rounded-full bg-[#25D366] text-white shadow-xl shadow-black/20 hover:scale-110 transition-transform"
+      className="fixed right-4 bottom-4 left-4 z-50 flex h-14 items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 font-black text-white shadow-xl shadow-black/20 transition-transform hover:scale-[1.02] md:right-6 md:bottom-6 md:left-auto md:w-14 md:px-0 md:hover:scale-110"
     >
-      <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-60 animate-ping" />
-      <MessageCircle size={28} className="relative fill-white" />
+      <span className="absolute hidden h-full w-full rounded-full bg-[#25D366] opacity-60 animate-ping md:inline-flex" />
+      <MessageCircle size={25} className="relative fill-white" />
+      <span className="relative md:hidden">استفسر واحجز عبر واتساب</span>
     </a>
   );
 }
@@ -994,6 +1012,8 @@ function Index() {
         <AboutSection />
         <ServicesSection />
         <StatsSection settings={settings} />
+        <FeaturedTripsSection settings={settings} />
+        <QuickQuoteSection settings={settings} />
         <GallerySection />
         <ReviewsSection />
         <ContactSection settings={settings} />

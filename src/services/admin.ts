@@ -63,6 +63,20 @@ export const tripsService = {
     return (data as Trip[]) || [];
   },
 
+  async getFeatured() {
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*")
+      .eq("is_featured", true)
+      .eq("status", "available")
+      .order("start_date", { ascending: true, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    if (error) throw error;
+    return (data as Trip[]) || [];
+  },
+
   async getPublicById(id: string) {
     const { data, error } = await supabase
       .from("trips")

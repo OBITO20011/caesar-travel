@@ -68,6 +68,17 @@ function PackageDestinationPage() {
       <Helmet>
         <title>{destination.title} | قيصر للسياحة والسفر</title>
         <meta name="description" content={destination.description} />
+        <link
+          rel="canonical"
+          href={`https://caesar-travel.pages.dev/packages/${destination.slug}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`${destination.title} | قيصر للسياحة والسفر`} />
+        <meta property="og:description" content={destination.description} />
+        <meta
+          property="og:url"
+          content={`https://caesar-travel.pages.dev/packages/${destination.slug}`}
+        />
       </Helmet>
 
       <main className="min-h-screen bg-[#F5EFD9]">
