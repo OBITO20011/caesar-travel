@@ -7,6 +7,9 @@ import { supabase } from "@/lib/supabase";
 const navigationItems = [
   { label: "الرحلات", to: "/admin/trips" },
   { label: "العمرة", to: "/admin/umrah" },
+  { label: "الحج", to: "/admin/hajj" },
+  { label: "مصر", to: "/admin/egypt" },
+  { label: "دبي", to: "/admin/dubai" },
   { label: "معرض الصور", to: "/admin/gallery" },
   { label: "الإعدادات", to: "/admin/settings" },
 ] as const;

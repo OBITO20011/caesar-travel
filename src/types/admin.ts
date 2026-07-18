@@ -1,12 +1,14 @@
 // Minimal type definitions for the public website CMS.
 
 export type TripCategory = "tourism" | "umrah";
+export type TripPageKey = "general" | "umrah" | "hajj" | "egypt" | "dubai";
 export type TripStatus = "available" | "fully_booked" | "cancelled" | "completed" | "hidden";
 
 export interface Trip {
   id: string;
   title: string;
   category: TripCategory;
+  page_key: TripPageKey;
   description?: string;
   start_date?: string;
   end_date?: string;
@@ -20,6 +22,12 @@ export interface Trip {
   total_seats: number;
   remaining_seats: number;
   main_image_url?: string;
+  room_type?: string;
+  double_price?: number;
+  triple_price?: number;
+  quad_price?: number;
+  additional_image_urls: string[];
+  madinah_image_url?: string;
   status: TripStatus;
   is_featured: boolean;
   created_at: string;

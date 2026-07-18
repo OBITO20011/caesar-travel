@@ -11,6 +11,7 @@ function RouteComponent() {
   return (
     <TripManager
       category="tourism"
+      pageKey="general"
       title="إدارة الرحلات"
       description="أضف الرحلات وعدّل تفاصيلها وأسعارها وصورها وحالة عرضها."
     />

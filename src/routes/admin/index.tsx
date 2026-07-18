@@ -16,6 +16,18 @@ function AdminHome() {
       link: "/admin/umrah",
     },
     {
+      title: "🕋 الحج",
+      link: "/admin/hajj",
+    },
+    {
+      title: "🇪🇬 مصر",
+      link: "/admin/egypt",
+    },
+    {
+      title: "🇦🇪 دبي",
+      link: "/admin/dubai",
+    },
+    {
       title: "🖼️ معرض الصور",
       link: "/admin/gallery",
     },

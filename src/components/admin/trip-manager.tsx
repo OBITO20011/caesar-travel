@@ -15,13 +15,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { imageService, tripsService } from "@/services/admin";
-import type { Trip, TripCategory, TripStatus } from "@/types/admin";
+import type { Trip, TripCategory, TripPageKey, TripStatus } from "@/types/admin";
 
 const PAGE_SIZE = 10;
 
 const categoryLabels: Record<TripCategory, string> = {
   umrah: "عمرة",
   tourism: "رحلة",
+};
+
+const pageLabels: Record<TripPageKey, string> = {
+  general: "الرحلات العامة",
+  umrah: "العمرة",
+  hajj: "الحج",
+  egypt: "مصر",
+  dubai: "دبي",
 };
 
 const statusLabels: Record<TripStatus, string> = {
@@ -43,6 +51,7 @@ const statusClasses: Record<TripStatus, string> = {
 type TripForm = {
   title: string;
   category: TripCategory;
+  page_key: TripPageKey;
   description: string;
   start_date: string;
   end_date: string;
@@ -56,14 +65,21 @@ type TripForm = {
   total_seats: string;
   remaining_seats: string;
   main_image_url: string;
+  room_type: string;
+  double_price: string;
+  triple_price: string;
+  quad_price: string;
+  additional_image_urls: string;
+  madinah_image_url: string;
   status: TripStatus;
   is_featured: boolean;
 };
 
-function emptyForm(category: TripCategory): TripForm {
+function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
   return {
     title: "",
     category,
+    page_key: pageKey,
     description: "",
     start_date: "",
     end_date: "",
@@ -77,6 +93,12 @@ function emptyForm(category: TripCategory): TripForm {
     total_seats: "0",
     remaining_seats: "0",
     main_image_url: "",
+    room_type: "",
+    double_price: "",
+    triple_price: "",
+    quad_price: "",
+    additional_image_urls: "",
+    madinah_image_url: "",
     status: "available",
     is_featured: false,
   };
@@ -86,6 +108,7 @@ function formFromTrip(trip: Trip): TripForm {
   return {
     title: trip.title,
     category: trip.category,
+    page_key: trip.page_key,
     description: trip.description ?? "",
     start_date: trip.start_date ?? "",
     end_date: trip.end_date ?? "",
@@ -99,6 +122,12 @@ function formFromTrip(trip: Trip): TripForm {
     total_seats: trip.total_seats.toString(),
     remaining_seats: trip.remaining_seats.toString(),
     main_image_url: trip.main_image_url ?? "",
+    room_type: trip.room_type ?? "",
+    double_price: trip.double_price?.toString() ?? "",
+    triple_price: trip.triple_price?.toString() ?? "",
+    quad_price: trip.quad_price?.toString() ?? "",
+    additional_image_urls: (trip.additional_image_urls ?? []).join("\n"),
+    madinah_image_url: trip.madinah_image_url ?? "",
     status: trip.status,
     is_featured: trip.is_featured,
   };
@@ -108,6 +137,7 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
   return {
     title: form.title.trim(),
     category: form.category,
+    page_key: form.page_key,
     description: form.description.trim() || undefined,
     start_date: form.start_date || undefined,
     end_date: form.end_date || undefined,
@@ -121,6 +151,15 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     total_seats: Number(form.total_seats) || 0,
     remaining_seats: Number(form.remaining_seats) || 0,
     main_image_url: form.main_image_url.trim() || undefined,
+    room_type: form.room_type.trim() || undefined,
+    double_price: form.double_price ? Number(form.double_price) : undefined,
+    triple_price: form.triple_price ? Number(form.triple_price) : undefined,
+    quad_price: form.quad_price ? Number(form.quad_price) : undefined,
+    additional_image_urls: form.additional_image_urls
+      .split("\n")
+      .map((url) => url.trim())
+      .filter(Boolean),
+    madinah_image_url: form.madinah_image_url.trim() || undefined,
     status: form.status,
     is_featured: form.is_featured,
   };
@@ -144,22 +183,24 @@ interface TripManagerProps {
   title: string;
   description: string;
   category: TripCategory;
+  pageKey: TripPageKey;
 }
 
-export function TripManager({ title, description, category }: TripManagerProps) {
+export function TripManager({ title, description, category, pageKey }: TripManagerProps) {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
-  const [form, setForm] = useState<TripForm>(() => emptyForm(category));
+  const [form, setForm] = useState<TripForm>(() => emptyForm(category, pageKey));
   const [feedback, setFeedback] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const filters = {
     category,
+    pageKey,
     status: statusFilter || undefined,
     search: search.trim() || undefined,
   };
@@ -171,6 +212,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
 
   const refreshTrips = async () => {
     await queryClient.invalidateQueries({ queryKey: ["admin-trips"] });
+    await queryClient.invalidateQueries({ queryKey: ["public-trips", pageKey] });
   };
 
   const saveMutation = useMutation({
@@ -204,7 +246,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
 
   function openCreateDialog() {
     setEditingTrip(null);
-    setForm(emptyForm(category));
+    setForm(emptyForm(category, pageKey));
     setFormError(null);
     setDialogOpen(true);
   }
@@ -216,14 +258,44 @@ export function TripManager({ title, description, category }: TripManagerProps) 
     setDialogOpen(true);
   }
 
-  async function uploadImage(file?: File) {
+  async function uploadImage(
+    file?: File,
+    field: "main_image_url" | "madinah_image_url" = "main_image_url",
+  ) {
     if (!file) return;
 
     setUploading(true);
     setFormError(null);
     try {
       const imageUrl = await imageService.uploadToStorage(file, "admin-media", "trips");
-      setForm((current) => ({ ...current, main_image_url: imageUrl }));
+      setForm((current) => ({ ...current, [field]: imageUrl }));
+    } catch (error) {
+      setFormError(getErrorMessage(error));
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function uploadAdditionalImages(files?: FileList | null) {
+    if (!files?.length) return;
+
+    setUploading(true);
+    setFormError(null);
+    try {
+      const uploadedUrls: string[] = [];
+      for (const file of Array.from(files)) {
+        uploadedUrls.push(await imageService.uploadToStorage(file, "admin-media", "trips"));
+      }
+      setForm((current) => ({
+        ...current,
+        additional_image_urls: [
+          ...current.additional_image_urls
+            .split("\n")
+            .map((url) => url.trim())
+            .filter(Boolean),
+          ...uploadedUrls,
+        ].join("\n"),
+      }));
     } catch (error) {
       setFormError(getErrorMessage(error));
     } finally {
@@ -262,7 +334,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
             className="rounded-full bg-slate-900 text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
-            إضافة {category === "umrah" ? "باقة عمرة" : "رحلة"}
+            إضافة {pageKey === "umrah" ? "باقة عمرة" : pageKey === "hajj" ? "برنامج حج" : "رحلة"}
           </Button>
         </header>
 
@@ -307,7 +379,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                 ))}
               </select>
               <div className="flex h-9 items-center rounded-md border border-input bg-slate-50 px-3 text-sm text-slate-600">
-                القسم: {categoryLabels[category]}
+                القسم: {pageLabels[pageKey] || categoryLabels[category]}
               </div>
             </div>
           </CardContent>
@@ -432,7 +504,7 @@ export function TripManager({ title, description, category }: TripManagerProps) 
           <DialogHeader className="text-right">
             <DialogTitle>{editingTrip ? "تعديل الرحلة" : "إضافة رحلة جديدة"}</DialogTitle>
             <DialogDescription>
-              أدخل بيانات الرحلة واحفظها لعرضها في لوحة الإدارة.
+              أدخل بيانات الرحلة واحفظها لعرضها مباشرة في صفحة {pageLabels[pageKey]}.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={submitForm} className="grid gap-4">
@@ -498,19 +570,29 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                 </select>
               </Field>
             </div>
+            {pageKey === "umrah" ? (
+              <div className="grid gap-4 md:grid-cols-3">
+                <Field label="فندق مكة">
+                  <Input
+                    value={form.makkah_hotel}
+                    onChange={(event) => setForm({ ...form, makkah_hotel: event.target.value })}
+                  />
+                </Field>
+                <Field label="فندق المدينة">
+                  <Input
+                    value={form.madinah_hotel}
+                    onChange={(event) => setForm({ ...form, madinah_hotel: event.target.value })}
+                  />
+                </Field>
+                <Field label="نوع الغرفة">
+                  <Input
+                    value={form.room_type}
+                    onChange={(event) => setForm({ ...form, room_type: event.target.value })}
+                  />
+                </Field>
+              </div>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="فندق مكة">
-                <Input
-                  value={form.makkah_hotel}
-                  onChange={(event) => setForm({ ...form, makkah_hotel: event.target.value })}
-                />
-              </Field>
-              <Field label="فندق المدينة">
-                <Input
-                  value={form.madinah_hotel}
-                  onChange={(event) => setForm({ ...form, madinah_hotel: event.target.value })}
-                />
-              </Field>
               <Field label="شركة الطيران">
                 <Input
                   value={form.airline}
@@ -524,6 +606,37 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                 />
               </Field>
             </div>
+            {pageKey === "umrah" ? (
+              <div className="grid gap-4 md:grid-cols-3">
+                <Field label="سعر الغرفة الثنائية">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.double_price}
+                    onChange={(event) => setForm({ ...form, double_price: event.target.value })}
+                  />
+                </Field>
+                <Field label="سعر الغرفة الثلاثية">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.triple_price}
+                    onChange={(event) => setForm({ ...form, triple_price: event.target.value })}
+                  />
+                </Field>
+                <Field label="سعر الغرفة الرباعية">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.quad_price}
+                    onChange={(event) => setForm({ ...form, quad_price: event.target.value })}
+                  />
+                </Field>
+              </div>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-3">
               <Field label="عدد الليالي">
                 <Input
@@ -583,6 +696,66 @@ export function TripManager({ title, description, category }: TripManagerProps) 
                 </label>
               </div>
             </Field>
+            {pageKey === "umrah" ? (
+              <>
+                <Field label="صور تفاصيل فندق مكة">
+                  <div className="grid gap-2">
+                    <Textarea
+                      rows={4}
+                      value={form.additional_image_urls}
+                      onChange={(event) =>
+                        setForm({ ...form, additional_image_urls: event.target.value })
+                      }
+                      placeholder="رابط صورة في كل سطر، أو ارفع عدة صور"
+                    />
+                    <label className="inline-flex h-9 w-fit cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-white px-4 text-sm font-medium hover:bg-slate-50">
+                      {uploading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ImagePlus className="h-4 w-4" />
+                      )}
+                      رفع صور التفاصيل
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        disabled={uploading}
+                        onChange={(event) => void uploadAdditionalImages(event.target.files)}
+                      />
+                    </label>
+                  </div>
+                </Field>
+                <Field label="صورة فندق المدينة">
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      value={form.madinah_image_url}
+                      onChange={(event) =>
+                        setForm({ ...form, madinah_image_url: event.target.value })
+                      }
+                      placeholder="رابط الصورة أو ارفع ملفاً"
+                    />
+                    <label className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-white px-4 text-sm font-medium hover:bg-slate-50">
+                      {uploading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ImagePlus className="h-4 w-4" />
+                      )}
+                      رفع صورة
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={uploading}
+                        onChange={(event) =>
+                          void uploadImage(event.target.files?.[0], "madinah_image_url")
+                        }
+                      />
+                    </label>
+                  </div>
+                </Field>
+              </>
+            ) : null}
             {formError ? (
               <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</p>
             ) : null}

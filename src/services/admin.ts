@@ -1,15 +1,16 @@
 import { supabase } from "@/lib/supabase";
-import type { GalleryImage, SiteSettings, Trip } from "@/types/admin";
+import type { GalleryImage, SiteSettings, Trip, TripPageKey } from "@/types/admin";
 
 export const tripsService = {
   async getAll(
-    filters?: { category?: string; status?: string; search?: string },
+    filters?: { category?: string; pageKey?: TripPageKey; status?: string; search?: string },
     page = 1,
     pageSize = 10,
   ) {
     let query = supabase.from("trips").select("*", { count: "exact" });
 
     if (filters?.category) query = query.eq("category", filters.category);
+    if (filters?.pageKey) query = query.eq("page_key", filters.pageKey);
     if (filters?.status) query = query.eq("status", filters.status);
     if (filters?.search) {
       query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
@@ -47,6 +48,31 @@ export const tripsService = {
   async delete(id: string) {
     const { error } = await supabase.from("trips").delete().eq("id", id);
     if (error) throw error;
+  },
+
+  async getPublicByPage(pageKey: TripPageKey) {
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*")
+      .eq("page_key", pageKey)
+      .neq("status", "hidden")
+      .order("start_date", { ascending: true, nullsFirst: false })
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    return (data as Trip[]) || [];
+  },
+
+  async getPublicById(id: string) {
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*")
+      .eq("id", id)
+      .neq("status", "hidden")
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as Trip | null;
   },
 };
 
@@ -110,7 +136,7 @@ export const siteSettingsService = {
 export const imageService = {
   async uploadToStorage(file: File, bucket: string, folder: string) {
     const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}.${fileExt}`;
+    const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
     const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file);
 
