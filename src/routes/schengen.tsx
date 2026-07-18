@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { VisaCountryPage } from "@/components/visa-country-page";
 export const Route = createFileRoute("/schengen")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
+  <VisaCountryPage slug="schengen" fallbackContent={
   <><section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
@@ -168,5 +170,6 @@ function VisaPage() {
   </div>
 </section>
       </>
+  } />
   );
 }

@@ -22,8 +22,6 @@ import {
   FileCheck,
   Moon,
   ChevronUp,
-  Menu,
-  X,
   Navigation,
   Send,
   Mail,
@@ -42,6 +40,10 @@ import galleryPetra from "@/assets/gallery-petra.jpg";
 import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
+import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
+import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
+import { buildWhatsAppUrl } from "@/lib/trip-format";
+import type { SiteSettings } from "@/types/admin";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -57,6 +59,20 @@ const WHATSAPP = "962795207900";
 const MAP_QUERY = "H268%2BP7%20Ramtha%20Jordan";
 const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_QUERY}&z=16&output=embed`;
 const MAP_DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${MAP_QUERY}`;
+
+function phoneList(settings?: SiteSettings) {
+  if (!settings?.phone) return PHONES;
+
+  return settings.phone
+    .split(/[,،;\n]+/)
+    .map((phone) => phone.trim())
+    .filter(Boolean)
+    .map((display) => {
+      const digits = display.replace(/\D/g, "");
+      const intl = digits.startsWith("0") ? `962${digits.slice(1)}` : digits;
+      return { display, intl };
+    });
+}
 
 /* ──────────────── Animation helpers ──────────────── */
 const fadeInUp = {
@@ -74,7 +90,7 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.8 } },
 };
 
-/* ──────────────── Navbar ──────────────── */
+/* ──────────────── Navigation Links for Footer ──────────────── */
 const NAV_LINKS = [
   { label: "الرئيسية", id: "hero" },
   { label: "خدماتنا", id: "services" },
@@ -82,105 +98,21 @@ const NAV_LINKS = [
   { label: "تواصل معنا", id: "contact" },
 ];
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
-  return (
-    <nav
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${scrolled ? "bg-cream/90 backdrop-blur-md shadow-md shadow-teal/5" : "bg-transparent"
-        }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
-        <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
-          <img src={logo} alt="شعار قيصر للسياحة والسفر" className="h-11 w-11 object-contain" />
-          <div className="text-right leading-tight">
-            <span className="block text-lg font-black text-teal tracking-tight">قيصر</span>
-            <span className="block text-[11px] font-medium text-gold-dark tracking-wide">
-              CAESAR TRAVEL
-            </span>
-          </div>
-        </button>
-
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-7">
-          {NAV_LINKS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className={`text-sm font-semibold transition-colors ${scrolled ? "text-foreground/80 hover:text-teal" : "text-foreground/90 hover:text-teal"
-                }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          <button
-            onClick={() => scrollTo("trips")}
-            className="rounded-full bg-teal px-6 py-2.5 text-sm font-bold text-primary-foreground hover:bg-teal-dark transition-colors shadow-lg shadow-teal/20"
-          >
-            احجز الآن
-          </button>
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-lg text-foreground hover:bg-cream-dark transition-colors"
-          aria-label="القائمة"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-cream/98 backdrop-blur-md border-t border-border px-6 py-5"
-        >
-          <div className="flex flex-col gap-1">
-            {NAV_LINKS.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="text-right text-base font-semibold text-foreground/80 hover:text-teal transition-colors py-2.5"
-              >
-                {item.label}
-              </button>
-            ))}
-            <button
-              onClick={() => scrollTo("trips")}
-              className="mt-3 rounded-full bg-teal px-6 py-3 text-sm font-bold text-primary-foreground"
-            >
-              احجز الآن
-            </button>
-          </div>
-        </motion.div>
-      )}
-    </nav>
-  );
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 /* ──────────────── Hero ──────────────── */
-function HeroSection() {
+function HeroSection({ settings }: { settings?: SiteSettings }) {
+  const heroTitle = settings?.hero_title ?? "اكتشف العالم مع قيصر للسياحة والسفر";
+  const heroSubtitle = settings?.hero_subtitle ?? "مع قيصر للسياحة";
+
   return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="hero" className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden">
       {/* Background image + overlay */}
       <div className="absolute inset-0">
         <img
-          src={heroImg}
+          src={resolveSiteAsset(settings?.hero_image_url, BUILTIN_HERO_URL, heroImg)}
           alt="الكعبة المشرفة في المسجد الحرام"
           className="h-full w-full object-cover"
           width={1920}
@@ -206,9 +138,13 @@ function HeroSection() {
             variants={fadeInUp}
             className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
           >
-            اكتشف العالم مع
-            قيصر للسياحة والسفر            <br />
-            <span className="text-gold">مع قيصر للسياحة</span>
+            {heroTitle}
+            {heroSubtitle ? (
+              <>
+                <br />
+                <span className="text-gold">{heroSubtitle}</span>
+              </>
+            ) : null}
           </motion.h1>
 
           <motion.p
@@ -220,27 +156,27 @@ function HeroSection() {
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
 
-            <button
-              onClick={() => document.getElementById("trips")?.scrollIntoView({ behavior: "smooth" })}
+            <Link
+              to="/gallery"
               className="rounded-full bg-gold px-8 py-4 text-base font-bold text-teal-dark hover:bg-gold-light transition-all duration-300 shadow-xl hover:scale-105"
             >
               احجز الآن
-            </button>
+            </Link>
 
             <a
-              href="https://wa.me/962795207900"
+              href={buildWhatsAppUrl(settings?.whatsapp || WHATSAPP)}
               target="_blank"
               className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
             >
               واتساب
             </a>
 
-            <button
-              onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+            <Link
+              to="/services"
               className="rounded-full border-2 border-white/40 bg-white/5 px-8 py-4 text-base font-bold text-white hover:bg-white/15 transition-colors backdrop-blur-sm"
             >
-              استكشف الوجهات
-            </button>
+              استكشف الخدمات
+            </Link>
 
           </motion.div>
         </motion.div>
@@ -248,22 +184,22 @@ function HeroSection() {
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">20+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.years_experience ?? 20}+</h3>
             <p className="text-white/80 text-sm">سنة خبرة</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">15000+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.happy_customers ?? 15000}+</h3>
             <p className="text-white/80 text-sm">عميل سعيد</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">30+</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.completed_trips ?? 30}+</h3>
             <p className="text-white/80 text-sm">وجهة سياحية</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">24/7</h3>
+            <h3 className="text-gold text-xl font-bold">{settings?.support_hours || "24/7"}</h3>
             <p className="text-white/80 text-sm">دعم العملاء</p>
           </div>
 
@@ -352,12 +288,12 @@ function ServicesSection() {
 }
 
 /* ──────────────── Stats ──────────────── */
-function StatsSection() {
+function StatsSection({ settings }: { settings?: SiteSettings }) {
   const stats = [
-    { value: "20+", label: "سنة خبرة" },
-    { value: "5000+", label: "حاج ومعتمر" },
-    { value: "4.9", label: "متوسط التقييم" },
-    { value: "50+", label: "وجهة عالمية" },
+    { value: `${settings?.years_experience ?? 20}+`, label: "سنة خبرة" },
+    { value: `${settings?.happy_customers ?? 15000}+`, label: "عميل سعيد" },
+    { value: `${settings?.completed_trips ?? 30}+`, label: "رحلة مكتملة" },
+    { value: settings?.support_hours || "24/7", label: "دعم العملاء" },
   ];
 
   return (
@@ -390,7 +326,8 @@ function StatsSection() {
 
 /* ──────────────── Gallery ──────────────── */
 function GallerySection() {
-  const images = [
+  const { data: cmsImages } = useGalleryImages();
+  const fallbackImages = [
     { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2" },
     {src: galleryMedina, alt: "المسجد النبوي الشريف",label: "العمرة",span: ""},
     {src: galleryVisa,alt: "خدمة التأشيرات",label: "التأشيرات",span: "",},
@@ -404,6 +341,14 @@ function GallerySection() {
     { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "" },
     { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "" },
   ];
+  const images = cmsImages?.length
+    ? cmsImages.map((image) => ({
+        src: image.image_url,
+        alt: image.title,
+        label: image.title,
+        span: "",
+      }))
+    : fallbackImages;
 
   return (
     <section
@@ -607,8 +552,9 @@ function ReviewsSection() {
 }
 
 /* ──────────────── Contact ──────────────── */
-function ContactSection() {
+function ContactSection({ settings }: { settings?: SiteSettings }) {
   const [sent, setSent] = useState(false);
+  const phones = phoneList(settings);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -618,13 +564,10 @@ function ContactSection() {
 
   const { error } = await supabase.from("bookings").insert([
     {
-      full_name: String(data.get("name") || ""),
+      customer_name: String(data.get("name") || ""),
       phone: String(data.get("phone") || ""),
-      service: "",
-      destination: "",
-      travel_date: null,
+      people_count: 1,
       notes: String(data.get("message") || ""),
-      status: "new",
     },
   ]);
 
@@ -672,7 +615,7 @@ function ContactSection() {
                 <h3 className="font-bold text-foreground text-lg">أرقام الهاتف</h3>
               </div>
               <div className="grid sm:grid-cols-3 gap-2">
-                {PHONES.map((p) => (
+                {phones.map((p) => (
                   <a
                     key={p.intl}
                     href={`tel:+${p.intl}`}
@@ -692,7 +635,18 @@ function ContactSection() {
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-foreground">العنوان</h3>
-                <p className="text-sm text-muted-foreground mt-1">الرمثا، الأردن — Plus Code: H268+P7</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {settings?.address || "الرمثا، الأردن — Plus Code: H268+P7"}
+                </p>
+                {settings?.email ? (
+                  <a
+                    href={`mailto:${settings.email}`}
+                    className="mt-2 block text-sm text-teal hover:text-teal-dark"
+                    dir="ltr"
+                  >
+                    {settings.email}
+                  </a>
+                ) : null}
                 <a
                   href={MAP_DIRECTIONS}
                   target="_blank"
@@ -754,7 +708,7 @@ function ContactSection() {
           >
             <iframe
               title="موقع قيصر للسياحة والسفر على الخريطة"
-              src={MAP_EMBED}
+              src={settings?.map_embed_url || MAP_EMBED}
               className="absolute inset-0 w-full h-full border-0"
               allowFullScreen
               loading="lazy"
@@ -777,8 +731,9 @@ function ContactSection() {
 }
 
 /* ──────────────── Footer ──────────────── */
-function Footer() {
+function Footer({ settings }: { settings?: SiteSettings }) {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const phones = phoneList(settings);
 
   return (
     <footer className="bg-teal-dark text-white/80">
@@ -787,9 +742,13 @@ function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="شعار قيصر للسياحة" className="h-12 w-12 object-contain" />
+              <img
+                src={resolveSiteAsset(settings?.logo_url, BUILTIN_LOGO_URL, logo)}
+                alt="شعار قيصر للسياحة"
+                className="h-12 w-12 object-contain"
+              />
               <div className="leading-tight">
-                <span className="block text-xl font-black text-gold">قيصر للسياحة والسفر</span>
+                <span className="block text-xl font-black text-gold">{settings?.company_name || "قيصر للسياحة والسفر"}</span>
                 <span className="block text-xs text-white/50 tracking-wide">CAESAR TRAVEL & TOURISM</span>
               </div>
             </div>
@@ -799,7 +758,11 @@ function Footer() {
             </p>
             <div className="flex items-center gap-3 mt-5">
               {[
-                { icon: MessageCircle, href: `https://wa.me/${WHATSAPP}`, label: "واتساب" },
+                {
+                  icon: MessageCircle,
+                  href: buildWhatsAppUrl(settings?.whatsapp || WHATSAPP),
+                  label: "واتساب",
+                },
                 { icon: Facebook, href: "https://www.facebook.com/caesartravel?locale=ar_AR", label: "فيسبوك" },
                 { icon: Instagram, href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==", label: "انستغرام" },
               ].map((s, i) => (
@@ -836,7 +799,7 @@ function Footer() {
           <div>
             <h4 className="font-bold text-white mb-4">تواصل معنا</h4>
             <ul className="space-y-2.5 text-sm">
-              {PHONES.map((p) => (
+              {phones.map((p) => (
                 <li key={p.intl}>
                   <a href={`tel:+${p.intl}`} dir="ltr" className="hover:text-gold transition-colors block text-right">
                     {p.display}
@@ -845,8 +808,16 @@ function Footer() {
               ))}
               <li className="flex items-start gap-2 pt-1">
                 <MapPin size={15} className="text-gold shrink-0 mt-0.5" />
-                <span>الرمثا، الأردن — H268+P7</span>
+                <span>{settings?.address || "الرمثا، الأردن — H268+P7"}</span>
               </li>
+              {settings?.email ? (
+                <li className="flex items-center gap-2">
+                  <Mail size={15} className="text-gold shrink-0" />
+                  <a href={`mailto:${settings.email}`} dir="ltr" className="hover:text-gold">
+                    {settings.email}
+                  </a>
+                </li>
+              ) : null}
               <li className="flex items-center gap-2">
                 <Clock size={15} className="text-gold shrink-0" />
                 <span>السبت — الخميس: 9:30 ص — 7:00 م</span>
@@ -869,10 +840,10 @@ function Footer() {
 }
 
 /* ──────────────── Floating WhatsApp ──────────────── */
-function WhatsAppButton() {
+function WhatsAppButton({ whatsapp }: { whatsapp?: string }) {
   return (
     <a
-      href={`https://wa.me/${WHATSAPP}`}
+      href={buildWhatsAppUrl(whatsapp || WHATSAPP)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل عبر واتساب"
@@ -909,6 +880,8 @@ function BackToTop() {
 
 /* ──────────────── Main Page ──────────────── */
 function Index() {
+  const { data: settings } = useSiteSettings();
+
   return (
     <>
       <Helmet>
@@ -982,16 +955,15 @@ function Index() {
   }}
 />
       <main className="min-h-screen">
-        <Navbar />
-        <HeroSection />
+        <HeroSection settings={settings} />
         <AboutSection />
         <ServicesSection />
-        <StatsSection />
+        <StatsSection settings={settings} />
         <GallerySection />
         <ReviewsSection />
-        <ContactSection />
-        <Footer />
-        <WhatsAppButton />
+        <ContactSection settings={settings} />
+        <Footer settings={settings} />
+        <WhatsAppButton whatsapp={settings?.whatsapp} />
         <BackToTop />
       </main>
     </>

@@ -1,38 +1,39 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { withAdminAuth } from "@/components/admin/admin-auth";
 
 export const Route = createFileRoute("/admin/")({
-  component: AdminHome,
+  component: withAdminAuth(AdminHome),
 });
 
 function AdminHome() {
   const cards = [
     {
-      title: "📊 لوحة التحكم",
-      link: "/admin/dashboard",
-    },
-    {
-      title: "🛂 التأشيرات",
-      link: "/admin/visa",
-    },
-    {
       title: "✈️ الرحلات",
       link: "/admin/trips",
-    },
-    {
-      title: "🏨 الفنادق",
-      link: "/admin/hotels",
     },
     {
       title: "🕋 العمرة",
       link: "/admin/umrah",
     },
     {
-      title: "📦 الطلبات",
-      link: "/admin/orders",
+      title: "🕋 الحج",
+      link: "/admin/hajj",
     },
     {
-      title: "👥 المستخدمون",
-      link: "/admin/users",
+      title: "🇪🇬 مصر",
+      link: "/admin/egypt",
+    },
+    {
+      title: "🇦🇪 دبي",
+      link: "/admin/dubai",
+    },
+    {
+      title: "🛂 التأشيرات",
+      link: "/admin/visas",
+    },
+    {
+      title: "🖼️ معرض الصور",
+      link: "/admin/gallery",
     },
     {
       title: "⚙️ الإعدادات",
@@ -49,7 +50,7 @@ function AdminHome() {
         fontFamily: "Tajawal",
       }}
     >
-      <h1>لوحة إدارة Caesar Travel</h1>
+      <h1>إدارة محتوى Caesar Travel</h1>
 
       <p>اختر القسم الذي تريد إدارته.</p>
 

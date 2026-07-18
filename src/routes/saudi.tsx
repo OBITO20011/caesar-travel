@@ -1,12 +1,50 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Helmet } from "react-helmet-async";
 import { Link } from "@tanstack/react-router";
+import { VisaCountryPage } from "@/components/visa-country-page";
 export const Route = createFileRoute("/saudi")({
   component: VisaPage,
 });
 
 function VisaPage() {
   return (
-  <><section
+  <VisaCountryPage slug="saudi" fallbackContent={
+  <>
+  <Helmet>
+    <title>رحلات السعودية | قصر للسياحة والسفر</title>
+
+    <meta
+      name="description"
+      content="أفضل عروض السفر إلى السعودية، جدة، الرياض، العلا، المدينة المنورة مع قصر للسياحة والسفر."
+    />
+
+    <meta
+      name="keywords"
+      content="السعودية، جدة، الرياض، المدينة، العلا، رحلات السعودية، قصر للسياحة"
+    />
+
+    <link
+      rel="canonical"
+      href="https://caesar-travel.pages.dev/saudi"
+    />
+
+    <meta
+      property="og:title"
+      content="رحلات السعودية | قصر للسياحة"
+    />
+
+    <meta
+      property="og:description"
+      content="احجز أفضل عروض السفر إلى السعودية مع قصر للسياحة والسفر."
+    />
+
+    <meta
+      property="og:url"
+      content="https://caesar-travel.pages.dev/saudi"
+    />
+  </Helmet>
+
+  <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: "url('/images/saudi-banner.jpg')",
@@ -168,5 +206,6 @@ function VisaPage() {
   </div>
 </section>
       </>
+  } />
   );
 }
