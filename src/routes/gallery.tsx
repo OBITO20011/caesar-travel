@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Link } from "@tanstack/react-router";
 import { Helmet } from "react-helmet-async";
 
 import galleryGeorgia from "@/assets/gallery-georgia.jpg";
@@ -15,6 +14,7 @@ import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
 import heroImg from "@/assets/hero-hajj.jpg";
+import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/gallery")({
@@ -37,33 +37,76 @@ const fadeIn = {
 };
 
 function galleryLink(title: string) {
-  const links: Record<string, "/hajj" | "/umrah" | "/visa" | "/turkey-trip" | "/dubai" | "/egypt"> = {
+  const links: Record<string, string> = {
     الحج: "/hajj",
     العمرة: "/umrah",
     التأشيرات: "/visa",
     تركيا: "/turkey-trip",
     دبي: "/dubai",
     مصر: "/egypt",
+    ...galleryPackagePaths,
   };
 
-  return links[title] || "/gallery";
+  return links[title.trim()] || "/gallery";
 }
 
 function GalleryPage() {
   const { data: cmsImages } = useGalleryImages();
   const fallbackImages = [
-    { src: heroImg, alt: "الكعبة المشرفة", label: "الحج", span: "sm:col-span-2 sm:row-span-2", link: "/hajj" },
+    {
+      src: heroImg,
+      alt: "الكعبة المشرفة",
+      label: "الحج",
+      span: "sm:col-span-2 sm:row-span-2",
+      link: "/hajj",
+    },
     { src: galleryMedina, alt: "المسجد النبوي الشريف", label: "العمرة", span: "", link: "/umrah" },
     { src: galleryVisa, alt: "خدمة التأشيرات", label: "التأشيرات", span: "", link: "/visa" },
     { src: galleryIstanbul, alt: "اسطنبول تركيا", label: "تركيا", span: "", link: "/turkey-trip" },
     { src: galleryDubai, alt: "دبي الإمارات", label: "دبي", span: "", link: "/dubai" },
-    { src: gallerySwitzerland, alt: "سويسرا", label: "سويسرا", span: "", link: "/" },
+    {
+      src: gallerySwitzerland,
+      alt: "سويسرا",
+      label: "سويسرا",
+      span: "",
+      link: "/packages/switzerland",
+    },
     { src: galleryEgypt, alt: "الأهرامات", label: "مصر", span: "", link: "/egypt" },
-    { src: galleryMaldives, alt: "المالديف", label: "المالديف", span: "", link: "/" },
-    { src: galleryGeorgia, alt: "جبال جورجيا", label: "جورجيا", span: "", link: "/" },
-    { src: galleryHotel, alt: "فندق فاخر", label: "حجز الفنادق ", span: "sm:col-span-2", link: "/" },
-    { src: galleryPetra, alt: "البتراء الأردن", label: "السياحة الداخلية", span: "", link: "/" },
-    { src: galleryFlight, alt: "رحلة طيران فاخرة", label: "الطيران", span: "", link: "/" },
+    {
+      src: galleryMaldives,
+      alt: "المالديف",
+      label: "المالديف",
+      span: "",
+      link: "/packages/maldives",
+    },
+    {
+      src: galleryGeorgia,
+      alt: "جبال جورجيا",
+      label: "جورجيا",
+      span: "",
+      link: "/packages/georgia",
+    },
+    {
+      src: galleryHotel,
+      alt: "فندق فاخر",
+      label: "حجز الفنادق ",
+      span: "sm:col-span-2",
+      link: "/packages/hotels",
+    },
+    {
+      src: galleryPetra,
+      alt: "البتراء الأردن",
+      label: "السياحة الداخلية",
+      span: "",
+      link: "/packages/domestic",
+    },
+    {
+      src: galleryFlight,
+      alt: "رحلة طيران فاخرة",
+      label: "الطيران",
+      span: "",
+      link: "/packages/flights",
+    },
   ];
   const images = cmsImages?.length
     ? cmsImages.map((image, index) => ({
@@ -83,10 +126,7 @@ function GalleryPage() {
           name="description"
           content="معرض صور من رحلاتنا إلى الحج والعمرة والسياحة الداخلية والخارجية"
         />
-        <meta
-          name="keywords"
-          content="معرض صور، رحلات، حج، عمرة، سياحة، قيصر للسياحة"
-        />
+        <meta name="keywords" content="معرض صور، رحلات، حج، عمرة، سياحة، قيصر للسياحة" />
       </Helmet>
       <main className="min-h-screen bg-cream-dark pt-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
@@ -97,13 +137,22 @@ function GalleryPage() {
             variants={staggerContainer}
             className="text-center mb-14"
           >
-            <motion.span variants={fadeInUp} className="text-sm font-bold text-gold-dark tracking-widest uppercase">
+            <motion.span
+              variants={fadeInUp}
+              className="text-sm font-bold text-gold-dark tracking-widest uppercase"
+            >
               معرض الصور
             </motion.span>
-            <motion.h1 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
+            <motion.h1
+              variants={fadeInUp}
+              className="mt-3 text-3xl md:text-5xl font-black text-teal"
+            >
               لمحات من رحلاتنا
             </motion.h1>
-            <motion.p variants={fadeInUp} className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
+            <motion.p
+              variants={fadeInUp}
+              className="mt-4 text-muted-foreground max-w-xl mx-auto text-base md:text-lg"
+            >
               وجهات مقدسة وسياحية اخترناها لك بعناية حول العالم.
             </motion.p>
           </motion.div>
@@ -116,11 +165,7 @@ function GalleryPage() {
             className="grid grid-cols-2 sm:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] gap-3 md:gap-4"
           >
             {images.map((img, i) => (
-              <Link
-                key={i}
-                to={img.link}
-                className={`block ${img.span}`}
-              >
+              <a key={i} href={img.link} className={`block ${img.span}`}>
                 <motion.div
                   variants={fadeIn}
                   className="group relative h-full overflow-hidden rounded-3xl border border-white/10 shadow-xl hover:shadow-2xl transition-all duration-500"
@@ -139,7 +184,7 @@ function GalleryPage() {
                     <div className="text-xs opacity-90">اضغط هنا</div>
                   </span>
                 </motion.div>
-              </Link>
+              </a>
             ))}
           </motion.div>
         </div>
