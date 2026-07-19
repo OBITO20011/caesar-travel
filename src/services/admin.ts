@@ -1,5 +1,10 @@
 import { supabase } from "@/lib/supabase";
+import { isTripOfferExpired } from "@/lib/trip-format";
 import type { GalleryImage, SiteSettings, Trip, TripPageKey, Visa } from "@/types/admin";
+
+function isTripPubliclyVisible(trip: Trip) {
+  return trip.is_visible !== false && !isTripOfferExpired(trip);
+}
 
 export const tripsService = {
   async getAll(
@@ -60,7 +65,7 @@ export const tripsService = {
       .order("created_at", { ascending: true });
 
     if (error) throw error;
-    return (data as Trip[]) || [];
+    return ((data as Trip[]) || []).filter(isTripPubliclyVisible);
   },
 
   async getFeatured() {
@@ -71,10 +76,10 @@ export const tripsService = {
       .eq("status", "available")
       .order("start_date", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(12);
 
     if (error) throw error;
-    return (data as Trip[]) || [];
+    return ((data as Trip[]) || []).filter(isTripPubliclyVisible).slice(0, 6);
   },
 
   async getPublicById(id: string) {
@@ -86,7 +91,8 @@ export const tripsService = {
       .maybeSingle();
 
     if (error) throw error;
-    return data as Trip | null;
+    const trip = data as Trip | null;
+    return trip && isTripPubliclyVisible(trip) ? trip : null;
   },
 };
 

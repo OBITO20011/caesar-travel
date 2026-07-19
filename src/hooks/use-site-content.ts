@@ -26,6 +26,7 @@ export function usePublicTrips(pageKey: TripPageKey) {
     queryKey: ["public-trips", pageKey],
     queryFn: () => tripsService.getPublicByPage(pageKey),
     staleTime: 60 * 1000,
+    refetchInterval: 60 * 1000,
     retry: false,
   });
 }
@@ -35,6 +36,7 @@ export function useFeaturedTrips() {
     queryKey: ["featured-trips"],
     queryFn: tripsService.getFeatured,
     staleTime: 60 * 1000,
+    refetchInterval: 60 * 1000,
     retry: false,
   });
 }
@@ -44,6 +46,7 @@ export function usePublicTrip(id: string) {
     queryKey: ["public-trip", id],
     queryFn: () => tripsService.getPublicById(id),
     staleTime: 60 * 1000,
+    refetchInterval: 60 * 1000,
     retry: false,
   });
 }

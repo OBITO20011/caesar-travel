@@ -2,8 +2,16 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrip, useSiteSettings } from "@/hooks/use-site-content";
-import { buildWhatsAppUrl, formatTripDate, formatTripPrice } from "@/lib/trip-format";
+import {
+  buildWhatsAppUrl,
+  formatTripAmount,
+  formatTripDate,
+  formatTripPrice,
+  getTripDiscountPercentage,
+  getTripSeatState,
+} from "@/lib/trip-format";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -47,7 +55,9 @@ function HotelDetailsPage() {
   }
 
   const detailImages = trip.additional_image_urls ?? [];
-  const available = trip.status === "available";
+  const seatState = getTripSeatState(trip);
+  const discount = getTripDiscountPercentage(trip);
+  const available = trip.status === "available" && !seatState.soldOut;
 
   return (
     <main className="min-h-screen bg-[#F5EFD9] p-8">
@@ -70,6 +80,36 @@ function HotelDetailsPage() {
           <p className="mt-2">🌙 المدة: {trip.description || `${trip.nights} ليالٍ`}</p>
         ) : null}
         {trip.meals ? <p className="mt-2">🍽️ الوجبات: {trip.meals}</p> : null}
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {discount > 0 && trip.old_price ? (
+            <>
+              <span className="rounded-full bg-rose-600 px-4 py-2 text-sm font-black text-white">
+                خصم {discount}%
+              </span>
+              <span className="text-gray-500 line-through">
+                {formatTripAmount(trip.old_price, trip.currency)}
+              </span>
+            </>
+          ) : null}
+          {seatState.tracksSeats ? (
+            <span
+              className={`rounded-full px-4 py-2 text-sm font-bold ${seatState.soldOut ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"}`}
+            >
+              {seatState.soldOut
+                ? "اكتمل الحجز"
+                : seatState.lastSeats
+                  ? trip.remaining_seats === 1
+                    ? "آخر مقعد"
+                    : "آخر مقعدين"
+                  : `متبقي ${trip.remaining_seats} مقعد`}
+            </span>
+          ) : null}
+          <TripOfferCountdown
+            endsAt={trip.offer_ends_at}
+            className="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700"
+          />
+        </div>
 
         {roomPrices.length > 0 ? (
           <>

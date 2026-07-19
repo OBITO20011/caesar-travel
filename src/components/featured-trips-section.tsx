@@ -5,7 +5,15 @@ import galleryMedina from "@/assets/gallery-medina.jpg";
 import heroHajj from "@/assets/hero-hajj.jpg";
 import { getPackageDestination } from "@/data/package-destinations";
 import { useFeaturedTrips } from "@/hooks/use-site-content";
-import { buildWhatsAppUrl, formatTripDate, formatTripPrice } from "@/lib/trip-format";
+import { TripOfferCountdown } from "@/components/trip-offer-countdown";
+import {
+  buildWhatsAppUrl,
+  formatTripAmount,
+  formatTripDate,
+  formatTripPrice,
+  getTripDiscountPercentage,
+  getTripSeatState,
+} from "@/lib/trip-format";
 import type { SiteSettings, TripPageKey } from "@/types/admin";
 import { ArrowLeft, CalendarDays, MapPinned, MessageCircle, Sparkles, Users } from "lucide-react";
 
@@ -94,6 +102,8 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
               ))
             : trips.map((trip) => {
                 const image = trip.main_image_url || fallbackImage(trip.page_key);
+                const discount = getTripDiscountPercentage(trip);
+                const seatState = getTripSeatState(trip);
                 return (
                   <article
                     key={trip.id}
@@ -114,6 +124,16 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
                       <span className="absolute right-5 top-5 rounded-full border border-white/20 bg-black/45 px-4 py-2 text-xs font-bold backdrop-blur-md">
                         {pageLabels[trip.page_key]}
                       </span>
+                      {discount > 0 ? (
+                        <span className="absolute left-5 top-5 rounded-full bg-rose-600 px-4 py-2 text-sm font-black text-white shadow-xl">
+                          خصم {discount}%
+                        </span>
+                      ) : null}
+                      {seatState.lastSeats ? (
+                        <span className="absolute bottom-5 left-5 rounded-full bg-amber-400 px-3 py-1.5 text-xs font-black text-slate-950">
+                          {trip.remaining_seats === 1 ? "آخر مقعد" : "آخر مقعدين"}
+                        </span>
+                      ) : null}
                     </div>
 
                     <div className="p-6">
@@ -132,22 +152,34 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
                           </span>
                         </div>
                         <div className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-3 py-3">
-                          {trip.remaining_seats > 0 ? (
+                          {seatState.tracksSeats ? (
                             <Users className="h-4 w-4 text-gold" />
                           ) : (
                             <MapPinned className="h-4 w-4 text-gold" />
                           )}
                           <span>
-                            {trip.remaining_seats > 0
-                              ? `${trip.remaining_seats} مقعد متبقٍ`
+                            {seatState.tracksSeats
+                              ? seatState.soldOut
+                                ? "اكتمل الحجز"
+                                : `${trip.remaining_seats} مقعد متبقٍ`
                               : pageLabels[trip.page_key]}
                           </span>
                         </div>
                       </div>
 
+                      <TripOfferCountdown
+                        endsAt={trip.offer_ends_at}
+                        className="mt-4 rounded-full bg-rose-500/15 px-3 py-2 text-xs font-bold text-rose-100"
+                      />
+
                       <div className="mt-6 flex items-end justify-between gap-4 border-t border-white/10 pt-5">
                         <div>
                           <p className="text-xs text-white/50">يبدأ السعر من</p>
+                          {trip.old_price && discount > 0 ? (
+                            <p className="mt-1 text-sm text-white/45 line-through">
+                              {formatTripAmount(trip.old_price, trip.currency)}
+                            </p>
+                          ) : null}
                           <p className="mt-1 text-xl font-black text-gold-light">
                             {formatTripPrice(trip)}
                           </p>
@@ -160,18 +192,24 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
                           >
                             التفاصيل
                           </a>
-                          <a
-                            href={buildWhatsAppUrl(
-                              settings?.whatsapp,
-                              `السلام عليكم، أرغب بحجز العرض المميز: ${trip.title}.`,
-                            )}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`حجز ${trip.title} عبر واتساب`}
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white transition hover:scale-105"
-                          >
-                            <MessageCircle className="h-5 w-5" />
-                          </a>
+                          {seatState.soldOut ? (
+                            <span className="inline-flex h-11 items-center rounded-full bg-rose-500/20 px-4 text-sm font-bold text-rose-100">
+                              اكتمل الحجز
+                            </span>
+                          ) : (
+                            <a
+                              href={buildWhatsAppUrl(
+                                settings?.whatsapp,
+                                `السلام عليكم، أرغب بحجز العرض المميز: ${trip.title}.`,
+                              )}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`حجز ${trip.title} عبر واتساب`}
+                              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white transition hover:scale-105"
+                            >
+                              <MessageCircle className="h-5 w-5" />
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>

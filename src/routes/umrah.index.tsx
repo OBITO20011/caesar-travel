@@ -1,8 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import umrahBg from "@/assets/umrah-bg.png";
+import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrips } from "@/hooks/use-site-content";
-import { formatTripDate, formatTripPrice } from "@/lib/trip-format";
+import {
+  formatTripAmount,
+  formatTripDate,
+  formatTripPrice,
+  getTripDiscountPercentage,
+  getTripSeatState,
+} from "@/lib/trip-format";
 
 export const Route = createFileRoute("/umrah/")({
   component: UmrahPage,
@@ -48,21 +55,35 @@ function UmrahPage() {
             </p>
           ) : (
             trips.map((trip) => {
-              const available = trip.status === "available";
+              const seatState = getTripSeatState(trip);
+              const discount = getTripDiscountPercentage(trip);
+              const available = trip.status === "available" && !seatState.soldOut;
               const hotelName = trip.makkah_hotel || trip.title;
 
               return (
                 <Link key={trip.id} to="/umrah/$id" params={{ id: trip.id }}>
                   <div className="cursor-pointer rounded-3xl border border-[#D4AF37]/25 bg-[#1C1B1A]/70 p-6 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:scale-[1.03] hover:border-[#D4AF37] hover:shadow-[0_0_40px_rgba(212,175,55,0.35)]">
-                    <img
-                      src={trip.main_image_url || umrahBg}
-                      alt={hotelName}
-                      className="mb-4 h-56 w-full rounded-2xl object-cover"
-                      onError={(event) => {
-                        event.currentTarget.onerror = null;
-                        event.currentTarget.src = umrahBg;
-                      }}
-                    />
+                    <div className="relative mb-4 h-56 overflow-hidden rounded-2xl">
+                      <img
+                        src={trip.main_image_url || umrahBg}
+                        alt={hotelName}
+                        className="h-full w-full object-cover"
+                        onError={(event) => {
+                          event.currentTarget.onerror = null;
+                          event.currentTarget.src = umrahBg;
+                        }}
+                      />
+                      {discount > 0 ? (
+                        <span className="absolute right-4 top-4 rounded-full bg-rose-600 px-3 py-1.5 text-sm font-black text-white">
+                          خصم {discount}%
+                        </span>
+                      ) : null}
+                      {seatState.lastSeats ? (
+                        <span className="absolute bottom-4 left-4 rounded-full bg-amber-400 px-3 py-1.5 text-xs font-black text-black">
+                          {trip.remaining_seats === 1 ? "آخر مقعد" : "آخر مقعدين"}
+                        </span>
+                      ) : null}
+                    </div>
 
                     <h2 className="mb-4 text-2xl font-bold text-[#8B6B00]">
                       {trip.start_date ? `رحلة ${formatTripDate(trip.start_date)}` : trip.title}
@@ -94,10 +115,31 @@ function UmrahPage() {
                       ) : null}
                     </div>
 
+                    {seatState.tracksSeats ? (
+                      <p
+                        className={`mt-4 text-sm font-bold ${seatState.soldOut ? "text-rose-300" : "text-[#F8E4A1]"}`}
+                      >
+                        {seatState.soldOut
+                          ? "اكتمل الحجز"
+                          : `متبقي ${trip.remaining_seats} من ${trip.total_seats} مقعد`}
+                      </p>
+                    ) : null}
+                    <TripOfferCountdown
+                      endsAt={trip.offer_ends_at}
+                      className="mt-3 text-xs font-bold text-rose-300"
+                    />
+
                     <div className="mt-6 flex items-center justify-between gap-3">
-                      <span className="text-2xl font-bold text-[#B8860B]">
-                        {formatTripPrice(trip)}
-                      </span>
+                      <div>
+                        {trip.old_price && discount > 0 ? (
+                          <p className="text-sm text-[#F8E4A1]/55 line-through">
+                            {formatTripAmount(trip.old_price, trip.currency)}
+                          </p>
+                        ) : null}
+                        <span className="text-2xl font-bold text-[#B8860B]">
+                          {formatTripPrice(trip)}
+                        </span>
+                      </div>
 
                       {available ? (
                         <span className="rounded-xl bg-[#C9A227] px-5 py-2 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-[#B8860B] hover:shadow-[0_10px_25px_rgba(212,175,55,0.5)]">
@@ -105,7 +147,9 @@ function UmrahPage() {
                         </span>
                       ) : (
                         <span className="rounded-xl bg-gray-700 px-5 py-2 text-sm font-bold text-gray-200">
-                          {statusLabels[trip.status as keyof typeof statusLabels] || "غير متاحة"}
+                          {seatState.soldOut
+                            ? "اكتمل الحجز"
+                            : statusLabels[trip.status as keyof typeof statusLabels] || "غير متاحة"}
                         </span>
                       )}
                     </div>

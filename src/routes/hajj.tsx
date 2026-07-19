@@ -1,8 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
+import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
-import { buildWhatsAppUrl, formatTripDate } from "@/lib/trip-format";
+import {
+  buildWhatsAppUrl,
+  formatTripAmount,
+  formatTripDate,
+  formatTripPrice,
+  getTripDiscountPercentage,
+  getTripSeatState,
+} from "@/lib/trip-format";
 
 export const Route = createFileRoute("/hajj")({
   component: HajjPage,
@@ -40,7 +48,9 @@ function HajjPage() {
           </div>
         ) : (
           trips.map((trip) => {
-            const available = trip.status === "available";
+            const seatState = getTripSeatState(trip);
+            const discount = getTripDiscountPercentage(trip);
+            const available = trip.status === "available" && !seatState.soldOut;
 
             return (
               <motion.div
@@ -55,7 +65,9 @@ function HajjPage() {
                     available ? "bg-green-600" : "bg-gray-600"
                   }`}
                 >
-                  {statusLabels[trip.status as keyof typeof statusLabels] || "غير متاح"}
+                  {seatState.soldOut
+                    ? "اكتمل التسجيل"
+                    : statusLabels[trip.status as keyof typeof statusLabels] || "غير متاح"}
                 </span>
 
                 <h1 className="mt-6 flex items-center justify-center gap-3 text-5xl font-bold text-blue-900">
@@ -84,6 +96,41 @@ function HajjPage() {
                     ) : null}
                   </div>
                 ) : null}
+
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  {trip.price !== undefined && trip.price !== null ? (
+                    <div className="rounded-2xl bg-white/70 px-5 py-3">
+                      {trip.old_price && discount > 0 ? (
+                        <p className="text-sm text-gray-500 line-through">
+                          {formatTripAmount(trip.old_price, trip.currency)}
+                        </p>
+                      ) : null}
+                      <p className="text-2xl font-black text-blue-900">{formatTripPrice(trip)}</p>
+                    </div>
+                  ) : null}
+                  {discount > 0 ? (
+                    <span className="rounded-full bg-rose-600 px-4 py-2 font-black text-white">
+                      خصم {discount}%
+                    </span>
+                  ) : null}
+                  {seatState.tracksSeats ? (
+                    <span
+                      className={`rounded-full px-4 py-2 font-bold ${seatState.soldOut ? "bg-rose-600 text-white" : "bg-amber-300 text-slate-900"}`}
+                    >
+                      {seatState.soldOut
+                        ? "اكتمل التسجيل"
+                        : seatState.lastSeats
+                          ? trip.remaining_seats === 1
+                            ? "آخر مقعد"
+                            : "آخر مقعدين"
+                          : `متبقي ${trip.remaining_seats} مقعد`}
+                    </span>
+                  ) : null}
+                  <TripOfferCountdown
+                    endsAt={trip.offer_ends_at}
+                    className="rounded-full bg-slate-900/80 px-4 py-2 font-bold text-white"
+                  />
+                </div>
 
                 {available ? (
                   <a

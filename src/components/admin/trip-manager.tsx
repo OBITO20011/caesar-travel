@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Edit3, ImagePlus, Loader2, Plus, Search, Trash2 } from "lucide-react";
+import { Clock3, Edit3, Eye, EyeOff, ImagePlus, Loader2, Plus, Search, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,7 @@ type TripForm = {
   start_date: string;
   end_date: string;
   price: string;
+  old_price: string;
   currency: string;
   makkah_hotel: string;
   madinah_hotel: string;
@@ -79,6 +80,8 @@ type TripForm = {
   madinah_image_url: string;
   status: TripStatus;
   is_featured: boolean;
+  is_visible: boolean;
+  offer_ends_at: string;
 };
 
 function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
@@ -90,6 +93,7 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     start_date: "",
     end_date: "",
     price: "",
+    old_price: "",
     currency: "JOD",
     makkah_hotel: "",
     madinah_hotel: "",
@@ -107,7 +111,17 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     madinah_image_url: "",
     status: "available",
     is_featured: false,
+    is_visible: true,
+    offer_ends_at: "",
   };
+}
+
+function toDateTimeLocal(value?: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
+  return localDate.toISOString().slice(0, 16);
 }
 
 function formFromTrip(trip: Trip): TripForm {
@@ -119,6 +133,7 @@ function formFromTrip(trip: Trip): TripForm {
     start_date: trip.start_date ?? "",
     end_date: trip.end_date ?? "",
     price: trip.price?.toString() ?? "",
+    old_price: trip.old_price?.toString() ?? "",
     currency: trip.currency,
     makkah_hotel: trip.makkah_hotel ?? "",
     madinah_hotel: trip.madinah_hotel ?? "",
@@ -136,6 +151,8 @@ function formFromTrip(trip: Trip): TripForm {
     madinah_image_url: trip.madinah_image_url ?? "",
     status: trip.status,
     is_featured: trip.is_featured,
+    is_visible: trip.is_visible !== false && trip.status !== "hidden",
+    offer_ends_at: toDateTimeLocal(trip.offer_ends_at),
   };
 }
 
@@ -148,6 +165,7 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     start_date: form.start_date || undefined,
     end_date: form.end_date || undefined,
     price: form.price ? Number(form.price) : undefined,
+    old_price: form.old_price ? Number(form.old_price) : null,
     currency: form.currency.trim().toUpperCase() || "JOD",
     makkah_hotel: form.makkah_hotel.trim() || undefined,
     madinah_hotel: form.madinah_hotel.trim() || undefined,
@@ -168,6 +186,8 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     madinah_image_url: form.madinah_image_url.trim() || undefined,
     status: form.status,
     is_featured: form.is_featured,
+    is_visible: form.is_visible,
+    offer_ends_at: form.offer_ends_at ? new Date(form.offer_ends_at).toISOString() : null,
   };
 }
 
@@ -183,6 +203,26 @@ function formatPrice(trip: Trip) {
     currency: trip.currency || "JOD",
     maximumFractionDigits: 0,
   }).format(trip.price);
+}
+
+function formatAmount(amount: number, currency: string) {
+  return new Intl.NumberFormat("ar-JO", {
+    style: "currency",
+    currency: currency || "JOD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+function getDiscountPercentage(trip: Trip) {
+  if (
+    trip.price === undefined ||
+    trip.price === null ||
+    !trip.old_price ||
+    trip.old_price <= trip.price
+  ) {
+    return 0;
+  }
+  return Math.round(((trip.old_price - trip.price) / trip.old_price) * 100);
 }
 
 interface TripManagerProps {
@@ -219,6 +259,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
   const refreshTrips = async () => {
     await queryClient.invalidateQueries({ queryKey: ["admin-trips"] });
     await queryClient.invalidateQueries({ queryKey: ["public-trips", pageKey] });
+    await queryClient.invalidateQueries({ queryKey: ["featured-trips"] });
   };
 
   const saveMutation = useMutation({
@@ -242,6 +283,16 @@ export function TripManager({ title, description, category, pageKey }: TripManag
     onSuccess: async () => {
       await refreshTrips();
       setFeedback("تم حذف الرحلة.");
+    },
+    onError: (error) => setFeedback(getErrorMessage(error)),
+  });
+
+  const visibilityMutation = useMutation({
+    mutationFn: ({ id, isVisible }: { id: string; isVisible: boolean }) =>
+      tripsService.update(id, { is_visible: isVisible }),
+    onSuccess: async (_, variables) => {
+      await refreshTrips();
+      setFeedback(variables.isVisible ? "تم إظهار العرض في الموقع." : "تم إخفاء العرض من الموقع.");
     },
     onError: (error) => setFeedback(getErrorMessage(error)),
   });
@@ -315,6 +366,18 @@ export function TripManager({ title, description, category, pageKey }: TripManag
 
     if (!form.title.trim()) {
       setFormError("اسم الرحلة مطلوب.");
+      return;
+    }
+
+    const currentPrice = form.price ? Number(form.price) : null;
+    const oldPrice = form.old_price ? Number(form.old_price) : null;
+    if (currentPrice !== null && oldPrice !== null && oldPrice <= currentPrice) {
+      setFormError("السعر القديم يجب أن يكون أكبر من السعر الحالي حتى يظهر الخصم.");
+      return;
+    }
+
+    if (Number(form.remaining_seats) > Number(form.total_seats)) {
+      setFormError("المقاعد المتبقية لا يمكن أن تكون أكثر من إجمالي المقاعد.");
       return;
     }
 
@@ -408,7 +471,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[800px] text-right text-sm">
+                <table className="w-full min-w-[980px] text-right text-sm">
                   <thead className="bg-slate-50 text-slate-500">
                     <tr>
                       <th className="px-5 py-4 font-medium">الرحلة</th>
@@ -416,6 +479,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                       <th className="px-5 py-4 font-medium">السعر</th>
                       <th className="px-5 py-4 font-medium">المقاعد</th>
                       <th className="px-5 py-4 font-medium">الحالة</th>
+                      <th className="px-5 py-4 font-medium">الظهور</th>
                       <th className="px-5 py-4 font-medium">الإجراءات</th>
                     </tr>
                   </thead>
@@ -437,7 +501,19 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                           </div>
                         </td>
                         <td className="px-5 py-4">{trip.start_date || "—"}</td>
-                        <td className="px-5 py-4 font-medium">{formatPrice(trip)}</td>
+                        <td className="px-5 py-4 font-medium">
+                          <div>{formatPrice(trip)}</div>
+                          {trip.old_price && getDiscountPercentage(trip) > 0 ? (
+                            <div className="mt-1 flex items-center gap-2 text-xs">
+                              <span className="text-slate-400 line-through">
+                                {formatAmount(trip.old_price, trip.currency)}
+                              </span>
+                              <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100">
+                                خصم {getDiscountPercentage(trip)}%
+                              </Badge>
+                            </div>
+                          ) : null}
+                        </td>
                         <td className="px-5 py-4">
                           {trip.remaining_seats}/{trip.total_seats}
                         </td>
@@ -445,6 +521,43 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                           <Badge className={statusClasses[trip.status]}>
                             {statusLabels[trip.status]}
                           </Badge>
+                          {trip.offer_ends_at ? (
+                            <div className="mt-2 flex items-center gap-1 text-xs text-slate-500">
+                              <Clock3 className="h-3.5 w-3.5" />
+                              {new Date(trip.offer_ends_at).getTime() <= Date.now()
+                                ? "انتهى العرض"
+                                : new Intl.DateTimeFormat("ar-JO", {
+                                    dateStyle: "short",
+                                    timeStyle: "short",
+                                  }).format(new Date(trip.offer_ends_at))}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td className="px-5 py-4">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={visibilityMutation.isPending}
+                            onClick={() =>
+                              visibilityMutation.mutate({
+                                id: trip.id,
+                                isVisible: trip.is_visible === false,
+                              })
+                            }
+                            className={
+                              trip.is_visible === false
+                                ? "border-slate-300 text-slate-500"
+                                : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                            }
+                          >
+                            {trip.is_visible === false ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                            {trip.is_visible === false ? "مخفي" : "ظاهر"}
+                          </Button>
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex gap-1">
@@ -543,14 +656,24 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 />
               </Field>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Field label="السعر">
+            <div className="grid gap-4 md:grid-cols-4">
+              <Field label="السعر الحالي">
                 <Input
                   type="number"
                   min="0"
                   step="0.01"
                   value={form.price}
                   onChange={(event) => setForm({ ...form, price: event.target.value })}
+                />
+              </Field>
+              <Field label="السعر القديم (اختياري)">
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={form.old_price}
+                  onChange={(event) => setForm({ ...form, old_price: event.target.value })}
+                  placeholder="يظهر مشطوباً"
                 />
               </Field>
               <Field label="العملة">
@@ -643,41 +766,67 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 </Field>
               </div>
             ) : null}
-            <div className="grid gap-4 md:grid-cols-3">
-              <Field label="عدد الليالي">
-                <Input
-                  type="number"
-                  min="0"
-                  value={form.nights}
-                  onChange={(event) => setForm({ ...form, nights: event.target.value })}
-                />
-              </Field>
-              <Field label="إجمالي المقاعد">
-                <Input
-                  type="number"
-                  min="0"
-                  value={form.total_seats}
-                  onChange={(event) => setForm({ ...form, total_seats: event.target.value })}
-                />
-              </Field>
-              <Field label="المقاعد المتبقية">
-                <Input
-                  type="number"
-                  min="0"
-                  value={form.remaining_seats}
-                  onChange={(event) => setForm({ ...form, remaining_seats: event.target.value })}
-                />
-              </Field>
+            <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
+              <div className="mb-4">
+                <h3 className="font-bold text-slate-900">إعدادات العرض الديناميكي</h3>
+                <p className="mt-1 text-xs text-slate-600">
+                  جميع الحقول اختيارية، ويُحسب الخصم وحالة المقاعد تلقائياً.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-4">
+                <Field label="عدد الليالي">
+                  <Input
+                    type="number"
+                    min="0"
+                    value={form.nights}
+                    onChange={(event) => setForm({ ...form, nights: event.target.value })}
+                  />
+                </Field>
+                <Field label="إجمالي المقاعد">
+                  <Input
+                    type="number"
+                    min="0"
+                    value={form.total_seats}
+                    onChange={(event) => setForm({ ...form, total_seats: event.target.value })}
+                  />
+                </Field>
+                <Field label="المقاعد المتبقية">
+                  <Input
+                    type="number"
+                    min="0"
+                    value={form.remaining_seats}
+                    onChange={(event) => setForm({ ...form, remaining_seats: event.target.value })}
+                  />
+                </Field>
+                <Field label="ينتهي العرض في">
+                  <Input
+                    type="datetime-local"
+                    value={form.offer_ends_at}
+                    onChange={(event) => setForm({ ...form, offer_ends_at: event.target.value })}
+                  />
+                </Field>
+              </div>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:gap-8">
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={form.is_visible}
+                    onChange={(event) => setForm({ ...form, is_visible: event.target.checked })}
+                    className="h-4 w-4 rounded border-slate-300"
+                  />
+                  إظهار العرض في الموقع
+                </label>
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={form.is_featured}
+                    onChange={(event) => setForm({ ...form, is_featured: event.target.checked })}
+                    className="h-4 w-4 rounded border-slate-300"
+                  />
+                  إظهار ضمن العروض المميزة في الرئيسية
+                </label>
+              </div>
             </div>
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-              <input
-                type="checkbox"
-                checked={form.is_featured}
-                onChange={(event) => setForm({ ...form, is_featured: event.target.checked })}
-                className="h-4 w-4 rounded border-slate-300"
-              />
-              إظهار كرحلة مميزة
-            </label>
             <Field label="الصورة الرئيسية">
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Input

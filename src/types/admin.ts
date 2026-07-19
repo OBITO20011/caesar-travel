@@ -24,6 +24,7 @@ export interface Trip {
   start_date?: string;
   end_date?: string;
   price?: number;
+  old_price?: number | null;
   currency: string;
   makkah_hotel?: string;
   madinah_hotel?: string;
@@ -41,6 +42,8 @@ export interface Trip {
   madinah_image_url?: string;
   status: TripStatus;
   is_featured: boolean;
+  is_visible: boolean;
+  offer_ends_at?: string | null;
   created_at: string;
   updated_at: string;
 }
