@@ -1,7 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
-import { motion } from "framer-motion";
 import logo from "@/assets/caesar-mark.png";
 import { useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
@@ -22,7 +20,6 @@ function scrollToElement(id: string) {
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const { data: settings } = useSiteSettings();
 
@@ -32,18 +29,12 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // إغلاق القائمة عند تغيير المسار
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location.pathname]);
-
   const isActive = (path: string) => location.pathname === path;
 
   const handleLinkClick = (item: (typeof NAV_LINKS)[0]) => {
     if (item.hash) {
       // إذا كان هناك hash، انتظر قليلاً ثم تمرر إلى العنصر
       setTimeout(() => scrollToElement(item.hash), 100);
-      setMenuOpen(false);
     }
   };
 
@@ -53,7 +44,7 @@ export function Header() {
         scrolled ? "bg-cream/90 backdrop-blur-md shadow-md shadow-teal/5" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 md:px-8 md:py-3">
         {/* Logo and brand */}
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img
@@ -95,45 +86,34 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Mobile menu toggle */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-lg text-foreground hover:bg-cream-dark transition-colors"
-          aria-label="القائمة"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-cream/98 backdrop-blur-md border-t border-border px-6 py-5"
+      {/* Mobile links stay visible like the desktop navigation. */}
+      <nav
+        className="grid grid-cols-5 items-center gap-1 border-t border-teal/10 bg-cream/95 px-2 pb-2 pt-1.5 backdrop-blur-md md:hidden"
+        aria-label="التنقل الرئيسي"
+      >
+        {NAV_LINKS.map((item) => (
+          <Link
+            key={`${item.path}-${item.hash || ""}`}
+            to={item.path}
+            onClick={() => handleLinkClick(item)}
+            className={`flex min-h-8 items-center justify-center whitespace-nowrap rounded-full px-1 text-center text-[10px] font-bold transition-colors sm:text-xs ${
+              isActive(item.path)
+                ? "bg-teal/10 text-teal"
+                : "text-foreground/75 hover:bg-teal/5 hover:text-teal"
+            }`}
+          >
+            {item.label}
+          </Link>
+        ))}
+        <Link
+          to="/gallery"
+          className="flex min-h-8 items-center justify-center whitespace-nowrap rounded-full bg-teal px-1 text-center text-[10px] font-bold text-primary-foreground shadow-md shadow-teal/15 transition-colors hover:bg-teal-dark sm:text-xs"
         >
-          <div className="flex flex-col gap-1">
-            {NAV_LINKS.map((item) => (
-              <Link
-                key={`${item.path}-${item.hash || ""}`}
-                to={item.path}
-                onClick={() => handleLinkClick(item)}
-                className={`text-right text-base font-semibold transition-colors py-2.5 ${
-                  isActive(item.path) ? "text-teal" : "text-foreground/80 hover:text-teal"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              to="/gallery"
-              className="mt-3 rounded-full bg-teal px-6 py-3 text-sm font-bold text-primary-foreground"
-            >
-              احجز الآن
-            </Link>
-          </div>
-        </motion.div>
-      )}
+          احجز الآن
+        </Link>
+      </nav>
     </header>
   );
 }

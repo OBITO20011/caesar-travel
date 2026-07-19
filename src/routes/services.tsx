@@ -52,7 +52,7 @@ function ServicesPage() {
           content="خدمات، حج، عمرة، طيران، فنادق، تأشيرات، قيصر للسياحة"
         />
       </Helmet>
-      <main className="min-h-screen bg-cream pt-20">
+      <main className="min-h-screen bg-cream pt-28 md:pt-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
           <motion.div
             initial="hidden"

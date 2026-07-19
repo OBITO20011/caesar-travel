@@ -113,7 +113,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
   return (
     <section
       id="hero"
-      className="relative pt-16 md:pt-20 min-h-screen flex items-center overflow-hidden"
+      className="relative pt-28 md:pt-20 min-h-screen flex items-center overflow-hidden"
     >
       {/* Background image + overlay */}
       <div className="absolute inset-0">

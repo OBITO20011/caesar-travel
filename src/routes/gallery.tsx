@@ -128,7 +128,7 @@ function GalleryPage() {
         />
         <meta name="keywords" content="معرض صور، رحلات، حج، عمرة، سياحة، قيصر للسياحة" />
       </Helmet>
-      <main className="min-h-screen bg-cream-dark pt-20">
+      <main className="min-h-screen bg-cream-dark pt-28 md:pt-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
           <motion.div
             initial="hidden"

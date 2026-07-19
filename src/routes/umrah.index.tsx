@@ -24,7 +24,7 @@ function UmrahPage() {
       style={{ backgroundImage: `url(${umrahBg})` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-[#1A1207]/90" />
-      <div className="relative z-10 mx-auto max-w-7xl px-8 py-16">
+      <div className="relative z-10 mx-auto max-w-7xl px-8 pb-16 pt-32 md:py-16">
         <h1 className="mb-2 text-center text-4xl font-bold text-[#E7C56D] drop-shadow-lg">
           رحلات العمرة
         </h1>
