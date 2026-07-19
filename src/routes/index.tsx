@@ -1014,9 +1014,9 @@ function Index() {
       <main className="min-h-screen">
         <HeroSection settings={settings} />
         <AboutSection />
+        <FeaturedTripsSection settings={settings} />
         <ServicesSection />
         <StatsSection settings={settings} />
-        <FeaturedTripsSection settings={settings} />
         <QuickQuoteSection settings={settings} />
         <GallerySection />
         <ReviewsSection />

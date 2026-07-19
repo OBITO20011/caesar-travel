@@ -64,8 +64,6 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
   const featuredQuery = useFeaturedTrips();
   const trips = featuredQuery.data ?? [];
 
-  if (!featuredQuery.isLoading && trips.length === 0) return null;
-
   return (
     <section
       id="featured-trips"
@@ -96,126 +94,168 @@ export function FeaturedTripsSection({ settings }: { settings?: SiteSettings }) 
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {featuredQuery.isLoading
-            ? Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="h-[440px] animate-pulse rounded-[2rem] bg-white/10" />
-              ))
-            : trips.map((trip) => {
-                const image = trip.main_image_url || fallbackImage(trip.page_key);
-                const discount = getTripDiscountPercentage(trip);
-                const seatState = getTripSeatState(trip);
-                return (
-                  <article
-                    key={trip.id}
-                    className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.07] shadow-2xl shadow-black/10 backdrop-blur-sm transition duration-500 hover:-translate-y-2 hover:border-gold/45"
-                  >
-                    <div className="relative h-60 overflow-hidden">
-                      <img
-                        src={image}
-                        alt={trip.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                        onError={(event) => {
-                          event.currentTarget.onerror = null;
-                          event.currentTarget.src = fallbackImage(trip.page_key);
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d2740] via-transparent to-black/10" />
-                      <span className="absolute right-5 top-5 rounded-full border border-white/20 bg-black/45 px-4 py-2 text-xs font-bold backdrop-blur-md">
-                        {pageLabels[trip.page_key]}
+          {featuredQuery.isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="h-[440px] animate-pulse rounded-[2rem] bg-white/10" />
+            ))
+          ) : trips.length > 0 ? (
+            trips.map((trip) => {
+              const image = trip.main_image_url || fallbackImage(trip.page_key);
+              const discount = getTripDiscountPercentage(trip);
+              const seatState = getTripSeatState(trip);
+              return (
+                <article
+                  key={trip.id}
+                  className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.07] shadow-2xl shadow-black/10 backdrop-blur-sm transition duration-500 hover:-translate-y-2 hover:border-gold/45"
+                >
+                  <div className="relative h-60 overflow-hidden">
+                    <img
+                      src={image}
+                      alt={trip.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = fallbackImage(trip.page_key);
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d2740] via-transparent to-black/10" />
+                    <span className="absolute right-5 top-5 rounded-full border border-white/20 bg-black/45 px-4 py-2 text-xs font-bold backdrop-blur-md">
+                      {pageLabels[trip.page_key]}
+                    </span>
+                    {discount > 0 ? (
+                      <span className="absolute left-5 top-5 rounded-full bg-rose-600 px-4 py-2 text-sm font-black text-white shadow-xl">
+                        خصم {discount}%
                       </span>
-                      {discount > 0 ? (
-                        <span className="absolute left-5 top-5 rounded-full bg-rose-600 px-4 py-2 text-sm font-black text-white shadow-xl">
-                          خصم {discount}%
+                    ) : null}
+                    {seatState.lastSeats ? (
+                      <span className="absolute bottom-5 left-5 rounded-full bg-amber-400 px-3 py-1.5 text-xs font-black text-slate-950">
+                        {trip.remaining_seats === 1 ? "آخر مقعد" : "آخر مقعدين"}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <div className="p-6">
+                    <h3 className="text-2xl font-black leading-snug">{trip.title}</h3>
+                    {trip.description ? (
+                      <p className="mt-3 line-clamp-2 min-h-12 text-sm leading-6 text-white/65">
+                        {trip.description}
+                      </p>
+                    ) : null}
+
+                    <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-white/70">
+                      <div className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-3 py-3">
+                        <CalendarDays className="h-4 w-4 text-gold" />
+                        <span>
+                          {trip.start_date ? formatTripDate(trip.start_date) : "موعد مرن"}
                         </span>
-                      ) : null}
-                      {seatState.lastSeats ? (
-                        <span className="absolute bottom-5 left-5 rounded-full bg-amber-400 px-3 py-1.5 text-xs font-black text-slate-950">
-                          {trip.remaining_seats === 1 ? "آخر مقعد" : "آخر مقعدين"}
+                      </div>
+                      <div className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-3 py-3">
+                        {seatState.tracksSeats ? (
+                          <Users className="h-4 w-4 text-gold" />
+                        ) : (
+                          <MapPinned className="h-4 w-4 text-gold" />
+                        )}
+                        <span>
+                          {seatState.tracksSeats
+                            ? seatState.soldOut
+                              ? "اكتمل الحجز"
+                              : `${trip.remaining_seats} مقعد متبقٍ`
+                            : pageLabels[trip.page_key]}
                         </span>
-                      ) : null}
+                      </div>
                     </div>
 
-                    <div className="p-6">
-                      <h3 className="text-2xl font-black leading-snug">{trip.title}</h3>
-                      {trip.description ? (
-                        <p className="mt-3 line-clamp-2 min-h-12 text-sm leading-6 text-white/65">
-                          {trip.description}
-                        </p>
-                      ) : null}
+                    <TripOfferCountdown
+                      endsAt={trip.offer_ends_at}
+                      className="mt-4 rounded-full bg-rose-500/15 px-3 py-2 text-xs font-bold text-rose-100"
+                    />
 
-                      <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-white/70">
-                        <div className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-3 py-3">
-                          <CalendarDays className="h-4 w-4 text-gold" />
-                          <span>
-                            {trip.start_date ? formatTripDate(trip.start_date) : "موعد مرن"}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 rounded-2xl bg-white/[0.07] px-3 py-3">
-                          {seatState.tracksSeats ? (
-                            <Users className="h-4 w-4 text-gold" />
-                          ) : (
-                            <MapPinned className="h-4 w-4 text-gold" />
-                          )}
-                          <span>
-                            {seatState.tracksSeats
-                              ? seatState.soldOut
-                                ? "اكتمل الحجز"
-                                : `${trip.remaining_seats} مقعد متبقٍ`
-                              : pageLabels[trip.page_key]}
-                          </span>
-                        </div>
-                      </div>
-
-                      <TripOfferCountdown
-                        endsAt={trip.offer_ends_at}
-                        className="mt-4 rounded-full bg-rose-500/15 px-3 py-2 text-xs font-bold text-rose-100"
-                      />
-
-                      <div className="mt-6 flex items-end justify-between gap-4 border-t border-white/10 pt-5">
-                        <div>
-                          <p className="text-xs text-white/50">يبدأ السعر من</p>
-                          {trip.old_price && discount > 0 ? (
-                            <p className="mt-1 text-sm text-white/45 line-through">
-                              {formatTripAmount(trip.old_price, trip.currency)}
-                            </p>
-                          ) : null}
-                          <p className="mt-1 text-xl font-black text-gold-light">
-                            {formatTripPrice(trip)}
+                    <div className="mt-6 flex items-end justify-between gap-4 border-t border-white/10 pt-5">
+                      <div>
+                        <p className="text-xs text-white/50">يبدأ السعر من</p>
+                        {trip.old_price && discount > 0 ? (
+                          <p className="mt-1 text-sm text-white/45 line-through">
+                            {formatTripAmount(trip.old_price, trip.currency)}
                           </p>
-                        </div>
-                        <div className="flex gap-2">
+                        ) : null}
+                        <p className="mt-1 text-xl font-black text-gold-light">
+                          {formatTripPrice(trip)}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href={pagePaths[trip.page_key]}
+                          aria-label={`تفاصيل ${trip.title}`}
+                          className="inline-flex h-11 items-center rounded-full border border-white/20 px-4 text-sm font-bold transition hover:bg-white/10"
+                        >
+                          التفاصيل
+                        </a>
+                        {seatState.soldOut ? (
+                          <span className="inline-flex h-11 items-center rounded-full bg-rose-500/20 px-4 text-sm font-bold text-rose-100">
+                            اكتمل الحجز
+                          </span>
+                        ) : (
                           <a
-                            href={pagePaths[trip.page_key]}
-                            aria-label={`تفاصيل ${trip.title}`}
-                            className="inline-flex h-11 items-center rounded-full border border-white/20 px-4 text-sm font-bold transition hover:bg-white/10"
+                            href={buildWhatsAppUrl(
+                              settings?.whatsapp,
+                              `السلام عليكم، أرغب بحجز العرض المميز: ${trip.title}.`,
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`حجز ${trip.title} عبر واتساب`}
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white transition hover:scale-105"
                           >
-                            التفاصيل
+                            <MessageCircle className="h-5 w-5" />
                           </a>
-                          {seatState.soldOut ? (
-                            <span className="inline-flex h-11 items-center rounded-full bg-rose-500/20 px-4 text-sm font-bold text-rose-100">
-                              اكتمل الحجز
-                            </span>
-                          ) : (
-                            <a
-                              href={buildWhatsAppUrl(
-                                settings?.whatsapp,
-                                `السلام عليكم، أرغب بحجز العرض المميز: ${trip.title}.`,
-                              )}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`حجز ${trip.title} عبر واتساب`}
-                              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white transition hover:scale-105"
-                            >
-                              <MessageCircle className="h-5 w-5" />
-                            </a>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="relative col-span-full overflow-hidden rounded-[2rem] border border-gold/25 bg-gradient-to-l from-white/[0.11] to-white/[0.05] p-7 shadow-2xl shadow-black/10 md:p-10">
+              <div className="absolute -left-16 -top-20 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
+              <div className="relative flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                <div className="max-w-2xl">
+                  <span className="inline-flex items-center gap-2 text-sm font-bold text-gold-light">
+                    <Sparkles className="h-4 w-4" />
+                    عروض تناسب خطتك وميزانيتك
+                  </span>
+                  <h3 className="mt-4 text-2xl font-black sm:text-3xl">
+                    وجهتك القادمة تبدأ من هنا
+                  </h3>
+                  <p className="mt-3 text-base leading-8 text-white/70">
+                    استعرض وجهاتنا أو تواصل معنا لنجهز لك عرض سفر متكاملاً حسب الموعد والميزانية
+                    وعدد المسافرين.
+                  </p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-3">
+                  <a
+                    href="/gallery"
+                    className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 font-black text-[#0d2740] transition hover:scale-105 hover:bg-gold-light"
+                  >
+                    استعرض الوجهات
+                    <ArrowLeft className="h-4 w-4" />
+                  </a>
+                  <a
+                    href={buildWhatsAppUrl(
+                      settings?.whatsapp,
+                      "السلام عليكم، أرغب بالحصول على عرض سفر مناسب.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 font-black text-white transition hover:scale-105"
+                  >
+                    اطلب عرضاً خاصاً
+                    <MessageCircle className="h-5 w-5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
