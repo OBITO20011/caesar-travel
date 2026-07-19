@@ -481,26 +481,29 @@ function GallerySection() {
 function ReviewsSection() {
   const reviews = [
     {
-      name: "علي الناصر ",
+      name: "Rayan Alzoubi",
       rating: 5,
-      text: "تجربة ممتازة في العمرة! التنظيم كان احترافياً والإقامة فاخرة. أنصح الجميع بالتعامل مع قيصر.",
+      text: "من افضل شركات السياحه والسفر صراحه صدق وامانه واخلاص بالتعامل",
     },
     {
-      name: "سارة محمد",
+      name: "Hussein Hezaber",
       rating: 5,
-      text: "رحلة عائلية إلى تركيا كانت رائعة. كل التفاصيل محسوبة والمرشد كان ممتازاً. شكراً لكم!",
+      text: "شركة ممتازة في مجال السياحة والسفر وخاصة الحج والعمرة.",
     },
     {
-      name: "محمد العلي",
-      rating: 4,
-      text: "خدمة جيدة جداً وسعر منافس. التأشيرة والحجوزات تمت بسلاسة. سأتعامل معهم مرة أخرى.",
+      name: "Bander alzoubi",
+      rating: 5,
+      text: "افضل واصدق شركة سياحة في الشمال",
     },
     {
-      name: "ليلى عبدالله",
+      name: "احمد عواقله",
       rating: 5,
-      text: "حج مبارك مع قيصر هذا العام. الجماعة كانت منظمة والخدمات تفوق التوقعات. جزاكم الله خيراً.",
+      text: "التعامل الكويس مع الجميع",
     },
   ];
+
+  const googleReviewsUrl =
+    "https://www.google.com/maps/search/?api=1&query=%D9%82%D9%8A%D8%B5%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9%20%D9%88%D8%A7%D9%84%D8%B3%D9%81%D8%B1%20%D9%88%D8%A7%D9%84%D8%AD%D8%AC%20%D9%88%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D9%85%D8%AB%D8%A7";
 
   return (
     <section id="reviews" className="py-24 md:py-32 bg-cream">
@@ -521,6 +524,19 @@ function ReviewsSection() {
           <motion.h2 variants={fadeInUp} className="mt-3 text-3xl md:text-5xl font-black text-teal">
             ماذا يقولون عنا؟
           </motion.h2>
+          <motion.p variants={fadeInUp} className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            مراجعات حقيقية مختارة من أعلى تقييمات عملائنا على Google.
+          </motion.p>
+          <motion.a
+            variants={fadeInUp}
+            href={googleReviewsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white px-5 py-2.5 text-sm font-bold text-teal shadow-sm transition-colors hover:border-gold hover:text-gold-dark"
+          >
+            عرض جميع مراجعات Google
+            <ArrowLeft size={16} />
+          </motion.a>
         </motion.div>
 
         <motion.div
@@ -536,14 +552,19 @@ function ReviewsSection() {
               variants={fadeInUp}
               className="rounded-3xl bg-card border border-border p-6 md:p-8 hover:shadow-xl hover:shadow-teal/5 transition-shadow"
             >
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: 5 }).map((_, j) => (
-                  <Star
-                    key={j}
-                    size={16}
-                    className={j < r.rating ? "text-gold fill-gold" : "text-border"}
-                  />
-                ))}
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1" aria-label={`${r.rating} من 5 نجوم`}>
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <Star
+                      key={j}
+                      size={16}
+                      className={j < r.rating ? "text-gold fill-gold" : "text-border"}
+                    />
+                  ))}
+                </div>
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                  Google
+                </span>
               </div>
               <p className="text-foreground leading-relaxed mb-5 text-base">{r.text}</p>
               <div className="flex items-center gap-3">
