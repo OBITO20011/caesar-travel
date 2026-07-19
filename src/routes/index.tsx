@@ -40,7 +40,6 @@ import galleryPetra from "@/assets/gallery-petra.jpg";
 import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
-import { FeaturedTripsSection } from "@/components/featured-trips-section";
 import { QuickQuoteSection } from "@/components/quick-quote-section";
 import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
@@ -1014,11 +1013,10 @@ function Index() {
       <main className="min-h-screen">
         <HeroSection settings={settings} />
         <AboutSection />
-        <FeaturedTripsSection settings={settings} />
+        <GallerySection />
         <ServicesSection />
         <StatsSection settings={settings} />
         <QuickQuoteSection settings={settings} />
-        <GallerySection />
         <ReviewsSection />
         <ContactSection settings={settings} />
         <Footer settings={settings} />
