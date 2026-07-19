@@ -29,6 +29,7 @@ import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as VisaSlugRouteImport } from './routes/visa.$slug'
 import { Route as UmrahIdRouteImport } from './routes/umrah.$id'
+import { Route as TripsIdRouteImport } from './routes/trips.$id'
 import { Route as PackagesSlugRouteImport } from './routes/packages.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminVisasIndexRouteImport } from './routes/admin/visas/index'
@@ -142,6 +143,11 @@ const UmrahIdRoute = UmrahIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => UmrahRoute,
 } as any)
+const TripsIdRoute = TripsIdRouteImport.update({
+  id: '/trips/$id',
+  path: '/trips/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesSlugRoute = PackagesSlugRouteImport.update({
   id: '/packages/$slug',
   path: '/packages/$slug',
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/packages/$slug': typeof PackagesSlugRoute
+  '/trips/$id': typeof TripsIdRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/packages/$slug': typeof PackagesSlugRoute
+  '/trips/$id': typeof TripsIdRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/packages/$slug': typeof PackagesSlugRoute
+  '/trips/$id': typeof TripsIdRoute
   '/umrah/$id': typeof UmrahIdRoute
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/visa'
     | '/admin/login'
     | '/packages/$slug'
+    | '/trips/$id'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin/'
@@ -359,6 +369,7 @@ export interface FileRouteTypes {
     | '/visa'
     | '/admin/login'
     | '/packages/$slug'
+    | '/trips/$id'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/visa'
     | '/admin/login'
     | '/packages/$slug'
+    | '/trips/$id'
     | '/umrah/$id'
     | '/visa/$slug'
     | '/admin/'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   VisaRoute: typeof VisaRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
   PackagesSlugRoute: typeof PackagesSlugRoute
+  TripsIdRoute: typeof TripsIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminPackagesSlugRoute: typeof AdminPackagesSlugRoute
   AdminDubaiIndexRoute: typeof AdminDubaiIndexRoute
@@ -583,6 +596,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UmrahIdRouteImport
       parentRoute: typeof UmrahRoute
     }
+    '/trips/$id': {
+      id: '/trips/$id'
+      path: '/trips/$id'
+      fullPath: '/trips/$id'
+      preLoaderRoute: typeof TripsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages/$slug': {
       id: '/packages/$slug'
       path: '/packages/$slug'
@@ -711,6 +731,7 @@ const rootRouteChildren: RootRouteChildren = {
   VisaRoute: VisaRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   PackagesSlugRoute: PackagesSlugRoute,
+  TripsIdRoute: TripsIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminPackagesSlugRoute: AdminPackagesSlugRoute,
   AdminDubaiIndexRoute: AdminDubaiIndexRoute,

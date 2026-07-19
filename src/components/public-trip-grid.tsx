@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import {
@@ -55,10 +57,19 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
     const unavailable = trip.status !== "available" || seatState.soldOut;
 
     return (
-      <div
+      <article
         key={trip.id}
-        className="group overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-[#171717] transition-all duration-500 hover:-translate-y-2 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.35)]"
+        className="group relative overflow-hidden rounded-3xl border border-[#D4AF37]/30 bg-[#171717] transition-all duration-500 hover:-translate-y-2 hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.35)]"
       >
+        <Link
+          to="/trips/$id"
+          params={{ id: trip.id }}
+          aria-label={`عرض تفاصيل ${trip.title}`}
+          className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#F3CF63]"
+        >
+          <span className="sr-only">عرض تفاصيل {trip.title}</span>
+        </Link>
+
         <div className="relative h-56 overflow-hidden">
           <img
             src={trip.main_image_url || fallbackImage}
@@ -92,6 +103,7 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
           {trip.description ? (
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-400">{trip.description}</p>
           ) : null}
+          <p className="mt-3 text-sm font-bold text-[#F3CF63]">اضغط لعرض البرنامج والتفاصيل</p>
 
           {seatState.tracksSeats ? (
             <p
@@ -132,14 +144,14 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-[#D4AF37] px-6 py-2 font-bold text-black transition hover:scale-105"
+                className="relative z-20 rounded-full bg-[#D4AF37] px-6 py-2 font-bold text-black transition hover:scale-105"
               >
                 احجز الآن
               </a>
             )}
           </div>
         </div>
-      </div>
+      </article>
     );
   });
 }
