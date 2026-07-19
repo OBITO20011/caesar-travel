@@ -901,23 +901,6 @@ function Footer({ settings }: { settings?: SiteSettings }) {
   );
 }
 
-/* ──────────────── Floating WhatsApp ──────────────── */
-function WhatsAppButton({ whatsapp }: { whatsapp?: string }) {
-  return (
-    <a
-      href={buildWhatsAppUrl(whatsapp || WHATSAPP)}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="تواصل عبر واتساب"
-      className="fixed right-4 bottom-4 left-4 z-50 flex h-14 items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 font-black text-white shadow-xl shadow-black/20 transition-transform hover:scale-[1.02] md:right-6 md:bottom-6 md:left-auto md:w-14 md:px-0 md:hover:scale-110"
-    >
-      <span className="absolute hidden h-full w-full rounded-full bg-[#25D366] opacity-60 animate-ping md:inline-flex" />
-      <MessageCircle size={25} className="relative fill-white" />
-      <span className="relative md:hidden">استفسر واحجز عبر واتساب</span>
-    </a>
-  );
-}
-
 /* ──────────────── Back to top ──────────────── */
 function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -1018,7 +1001,6 @@ function Index() {
         <ReviewsSection />
         <ContactSection settings={settings} />
         <Footer settings={settings} />
-        <WhatsAppButton whatsapp={settings?.whatsapp} />
         <BackToTop />
       </main>
     </>
