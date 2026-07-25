@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { formatVisaPrice, isValidCurrencyCode, normalizeVisaSlug } from "@/lib/visa-utils";
 import { imageService, visasService } from "@/services/admin";
 import type { Visa, VisaTypeOption } from "@/types/admin";
 
@@ -100,7 +101,7 @@ function formFromVisa(visa: Visa): VisaForm {
 function toPayload(form: VisaForm): Omit<Visa, "id" | "created_at" | "updated_at"> {
   return {
     country_name: form.country_name.trim(),
-    slug: form.slug.trim().toLowerCase(),
+    slug: normalizeVisaSlug(form.slug || form.country_name),
     headline: form.headline.trim(),
     summary: form.summary.trim(),
     description: form.description.trim(),
@@ -123,17 +124,40 @@ function toPayload(form: VisaForm): Omit<Visa, "id" | "created_at" | "updated_at
 }
 
 function getErrorMessage(error: unknown) {
-  return error instanceof Error ? error.message : "تعذر إكمال العملية. حاول مرة أخرى.";
-}
+  const errorRecord =
+    error && typeof error === "object" ? (error as Record<string, unknown>) : undefined;
+  const code = typeof errorRecord?.code === "string" ? errorRecord.code : "";
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof errorRecord?.message === "string"
+        ? errorRecord.message
+        : "";
+  const normalizedMessage = message.toLowerCase();
 
-function formatPrice(visa: Visa) {
-  if (visa.price === undefined || visa.price === null) return "تواصل معنا";
+  if (code === "23505" || normalizedMessage.includes("duplicate key")) {
+    return "هذا الرابط المختصر مستخدم لتأشيرة أخرى. اختر رابطًا مختلفًا.";
+  }
 
-  return new Intl.NumberFormat("ar-JO", {
-    style: "currency",
-    currency: visa.currency || "JOD",
-    maximumFractionDigits: 2,
-  }).format(visa.price);
+  if (code === "42501" || normalizedMessage.includes("row-level security")) {
+    return "جلسة الإدارة انتهت أو لا تملك صلاحية الحفظ. سجّل الخروج ثم ادخل من جديد.";
+  }
+
+  if (code === "23514" || normalizedMessage.includes("check constraint")) {
+    return "إحدى القيم غير صالحة. تأكد من أن السعر صفر أو أكبر.";
+  }
+
+  if (code === "22001" || normalizedMessage.includes("too long")) {
+    return "رمز العملة يجب أن يكون 3 أحرف فقط، مثل JOD أو USD.";
+  }
+
+  if (code === "PGRST204" || normalizedMessage.includes("schema cache")) {
+    return "جدول التأشيرات يحتاج تحديثًا في Supabase. أعد المحاولة بعد تحديث قاعدة البيانات.";
+  }
+
+  return code
+    ? `تعذر حفظ التأشيرة. رمز الخطأ: ${code}`
+    : "تعذر حفظ التأشيرة. تحقق من الاتصال ثم حاول مرة أخرى.";
 }
 
 export function VisaManager() {
@@ -228,16 +252,44 @@ export function VisaManager() {
     event.preventDefault();
     setFormError(null);
 
-    if (!form.country_name.trim() || !form.slug.trim() || !form.headline.trim()) {
-      setFormError("اسم الدولة والرابط وعنوان الصفحة مطلوبة.");
+    if (!form.country_name.trim() || !form.headline.trim()) {
+      setFormError("اسم الدولة وعنوان الصفحة مطلوبان.");
       return;
     }
 
-    if (!/^[a-z0-9-]+$/.test(form.slug.trim())) {
-      setFormError("الرابط المختصر يقبل حروفاً إنجليزية وأرقاماً وشرطة فقط.");
+    const normalizedSlug = normalizeVisaSlug(form.slug || form.country_name);
+    if (!normalizedSlug) {
+      setFormError("تعذر إنشاء الرابط المختصر. اكتب اسم الدولة أو رابطًا واضحًا.");
       return;
     }
 
+    const duplicateVisa = (visasQuery.data ?? []).find(
+      (visa) => normalizeVisaSlug(visa.slug) === normalizedSlug && visa.id !== editingVisa?.id,
+    );
+    if (duplicateVisa) {
+      setFormError(
+        `الرابط /${normalizedSlug} مستخدم لتأشيرة ${duplicateVisa.country_name}. اختر رابطًا مختلفًا.`,
+      );
+      return;
+    }
+
+    const normalizedCurrency = form.currency.trim().toUpperCase() || "JOD";
+    if (!isValidCurrencyCode(normalizedCurrency)) {
+      setFormError("رمز العملة يجب أن يكون 3 أحرف إنجليزية، مثل JOD أو USD.");
+      return;
+    }
+
+    const parsedPrice = form.price.trim() === "" ? undefined : Number(form.price);
+    if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice < 0)) {
+      setFormError("أدخل سعرًا صحيحًا يساوي صفرًا أو أكبر.");
+      return;
+    }
+
+    setForm((current) => ({
+      ...current,
+      slug: normalizedSlug,
+      currency: normalizedCurrency,
+    }));
     saveMutation.mutate();
   }
 
@@ -335,7 +387,9 @@ export function VisaManager() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-5 py-4">{formatPrice(visa)}</td>
+                        <td className="px-5 py-4">
+                          {formatVisaPrice(visa.price, visa.currency, "تواصل معنا")}
+                        </td>
                         <td className="px-5 py-4">{visa.display_order}</td>
                         <td className="px-5 py-4">
                           <Badge
@@ -399,15 +453,34 @@ export function VisaManager() {
               <Field label="اسم الدولة" required>
                 <Input
                   value={form.country_name}
-                  onChange={(event) => setForm({ ...form, country_name: event.target.value })}
+                  onChange={(event) => {
+                    const countryName = event.target.value;
+                    setForm((current) => {
+                      const previousAutoSlug = normalizeVisaSlug(current.country_name);
+                      const shouldUpdateSlug =
+                        !current.slug.trim() || current.slug === previousAutoSlug;
+
+                      return {
+                        ...current,
+                        country_name: countryName,
+                        slug: shouldUpdateSlug ? normalizeVisaSlug(countryName) : current.slug,
+                      };
+                    });
+                  }}
                 />
               </Field>
-              <Field label="الرابط المختصر بالإنجليزية" required>
+              <Field label="الرابط المختصر (عربي أو إنجليزي)">
                 <Input
                   dir="ltr"
                   value={form.slug}
                   onChange={(event) => setForm({ ...form, slug: event.target.value })}
-                  placeholder="saudi"
+                  onBlur={() =>
+                    setForm((current) => ({
+                      ...current,
+                      slug: normalizeVisaSlug(current.slug || current.country_name),
+                    }))
+                  }
+                  placeholder="turkey أو تركيا"
                 />
               </Field>
             </div>

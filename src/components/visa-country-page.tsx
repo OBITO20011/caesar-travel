@@ -4,19 +4,10 @@ import type { ReactNode } from "react";
 import { getFallbackVisa } from "@/data/visas";
 import { usePublicVisa, useSiteSettings } from "@/hooks/use-site-content";
 import { buildWhatsAppUrl, normalizeJordanPhoneNumber } from "@/lib/trip-format";
+import { formatVisaPrice } from "@/lib/visa-utils";
 import type { Visa } from "@/types/admin";
 
 const legacyPaths = new Set(["saudi", "uae", "qatar", "syria", "schengen", "uk", "usa"]);
-
-function formatPrice(visa: Visa) {
-  if (visa.price === undefined || visa.price === null) return "تواصل معنا لمعرفة السعر";
-
-  return new Intl.NumberFormat("ar-JO", {
-    style: "currency",
-    currency: visa.currency || "JOD",
-    maximumFractionDigits: 2,
-  }).format(visa.price);
-}
 
 export function VisaCountryPage({
   slug,
@@ -138,7 +129,9 @@ export function VisaCountryPage({
             <div className="rounded-3xl bg-blue-600 p-8 text-white shadow-xl">
               <h3 className="mb-6 text-2xl font-bold">معلومات التأشيرة</h3>
               <div className="space-y-4 text-lg">
-                <p>💰 السعر: {formatPrice(visa)}</p>
+                <p>
+                  💰 السعر: {formatVisaPrice(visa.price, visa.currency, "تواصل معنا لمعرفة السعر")}
+                </p>
                 <p>⏱ مدة الإنجاز: {visa.processing_time}</p>
                 <p>📅 صلاحية التأشيرة: {visa.validity}</p>
                 <p>🌍 {visa.availability}</p>
