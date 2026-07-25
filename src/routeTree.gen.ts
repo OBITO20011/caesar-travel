@@ -25,6 +25,7 @@ import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as DubaiRouteImport } from './routes/dubai'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VisaIndexRouteImport } from './routes/visa.index'
 import { Route as UmrahIndexRouteImport } from './routes/umrah.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as VisaSlugRouteImport } from './routes/visa.$slug'
@@ -122,6 +123,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const VisaIndexRoute = VisaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VisaRoute,
 } as any)
 const UmrahIndexRoute = UmrahIndexRouteImport.update({
   id: '/',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/umrah/': typeof UmrahIndexRoute
+  '/visa/': typeof VisaIndexRoute
   '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai/': typeof AdminDubaiIndexRoute
   '/admin/egypt/': typeof AdminEgyptIndexRoute
@@ -259,7 +266,6 @@ export interface FileRoutesByTo {
   '/uae': typeof UaeRoute
   '/uk': typeof UkRoute
   '/usa': typeof UsaRoute
-  '/visa': typeof VisaRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/packages/$slug': typeof PackagesSlugRoute
   '/trips/$id': typeof TripsIdRoute
@@ -267,6 +273,7 @@ export interface FileRoutesByTo {
   '/visa/$slug': typeof VisaSlugRoute
   '/admin': typeof AdminIndexRoute
   '/umrah': typeof UmrahIndexRoute
+  '/visa': typeof VisaIndexRoute
   '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai': typeof AdminDubaiIndexRoute
   '/admin/egypt': typeof AdminEgyptIndexRoute
@@ -303,6 +310,7 @@ export interface FileRoutesById {
   '/visa/$slug': typeof VisaSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/umrah/': typeof UmrahIndexRoute
+  '/visa/': typeof VisaIndexRoute
   '/admin/packages/$slug': typeof AdminPackagesSlugRoute
   '/admin/dubai/': typeof AdminDubaiIndexRoute
   '/admin/egypt/': typeof AdminEgyptIndexRoute
@@ -340,6 +348,7 @@ export interface FileRouteTypes {
     | '/visa/$slug'
     | '/admin/'
     | '/umrah/'
+    | '/visa/'
     | '/admin/packages/$slug'
     | '/admin/dubai/'
     | '/admin/egypt/'
@@ -366,7 +375,6 @@ export interface FileRouteTypes {
     | '/uae'
     | '/uk'
     | '/usa'
-    | '/visa'
     | '/admin/login'
     | '/packages/$slug'
     | '/trips/$id'
@@ -374,6 +382,7 @@ export interface FileRouteTypes {
     | '/visa/$slug'
     | '/admin'
     | '/umrah'
+    | '/visa'
     | '/admin/packages/$slug'
     | '/admin/dubai'
     | '/admin/egypt'
@@ -409,6 +418,7 @@ export interface FileRouteTypes {
     | '/visa/$slug'
     | '/admin/'
     | '/umrah/'
+    | '/visa/'
     | '/admin/packages/$slug'
     | '/admin/dubai/'
     | '/admin/egypt/'
@@ -568,6 +578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/visa/': {
+      id: '/visa/'
+      path: '/'
+      fullPath: '/visa/'
+      preLoaderRoute: typeof VisaIndexRouteImport
+      parentRoute: typeof VisaRoute
+    }
     '/umrah/': {
       id: '/umrah/'
       path: '/'
@@ -704,10 +721,12 @@ const UmrahRouteWithChildren = UmrahRoute._addFileChildren(UmrahRouteChildren)
 
 interface VisaRouteChildren {
   VisaSlugRoute: typeof VisaSlugRoute
+  VisaIndexRoute: typeof VisaIndexRoute
 }
 
 const VisaRouteChildren: VisaRouteChildren = {
   VisaSlugRoute: VisaSlugRoute,
+  VisaIndexRoute: VisaIndexRoute,
 }
 
 const VisaRouteWithChildren = VisaRoute._addFileChildren(VisaRouteChildren)
