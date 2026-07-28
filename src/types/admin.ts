@@ -6,6 +6,7 @@ export type TripPageKey =
   | "umrah"
   | "hajj"
   | "egypt"
+  | "turkey"
   | "dubai"
   | "switzerland"
   | "maldives"
@@ -14,6 +15,12 @@ export type TripPageKey =
   | "flights"
   | "hotels";
 export type TripStatus = "available" | "fully_booked" | "cancelled" | "completed" | "hidden";
+
+export interface TripStayOption {
+  days: number;
+  nights: number;
+  price: number;
+}
 
 export interface Trip {
   id: string;
@@ -35,6 +42,10 @@ export interface Trip {
   remaining_seats: number;
   main_image_url?: string;
   room_type?: string;
+  hotel_location?: string;
+  hotel_stars?: number | null;
+  hotel_features: string[];
+  stay_options: TripStayOption[];
   double_price?: number;
   triple_price?: number;
   quad_price?: number;

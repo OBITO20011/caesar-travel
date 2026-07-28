@@ -35,6 +35,7 @@ import { Route as PackagesSlugRouteImport } from './routes/packages.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminVisasIndexRouteImport } from './routes/admin/visas/index'
 import { Route as AdminUmrahIndexRouteImport } from './routes/admin/umrah/index'
+import { Route as AdminTurkeyIndexRouteImport } from './routes/admin/turkey/index'
 import { Route as AdminTripsIndexRouteImport } from './routes/admin/trips/index'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 import { Route as AdminPackagesIndexRouteImport } from './routes/admin/packages/index'
@@ -174,6 +175,11 @@ const AdminUmrahIndexRoute = AdminUmrahIndexRouteImport.update({
   path: '/admin/umrah/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTurkeyIndexRoute = AdminTurkeyIndexRouteImport.update({
+  id: '/admin/turkey/',
+  path: '/admin/turkey/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminTripsIndexRoute = AdminTripsIndexRouteImport.update({
   id: '/admin/trips/',
   path: '/admin/trips/',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/admin/packages/': typeof AdminPackagesIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
   '/admin/trips/': typeof AdminTripsIndexRoute
+  '/admin/turkey/': typeof AdminTurkeyIndexRoute
   '/admin/umrah/': typeof AdminUmrahIndexRoute
   '/admin/visas/': typeof AdminVisasIndexRoute
 }
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/admin/packages': typeof AdminPackagesIndexRoute
   '/admin/settings': typeof AdminSettingsIndexRoute
   '/admin/trips': typeof AdminTripsIndexRoute
+  '/admin/turkey': typeof AdminTurkeyIndexRoute
   '/admin/umrah': typeof AdminUmrahIndexRoute
   '/admin/visas': typeof AdminVisasIndexRoute
 }
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/admin/packages/': typeof AdminPackagesIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
   '/admin/trips/': typeof AdminTripsIndexRoute
+  '/admin/turkey/': typeof AdminTurkeyIndexRoute
   '/admin/umrah/': typeof AdminUmrahIndexRoute
   '/admin/visas/': typeof AdminVisasIndexRoute
 }
@@ -357,6 +366,7 @@ export interface FileRouteTypes {
     | '/admin/packages/'
     | '/admin/settings/'
     | '/admin/trips/'
+    | '/admin/turkey/'
     | '/admin/umrah/'
     | '/admin/visas/'
   fileRoutesByTo: FileRoutesByTo
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/settings'
     | '/admin/trips'
+    | '/admin/turkey'
     | '/admin/umrah'
     | '/admin/visas'
   id:
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/admin/packages/'
     | '/admin/settings/'
     | '/admin/trips/'
+    | '/admin/turkey/'
     | '/admin/umrah/'
     | '/admin/visas/'
   fileRoutesById: FileRoutesById
@@ -460,6 +472,7 @@ export interface RootRouteChildren {
   AdminPackagesIndexRoute: typeof AdminPackagesIndexRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
   AdminTripsIndexRoute: typeof AdminTripsIndexRoute
+  AdminTurkeyIndexRoute: typeof AdminTurkeyIndexRoute
   AdminUmrahIndexRoute: typeof AdminUmrahIndexRoute
   AdminVisasIndexRoute: typeof AdminVisasIndexRoute
 }
@@ -648,6 +661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUmrahIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/turkey/': {
+      id: '/admin/turkey/'
+      path: '/admin/turkey'
+      fullPath: '/admin/turkey/'
+      preLoaderRoute: typeof AdminTurkeyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/trips/': {
       id: '/admin/trips/'
       path: '/admin/trips'
@@ -760,6 +780,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPackagesIndexRoute: AdminPackagesIndexRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
   AdminTripsIndexRoute: AdminTripsIndexRoute,
+  AdminTurkeyIndexRoute: AdminTurkeyIndexRoute,
   AdminUmrahIndexRoute: AdminUmrahIndexRoute,
   AdminVisasIndexRoute: AdminVisasIndexRoute,
 }

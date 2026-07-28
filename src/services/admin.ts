@@ -56,13 +56,15 @@ export const tripsService = {
   },
 
   async getPublicByPage(pageKey: TripPageKey) {
-    const { data, error } = await supabase
-      .from("trips")
-      .select("*")
-      .eq("page_key", pageKey)
-      .neq("status", "hidden")
-      .order("start_date", { ascending: true, nullsFirst: false })
-      .order("created_at", { ascending: true });
+    let query = supabase.from("trips").select("*").eq("page_key", pageKey).neq("status", "hidden");
+
+    if (pageKey === "egypt" || pageKey === "turkey" || pageKey === "hotels") {
+      query = query.order("price", { ascending: true, nullsFirst: false });
+    } else {
+      query = query.order("start_date", { ascending: true, nullsFirst: false });
+    }
+
+    const { data, error } = await query.order("created_at", { ascending: true });
 
     if (error) throw error;
     return ((data as Trip[]) || []).filter(isTripPubliclyVisible);

@@ -1,203 +1,219 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
+import {
+  Bus,
+  Camera,
+  Headphones,
+  Hotel,
+  MapPin,
+  PlaneLanding,
+  UtensilsCrossed,
+} from "lucide-react";
+import { Helmet } from "react-helmet-async";
+
+import { PublicTripGrid } from "@/components/public-trip-grid";
+
 export const Route = createFileRoute("/turkey-trip")({
-  component: VisaPage,
+  component: TurkeyTripsPage,
 });
 
-function VisaPage() {
+const services = [
+  {
+    icon: PlaneLanding,
+    title: "استقبال من المطار",
+    description: "استقبال عند الوصول ونقل مريح وآمن إلى الفندق.",
+  },
+  {
+    icon: Hotel,
+    title: "إقامة مريحة",
+    description: "فنادق مختارة بعناية تناسب مختلف الميزانيات.",
+  },
+  {
+    icon: Bus,
+    title: "مواصلات وجولات",
+    description: "تنقلات يومية وزيارات منظمة لأشهر المعالم السياحية.",
+  },
+  {
+    icon: UtensilsCrossed,
+    title: "خيارات وجبات",
+    description: "برامج متنوعة تتضمن الإفطار أو الوجبات حسب كل باقة.",
+  },
+  {
+    icon: Headphones,
+    title: "متابعة متواصلة",
+    description: "فريق قيصر معك قبل الرحلة وأثناءها وحتى عودتك.",
+  },
+  {
+    icon: Camera,
+    title: "أفضل الوجهات",
+    description: "برامج تغطي أشهر المدن والمعالم السياحية في تركيا.",
+  },
+] as const;
+
+const destinations = [
+  {
+    title: "إسطنبول",
+    description: "مدينة التاريخ والبوسفور والأسواق.",
+    image: "/images/turkey-istanbil.png",
+  },
+  {
+    title: "طرابزون",
+    description: "الطبيعة الخضراء والجبال الساحرة.",
+    image: "/images/turkey-tarabzon.png",
+  },
+  {
+    title: "أنطاليا",
+    description: "شواطئ فاخرة ومنتجعات عالمية.",
+    image: "/images/turkey-antalya.png",
+  },
+  {
+    title: "كابادوكيا",
+    description: "رحلات المناطيد والمناظر الخيالية.",
+    image: "/images/turkey-cappadocia.png",
+  },
+  {
+    title: "بورصة",
+    description: "الجبل الأخضر والطبيعة الخلابة.",
+    image: "/images/turkey-bursa.png",
+  },
+] as const;
+
+function TurkeyTripsPage() {
   return (
-  <><section
-      className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/images/turkey-banner.png')",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/55"></div>
+    <>
+      <Helmet>
+        <title>فنادق وباقات تركيا | قيصر للسياحة والسفر</title>
+        <meta
+          name="description"
+          content="اكتشف فنادق وباقات تركيا مع قيصر للسياحة والسفر، مع صور وأسعار ومواعيد ومقاعد محدثة."
+        />
+        <link rel="canonical" href="https://caesar-travel.pages.dev/turkey-trip" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="فنادق وباقات تركيا | قيصر للسياحة والسفر" />
+        <meta
+          property="og:description"
+          content="فنادق مختارة وبرامج سياحية متكاملة إلى أجمل مدن تركيا."
+        />
+        <meta property="og:image" content="/images/turkey-banner.png" />
+      </Helmet>
 
-      <div className="relative z-10 text-center text-white max-w-3xl px-6">
-        <span className="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold">
-           أجمل البرامج السياحية إلى تركيا
-        </span>
+      <main className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
+        <section
+          className="relative flex min-h-[72vh] items-center justify-center overflow-hidden bg-cover bg-center px-5 py-28 text-center"
+          style={{ backgroundImage: "url('/images/turkey-banner.png')" }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-[#071f29]/90" />
+          <div className="relative z-10 mx-auto max-w-4xl text-white">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#F3CF63]/45 bg-black/25 px-5 py-2 text-sm font-bold text-[#F3CF63] backdrop-blur">
+              <MapPin className="h-4 w-4" aria-hidden="true" />
+              أجمل البرامج السياحية إلى تركيا
+            </span>
+            <h1 className="mt-7 text-5xl font-black leading-tight drop-shadow-xl sm:text-7xl">
+              فنادق وباقات <span className="text-[#F3CF63]">تركيا</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-9 text-white/85 sm:text-xl">
+              حجوزات فنادق، استقبال من المطار، جولات يومية ومواصلات ضمن برامج مختارة بعناية وبأسعار
+              واضحة.
+            </p>
+            <a
+              href="#turkey-packages"
+              className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full bg-[#D4AF37] px-9 py-3 font-black text-[#102F3A] shadow-xl transition duration-200 hover:bg-[#F3CF63] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70"
+            >
+              شاهد الفنادق والباقات
+            </a>
+          </div>
+        </section>
 
-        <h1 className="mt-6 text-5xl font-black">
-        رحلات تركيا
-        </h1>
+        <section className="bg-white py-20">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <span className="font-bold text-[#9B7617]">كل ما تحتاجه في رحلة واحدة</span>
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">خدمة متكاملة من قيصر</h2>
+              <p className="mt-4 leading-8 text-slate-600">
+                تفاصيل كل برنامج تظهر بوضوح، ويمكنك الدخول إلى صفحة الفندق ومشاهدة الصور والأسعار
+                والمقاعد المتبقية قبل التواصل للحجز.
+              </p>
+            </div>
 
-        <p className="mt-6 text-xl leading-9 text-white/90">
-          استمتع بأجمل البرامج السياحية في تركيا مع قيصر للسياحة والسفر.
-نوفر حجوزات الفنادق، الاستقبال من المطار، الجولات اليومية، والمواصلات بأسعار تنافسية وخدمة مميزة.
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => {
+                const Icon = service.icon;
 
-        </p>
+                return (
+                  <article
+                    key={service.title}
+                    className="rounded-3xl border border-slate-200 bg-slate-50 p-7 shadow-sm transition duration-200 hover:border-[#D4AF37]/60 hover:shadow-lg"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123C49] text-[#F3CF63]">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <h3 className="mt-5 text-xl font-black">{service.title}</h3>
+                    <p className="mt-2 leading-7 text-slate-600">{service.description}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
-        <a
-  href="#available-visas"
-  className="mt-10 inline-block rounded-full bg-yellow-400 px-8 py-4 font-bold text-black hover:scale-105 transition"
->
-احجز رحلتك الآن
-</a>
-      </div>
-    </section>
-    {/* ماذا تشمل رحلتك */}
-<section className="py-20 bg-white">
-  <div className="max-w-7xl mx-auto px-6">
+        <section className="bg-slate-100 py-20">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mb-12 text-center">
+              <span className="font-bold text-[#9B7617]">وجهات متنوعة</span>
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">أشهر المدن السياحية</h2>
+            </div>
 
-    <div className="text-center mb-14">
-      <span className="text-blue-600 font-semibold">
-        كل ما تحتاجه في رحلة واحدة
-      </span>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+              {destinations.map((destination) => (
+                <article
+                  key={destination.title}
+                  className="group overflow-hidden rounded-3xl bg-white shadow-sm"
+                >
+                  <img
+                    src={destination.image}
+                    alt={destination.title}
+                    loading="lazy"
+                    className="h-52 w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
+                  <div className="p-5">
+                    <h3 className="text-xl font-black">{destination.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {destination.description}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      <h2 className="text-4xl font-bold text-gray-900 mt-3">
-        ماذا تشمل رحلتك إلى تركيا؟
-      </h2>
+        <section id="turkey-packages" className="scroll-mt-24 bg-[#0B0B0B] py-20 text-white">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <span className="font-bold text-[#F3CF63]">محدّثة من لوحة الإدارة</span>
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">فنادق وباقات تركيا المتاحة</h2>
+              <p className="mt-4 leading-8 text-white/70">
+                اختر الفندق أو الباقة لعرض الصور والموقع والأسعار والتواريخ وجميع التفاصيل.
+              </p>
+            </div>
 
-      <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
-        نوفر لك تجربة سفر متكاملة تبدأ من لحظة وصولك وحتى انتهاء رحلتك بكل راحة واحترافية.
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">✈️</div>
-        <h3 className="font-bold text-xl mb-2">استقبال من المطار</h3>
-        <p className="text-gray-500">
-          استقبال عند الوصول ونقل مريح إلى الفندق.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">🏨</div>
-        <h3 className="font-bold text-xl mb-2">إقامة مريحة</h3>
-        <p className="text-gray-500">
-          فنادق مختارة بعناية تناسب مختلف الميزانيات.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">🚐</div>
-        <h3 className="font-bold text-xl mb-2">مواصلات وجولات</h3>
-        <p className="text-gray-500">
-          تنقلات يومية وزيارات لأشهر المعالم السياحية.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">🍽️</div>
-        <h3 className="font-bold text-xl mb-2">إفطار يومي</h3>
-        <p className="text-gray-500">
-          وجبة إفطار ضمن معظم البرامج السياحية.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">🧑‍💼</div>
-        <h3 className="font-bold text-xl mb-2">دعم طوال الرحلة</h3>
-        <p className="text-gray-500">
-          فريقنا معك قبل وأثناء وبعد الرحلة للإجابة عن جميع استفساراتك.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 text-center hover:-translate-y-2 transition">
-        <div className="text-5xl mb-4">📸</div>
-        <h3 className="font-bold text-xl mb-2">أفضل الوجهات</h3>
-        <p className="text-gray-500">
-          برامج تغطي أشهر المدن والمعالم السياحية في تركيا.
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-      {/* أشهر الوجهات في تركيا */}
-<section id="available-visas" className="py-20 bg-gradient-to-b from-white to-slate-50">
-  <div className="max-w-7xl mx-auto px-4">
-    <div className="text-center mb-12">
-      <h2 className="text-4xl font-bold text-slate-800">
-        أشهر الوجهات السياحية في تركيا
-      </h2>
-      <p className="text-slate-500 mt-3">
-        اختر وجهتك واستمتع بأفضل البرامج السياحية
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-        <img src="/images/turkey-istanbil.png" className="w-full h-64 object-cover" />
-        <div className="p-6 text-center">
-          <h3 className="text-2xl font-bold">إسطنبول</h3>
-          <p className="text-gray-500 mt-2">مدينة التاريخ والبوسفور والأسواق.</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-        <img src="/images/turkey-tarabzon.png" className="w-full h-64 object-cover" />
-        <div className="p-6 text-center">
-          <h3 className="text-2xl font-bold">طرابزون</h3>
-          <p className="text-gray-500 mt-2">الطبيعة الخضراء والجبال الساحرة.</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-        <img src="/images/turkey-antalya.png" className="w-full h-64 object-cover" />
-        <div className="p-6 text-center">
-          <h3 className="text-2xl font-bold">أنطاليا</h3>
-          <p className="text-gray-500 mt-2">شواطئ فاخرة ومنتجعات عالمية.</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-        <img src="/images/turkey-cappadocia.png" className="w-full h-64 object-cover" />
-        <div className="p-6 text-center">
-          <h3 className="text-2xl font-bold">كابادوكيا</h3>
-          <p className="text-gray-500 mt-2">رحلات المناطيد والمناظر الخيالية.</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-        <img src="/images/turkey-bursa.png" className="w-full h-64 object-cover" />
-        <div className="p-6 text-center">
-          <h3 className="text-2xl font-bold">بورصة</h3>
-          <p className="text-gray-500 mt-2">الجبل الأخضر والطبيعة الخلابة.</p>
-        </div>
-      </div>
-<div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl shadow-lg hover:shadow-2xl transition flex flex-col justify-center items-center text-center p-6">
-
-  <div className="text-6xl mb-4">✈️</div>
-
-  <h3 className="text-2xl font-bold text-white">
-    احجز رحلتك الآن
-  </h3>
-
-  <p className="text-white/90 mt-3 leading-7">
-    تواصل معنا للحصول على أفضل العروض
-    والبرامج السياحية إلى تركيا.
-  </p>
-
-  <div className="flex gap-3 mt-8 w-full">
-
-    <a
-      href="https://wa.me/962798337711?text=مرحباً، أود الاستفسار عن رحلات تركيا."
-      target="_blank"
-      className="flex-1 bg-white text-green-700 py-3 rounded-xl font-bold text-center hover:bg-green-100 transition"
-    >
-      💬 واتساب
-    </a>
-
-    <a
-      href="tel:+962798337711"
-      className="flex-1 bg-yellow-400 text-black py-3 rounded-xl font-bold text-center hover:bg-yellow-300 transition"
-    >
-      📞 اتصال
-    </a>
-
-  </div>
-
-</div>
-    </div>
-  </div>
-</section>
-      </>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <PublicTripGrid
+                pageKey="turkey"
+                fallbackImage="/images/turkey-banner.png"
+                emptyContent={
+                  <div className="col-span-full rounded-3xl border border-[#D4AF37]/30 bg-white/5 px-6 py-12 text-center">
+                    <Hotel className="mx-auto h-10 w-10 text-[#F3CF63]" aria-hidden="true" />
+                    <h3 className="mt-5 text-2xl font-black">الفنادق الجديدة قيد التجهيز</h3>
+                    <p className="mt-3 text-white/65">
+                      ستظهر هنا مباشرة فور إضافتها من لوحة الإدارة.
+                    </p>
+                  </div>
+                }
+              />
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

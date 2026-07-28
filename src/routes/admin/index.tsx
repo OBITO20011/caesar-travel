@@ -24,6 +24,10 @@ function AdminHome() {
       link: "/admin/egypt",
     },
     {
+      title: "تركيا",
+      link: "/admin/turkey",
+    },
+    {
       title: "🇦🇪 دبي",
       link: "/admin/dubai",
     },

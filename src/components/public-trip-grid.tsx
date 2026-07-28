@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CalendarDays, Clock3, MapPin, Star } from "lucide-react";
 
 import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
@@ -29,6 +30,7 @@ const unavailableLabels = {
 export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicTripGridProps) {
   const tripsQuery = usePublicTrips(pageKey);
   const { data: settings } = useSiteSettings();
+  const isHotelPage = pageKey === "egypt" || pageKey === "turkey" || pageKey === "hotels";
 
   if (tripsQuery.isLoading) {
     return <p className="col-span-full py-10 text-center text-gray-400">جاري تحميل الرحلات...</p>;
@@ -55,6 +57,17 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
     const seatState = getTripSeatState(trip);
     const discount = getTripDiscountPercentage(trip);
     const unavailable = trip.status !== "available" || seatState.soldOut;
+    const stayOptions = [...(trip.stay_options ?? [])].sort(
+      (first, second) => first.days - second.days,
+    );
+    const startingStayOption = stayOptions[0];
+    const startingPrice = startingStayOption?.price ?? trip.price;
+    const stayRange =
+      stayOptions.length > 1
+        ? `${stayOptions[0].days}–${stayOptions[stayOptions.length - 1].days} أيام`
+        : startingStayOption
+          ? `${startingStayOption.days} أيام`
+          : null;
 
     return (
       <article
@@ -74,6 +87,8 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
           <img
             src={trip.main_image_url || fallbackImage}
             alt={trip.title}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
             onError={(event) => {
               event.currentTarget.onerror = null;
@@ -95,15 +110,46 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
         <div className="p-5">
           <h3 className="text-lg font-bold text-white">{trip.title}</h3>
 
-          <div className="mt-2 text-lg text-[#D4AF37]">★★★★★</div>
+          {trip.hotel_stars ? (
+            <div
+              className="mt-3 flex items-center gap-1 text-[#D4AF37]"
+              aria-label={`تصنيف الفندق ${trip.hotel_stars} من 5 نجوم`}
+            >
+              {Array.from({ length: 5 }, (_, index) => (
+                <Star
+                  key={index}
+                  className="h-4 w-4"
+                  fill={index < trip.hotel_stars! ? "currentColor" : "none"}
+                  aria-hidden="true"
+                />
+              ))}
+            </div>
+          ) : null}
 
           {trip.start_date ? (
-            <p className="mt-3 text-sm text-gray-300">📅 {formatTripDate(trip.start_date)}</p>
+            <p className="mt-3 flex items-center gap-2 text-sm text-gray-300">
+              <CalendarDays className="h-4 w-4 text-[#D4AF37]" aria-hidden="true" />
+              {formatTripDate(trip.start_date)}
+            </p>
+          ) : null}
+          {trip.hotel_location ? (
+            <p className="mt-2 flex items-center gap-2 text-sm text-gray-300">
+              <MapPin className="h-4 w-4 text-[#D4AF37]" aria-hidden="true" />
+              {trip.hotel_location}
+            </p>
+          ) : null}
+          {stayRange ? (
+            <p className="mt-2 flex items-center gap-2 text-sm font-bold text-[#F3CF63]">
+              <Clock3 className="h-4 w-4" aria-hidden="true" />
+              خيارات إقامة من {stayRange}
+            </p>
           ) : null}
           {trip.description ? (
             <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-400">{trip.description}</p>
           ) : null}
-          <p className="mt-3 text-sm font-bold text-[#F3CF63]">اضغط لعرض البرنامج والتفاصيل</p>
+          <p className="mt-3 text-sm font-bold text-[#F3CF63]">
+            {isHotelPage ? "اختر مدة إقامتك وشاهد جميع الصور" : "اضغط لعرض البرنامج والتفاصيل"}
+          </p>
 
           {seatState.tracksSeats ? (
             <p
@@ -127,7 +173,11 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
                   {formatTripAmount(trip.old_price, trip.currency)}
                 </p>
               ) : null}
-              <p className="text-2xl font-bold text-[#D4AF37]">{formatTripPrice(trip)}</p>
+              <p className="text-2xl font-bold text-[#D4AF37]">
+                {startingPrice !== undefined && startingPrice !== null
+                  ? formatTripAmount(startingPrice, trip.currency)
+                  : formatTripPrice(trip)}
+              </p>
             </div>
 
             {unavailable ? (

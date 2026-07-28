@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Clock3, Edit3, Eye, EyeOff, ImagePlus, Loader2, Plus, Search, Trash2 } from "lucide-react";
+import {
+  CalendarRange,
+  Clock3,
+  Edit3,
+  Eye,
+  EyeOff,
+  ImagePlus,
+  Loader2,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +40,7 @@ const pageLabels: Record<TripPageKey, string> = {
   umrah: "العمرة",
   hajj: "الحج",
   egypt: "مصر",
+  turkey: "تركيا",
   dubai: "دبي",
   switzerland: "سويسرا",
   maldives: "المالديف",
@@ -54,6 +66,13 @@ const statusClasses: Record<TripStatus, string> = {
   hidden: "bg-slate-100 text-slate-600",
 };
 
+type StayOptionForm = {
+  key: string;
+  days: string;
+  nights: string;
+  price: string;
+};
+
 type TripForm = {
   title: string;
   category: TripCategory;
@@ -73,6 +92,10 @@ type TripForm = {
   remaining_seats: string;
   main_image_url: string;
   room_type: string;
+  hotel_location: string;
+  hotel_stars: string;
+  hotel_features: string;
+  stay_options: StayOptionForm[];
   double_price: string;
   triple_price: string;
   quad_price: string;
@@ -104,6 +127,10 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     remaining_seats: "0",
     main_image_url: "",
     room_type: "",
+    hotel_location: "",
+    hotel_stars: "",
+    hotel_features: "",
+    stay_options: [],
     double_price: "",
     triple_price: "",
     quad_price: "",
@@ -144,6 +171,15 @@ function formFromTrip(trip: Trip): TripForm {
     remaining_seats: trip.remaining_seats.toString(),
     main_image_url: trip.main_image_url ?? "",
     room_type: trip.room_type ?? "",
+    hotel_location: trip.hotel_location ?? "",
+    hotel_stars: trip.hotel_stars?.toString() ?? "",
+    hotel_features: (trip.hotel_features ?? []).join("\n"),
+    stay_options: (trip.stay_options ?? []).map((option, index) => ({
+      key: `${trip.id}-${index}`,
+      days: option.days.toString(),
+      nights: option.nights.toString(),
+      price: option.price.toString(),
+    })),
     double_price: trip.double_price?.toString() ?? "",
     triple_price: trip.triple_price?.toString() ?? "",
     quad_price: trip.quad_price?.toString() ?? "",
@@ -176,6 +212,28 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     remaining_seats: Number(form.remaining_seats) || 0,
     main_image_url: form.main_image_url.trim() || undefined,
     room_type: form.room_type.trim() || undefined,
+    hotel_location: form.hotel_location.trim() || undefined,
+    hotel_stars: form.hotel_stars ? Number(form.hotel_stars) : null,
+    hotel_features: form.hotel_features
+      .split("\n")
+      .map((feature) => feature.trim())
+      .filter(Boolean),
+    stay_options: form.stay_options
+      .map((option) => ({
+        days: Number(option.days),
+        nights: Number(option.nights),
+        price: Number(option.price),
+      }))
+      .filter(
+        (option) =>
+          Number.isFinite(option.days) &&
+          option.days > 0 &&
+          Number.isFinite(option.nights) &&
+          option.nights >= 0 &&
+          Number.isFinite(option.price) &&
+          option.price > 0,
+      )
+      .sort((first, second) => first.days - second.days),
     double_price: form.double_price ? Number(form.double_price) : undefined,
     triple_price: form.triple_price ? Number(form.triple_price) : undefined,
     quad_price: form.quad_price ? Number(form.quad_price) : undefined,
@@ -234,6 +292,16 @@ interface TripManagerProps {
 
 export function TripManager({ title, description, category, pageKey }: TripManagerProps) {
   const queryClient = useQueryClient();
+  const isHotelPackage = pageKey === "egypt" || pageKey === "turkey";
+  const hasHotelDetails = pageKey === "umrah" || isHotelPackage;
+  const contentNoun =
+    pageKey === "umrah"
+      ? "باقة عمرة"
+      : pageKey === "hajj"
+        ? "برنامج حج"
+        : isHotelPackage
+          ? "فندق أو باقة"
+          : "رحلة";
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -313,6 +381,37 @@ export function TripManager({ title, description, category, pageKey }: TripManag
     setForm(formFromTrip(trip));
     setFormError(null);
     setDialogOpen(true);
+  }
+
+  function addStayOption() {
+    setForm((current) => ({
+      ...current,
+      stay_options: [
+        ...current.stay_options,
+        {
+          key: crypto.randomUUID(),
+          days: "",
+          nights: "",
+          price: "",
+        },
+      ],
+    }));
+  }
+
+  function updateStayOption(key: string, field: "days" | "nights" | "price", value: string) {
+    setForm((current) => ({
+      ...current,
+      stay_options: current.stay_options.map((option) =>
+        option.key === key ? { ...option, [field]: value } : option,
+      ),
+    }));
+  }
+
+  function removeStayOption(key: string) {
+    setForm((current) => ({
+      ...current,
+      stay_options: current.stay_options.filter((option) => option.key !== key),
+    }));
   }
 
   async function uploadImage(
@@ -403,7 +502,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
             className="rounded-full bg-slate-900 text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
-            إضافة {pageKey === "umrah" ? "باقة عمرة" : pageKey === "hajj" ? "برنامج حج" : "رحلة"}
+            إضافة {contentNoun}
           </Button>
         </header>
 
@@ -492,7 +591,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                               {trip.main_image_url ? (
                                 <img
                                   src={trip.main_image_url}
-                                  alt=""
+                                  alt={trip.title}
                                   className="h-full w-full object-cover"
                                 />
                               ) : null}
@@ -621,23 +720,30 @@ export function TripManager({ title, description, category, pageKey }: TripManag
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto" dir="rtl">
           <DialogHeader className="text-right">
-            <DialogTitle>{editingTrip ? "تعديل الرحلة" : "إضافة رحلة جديدة"}</DialogTitle>
+            <DialogTitle>
+              {editingTrip ? `تعديل ${contentNoun}` : `إضافة ${contentNoun} جديد`}
+            </DialogTitle>
             <DialogDescription>
               أدخل بيانات الرحلة واحفظها لعرضها مباشرة في صفحة {pageLabels[pageKey]}.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={submitForm} className="grid gap-4">
-            <Field label="اسم الرحلة" required>
+            <Field label={isHotelPackage ? "اسم الفندق أو الباقة" : "اسم الرحلة"} required>
               <Input
                 value={form.title}
                 onChange={(event) => setForm({ ...form, title: event.target.value })}
               />
             </Field>
-            <Field label="الوصف">
+            <Field label={isHotelPackage ? "تفاصيل الإقامة والبرنامج" : "الوصف"}>
               <Textarea
-                rows={3}
+                rows={isHotelPackage ? 5 : 3}
                 value={form.description}
                 onChange={(event) => setForm({ ...form, description: event.target.value })}
+                placeholder={
+                  isHotelPackage
+                    ? "اكتب كل معلومة أو بند في سطر مستقل ليظهر بشكل مرتب في صفحة الفندق."
+                    : undefined
+                }
               />
             </Field>
             <div className="grid gap-4 md:grid-cols-2">
@@ -721,6 +827,38 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 </Field>
               </div>
             ) : null}
+            {isHotelPackage ? (
+              <div className="grid gap-4 md:grid-cols-3">
+                <Field label="موقع الفندق / المدينة">
+                  <Input
+                    value={form.hotel_location}
+                    onChange={(event) => setForm({ ...form, hotel_location: event.target.value })}
+                    placeholder={pageKey === "egypt" ? "مثال: شرم الشيخ" : "مثال: إسطنبول"}
+                  />
+                </Field>
+                <Field label="تصنيف الفندق">
+                  <select
+                    value={form.hotel_stars}
+                    onChange={(event) => setForm({ ...form, hotel_stars: event.target.value })}
+                    className="h-9 rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">غير محدد</option>
+                    {[1, 2, 3, 4, 5].map((stars) => (
+                      <option key={stars} value={stars}>
+                        {stars} {stars === 1 ? "نجمة" : "نجوم"}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="نوع الغرفة">
+                  <Input
+                    value={form.room_type}
+                    onChange={(event) => setForm({ ...form, room_type: event.target.value })}
+                    placeholder="مثال: غرفة ديلوكس"
+                  />
+                </Field>
+              </div>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="شركة الطيران">
                 <Input
@@ -735,7 +873,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 />
               </Field>
             </div>
-            {pageKey === "umrah" ? (
+            {hasHotelDetails ? (
               <div className="grid gap-4 md:grid-cols-3">
                 <Field label="سعر الغرفة الثنائية">
                   <Input
@@ -765,6 +903,107 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                   />
                 </Field>
               </div>
+            ) : null}
+            {isHotelPackage ? (
+              <Field label="مميزات الفندق">
+                <Textarea
+                  rows={5}
+                  value={form.hotel_features}
+                  onChange={(event) => setForm({ ...form, hotel_features: event.target.value })}
+                  placeholder="اكتب كل ميزة في سطر مستقل، مثال: قريب من الشاطئ"
+                />
+              </Field>
+            ) : null}
+            {isHotelPackage ? (
+              <section className="rounded-2xl border border-sky-200 bg-sky-50/70 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 text-slate-900">
+                      <CalendarRange className="h-5 w-5 text-sky-700" aria-hidden="true" />
+                      <h3 className="font-bold">مدد الإقامة وأسعار الشخص</h3>
+                    </div>
+                    <p className="mt-1 text-xs leading-6 text-slate-600">
+                      أضف خيارًا لكل مدة. سيختار العميل المدة المناسبة ويتغير السعر تلقائيًا.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addStayOption}
+                    className="min-h-11 border-sky-300 bg-white text-sky-800 hover:bg-sky-100"
+                  >
+                    <Plus className="h-4 w-4" aria-hidden="true" />
+                    إضافة مدة
+                  </Button>
+                </div>
+
+                {form.stay_options.length > 0 ? (
+                  <div className="mt-4 space-y-3">
+                    {form.stay_options.map((option, index) => (
+                      <div
+                        key={option.key}
+                        className="grid gap-3 rounded-2xl border border-sky-100 bg-white p-3 md:grid-cols-[1fr_1fr_1.2fr_auto]"
+                      >
+                        <Field label={`عدد الأيام ${index + 1}`}>
+                          <Input
+                            type="number"
+                            min="1"
+                            inputMode="numeric"
+                            value={option.days}
+                            onChange={(event) =>
+                              updateStayOption(option.key, "days", event.target.value)
+                            }
+                            placeholder="4"
+                          />
+                        </Field>
+                        <Field label="عدد الليالي">
+                          <Input
+                            type="number"
+                            min="0"
+                            inputMode="numeric"
+                            value={option.nights}
+                            onChange={(event) =>
+                              updateStayOption(option.key, "nights", event.target.value)
+                            }
+                            placeholder="3"
+                          />
+                        </Field>
+                        <Field label={`السعر للشخص (${form.currency || "JOD"})`}>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            inputMode="decimal"
+                            value={option.price}
+                            onChange={(event) =>
+                              updateStayOption(option.key, "price", event.target.value)
+                            }
+                            placeholder="380"
+                          />
+                        </Field>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => removeStayOption(option.key)}
+                          aria-label={`حذف خيار الإقامة ${index + 1}`}
+                          className="min-h-11 min-w-11 self-end border-rose-200 text-rose-700 hover:bg-rose-50"
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={addStayOption}
+                    className="mt-4 flex min-h-24 w-full cursor-pointer items-center justify-center rounded-2xl border border-dashed border-sky-300 bg-white/70 px-4 text-sm font-bold text-sky-800 transition hover:bg-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                  >
+                    اضغط لإضافة أول مدة وسعر
+                  </button>
+                )}
+              </section>
             ) : null}
             <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
               <div className="mb-4">
@@ -851,36 +1090,38 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 </label>
               </div>
             </Field>
+            {hasHotelDetails ? (
+              <Field label={pageKey === "umrah" ? "صور تفاصيل فندق مكة" : "صور الفندق والتفاصيل"}>
+                <div className="grid gap-2">
+                  <Textarea
+                    rows={4}
+                    value={form.additional_image_urls}
+                    onChange={(event) =>
+                      setForm({ ...form, additional_image_urls: event.target.value })
+                    }
+                    placeholder="رابط صورة في كل سطر، أو ارفع عدة صور"
+                  />
+                  <label className="inline-flex h-11 w-fit cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-white px-4 text-sm font-medium hover:bg-slate-50">
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ImagePlus className="h-4 w-4" />
+                    )}
+                    رفع صور التفاصيل
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      disabled={uploading}
+                      onChange={(event) => void uploadAdditionalImages(event.target.files)}
+                    />
+                  </label>
+                </div>
+              </Field>
+            ) : null}
             {pageKey === "umrah" ? (
               <>
-                <Field label="صور تفاصيل فندق مكة">
-                  <div className="grid gap-2">
-                    <Textarea
-                      rows={4}
-                      value={form.additional_image_urls}
-                      onChange={(event) =>
-                        setForm({ ...form, additional_image_urls: event.target.value })
-                      }
-                      placeholder="رابط صورة في كل سطر، أو ارفع عدة صور"
-                    />
-                    <label className="inline-flex h-9 w-fit cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-white px-4 text-sm font-medium hover:bg-slate-50">
-                      {uploading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <ImagePlus className="h-4 w-4" />
-                      )}
-                      رفع صور التفاصيل
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        disabled={uploading}
-                        onChange={(event) => void uploadAdditionalImages(event.target.files)}
-                      />
-                    </label>
-                  </div>
-                </Field>
                 <Field label="صورة فندق المدينة">
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <Input
@@ -912,7 +1153,9 @@ export function TripManager({ title, description, category, pageKey }: TripManag
               </>
             ) : null}
             {formError ? (
-              <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{formError}</p>
+              <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                {formError}
+              </p>
             ) : null}
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
@@ -924,7 +1167,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 className="bg-slate-900 text-white hover:bg-slate-800"
               >
                 {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                حفظ الرحلة
+                حفظ {contentNoun}
               </Button>
             </div>
           </form>
