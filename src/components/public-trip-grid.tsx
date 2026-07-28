@@ -186,6 +186,14 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
                   ? "اكتمل الحجز"
                   : unavailableLabels[trip.status as keyof typeof unavailableLabels] || "غير متاحة"}
               </span>
+            ) : isHotelPage ? (
+              <Link
+                to="/trips/$id"
+                params={{ id: trip.id }}
+                className="relative z-20 rounded-full bg-[#D4AF37] px-6 py-2 font-bold text-black transition hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#F3CF63]/60"
+              >
+                احجز الآن
+              </Link>
             ) : (
               <a
                 href={buildWhatsAppUrl(
