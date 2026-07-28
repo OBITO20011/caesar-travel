@@ -202,9 +202,9 @@ function TripPackageDetailsPage() {
       ? "اكتمل الحجز"
       : `${trip.remaining_seats} مقعد متبقٍ من ${trip.total_seats}`
     : "مقاعد محدودة — تواصل معنا";
-  const dateLabel = trip.start_date
-    ? formatTripDate(trip.start_date, true)
-    : "الموعد يُحدّد عند الحجز";
+  const dateLabel =
+    trip.schedule_label ||
+    (trip.start_date ? formatTripDate(trip.start_date, true) : "الموعد يُحدّد عند الحجز");
   const destinationLabel = trip.hotel_location || meta.destination;
   const bookingUrl = buildWhatsAppUrl(
     settings?.whatsapp,

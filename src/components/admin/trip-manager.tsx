@@ -78,6 +78,7 @@ type TripForm = {
   category: TripCategory;
   page_key: TripPageKey;
   description: string;
+  schedule_label: string;
   start_date: string;
   end_date: string;
   price: string;
@@ -113,6 +114,7 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     category,
     page_key: pageKey,
     description: "",
+    schedule_label: "",
     start_date: "",
     end_date: "",
     price: "",
@@ -157,6 +159,7 @@ function formFromTrip(trip: Trip): TripForm {
     category: trip.category,
     page_key: trip.page_key,
     description: trip.description ?? "",
+    schedule_label: trip.schedule_label ?? "",
     start_date: trip.start_date ?? "",
     end_date: trip.end_date ?? "",
     price: trip.price?.toString() ?? "",
@@ -198,6 +201,7 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     category: form.category,
     page_key: form.page_key,
     description: form.description.trim() || undefined,
+    schedule_label: form.schedule_label.trim() || undefined,
     start_date: form.start_date || undefined,
     end_date: form.end_date || undefined,
     price: form.price ? Number(form.price) : undefined,
@@ -599,7 +603,9 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                             <p className="font-semibold text-slate-900">{trip.title}</p>
                           </div>
                         </td>
-                        <td className="px-5 py-4">{trip.start_date || "—"}</td>
+                        <td className="px-5 py-4">
+                          {trip.schedule_label || trip.start_date || "—"}
+                        </td>
                         <td className="px-5 py-4 font-medium">
                           <div>{formatPrice(trip)}</div>
                           {trip.old_price && getDiscountPercentage(trip) > 0 ? (
@@ -744,6 +750,16 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                     ? "اكتب كل معلومة أو بند في سطر مستقل ليظهر بشكل مرتب في صفحة الفندق."
                     : undefined
                 }
+              />
+            </Field>
+            <Field
+              label="فترة الرحلات"
+              hint="اختياري — مثال: رحلات شهر 8 و9 و10. عند تعبئته سيظهر بدل التاريخ المحدد."
+            >
+              <Input
+                value={form.schedule_label}
+                onChange={(event) => setForm({ ...form, schedule_label: event.target.value })}
+                placeholder="رحلات شهر 8 و9 و10"
               />
             </Field>
             <div className="grid gap-4 md:grid-cols-2">

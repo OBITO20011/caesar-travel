@@ -126,10 +126,10 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
             </div>
           ) : null}
 
-          {trip.start_date ? (
+          {trip.schedule_label || trip.start_date ? (
             <p className="mt-3 flex items-center gap-2 text-sm text-gray-300">
               <CalendarDays className="h-4 w-4 text-[#D4AF37]" aria-hidden="true" />
-              {formatTripDate(trip.start_date)}
+              {trip.schedule_label || formatTripDate(trip.start_date!)}
             </p>
           ) : null}
           {trip.hotel_location ? (

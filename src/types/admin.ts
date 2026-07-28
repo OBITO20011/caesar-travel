@@ -28,6 +28,7 @@ export interface Trip {
   category: TripCategory;
   page_key: TripPageKey;
   description?: string;
+  schedule_label?: string;
   start_date?: string;
   end_date?: string;
   price?: number;
