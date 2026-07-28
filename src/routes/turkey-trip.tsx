@@ -123,9 +123,9 @@ function TurkeyTripsPage() {
           </div>
         </section>
 
-        <section className="bg-white py-20">
+        <section className="bg-white py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
-            <div className="mx-auto mb-12 max-w-3xl text-center">
+            <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
               <span className="font-bold text-[#9B7617]">كل ما تحتاجه في رحلة واحدة</span>
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">خدمة متكاملة من قيصر</h2>
               <p className="mt-4 leading-8 text-slate-600">
@@ -134,23 +134,55 @@ function TurkeyTripsPage() {
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-4 lg:grid-cols-6">
               {services.map((service) => {
                 const Icon = service.icon;
 
                 return (
                   <article
                     key={service.title}
-                    className="rounded-3xl border border-slate-200 bg-slate-50 p-7 shadow-sm transition duration-200 hover:border-[#D4AF37]/60 hover:shadow-lg"
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-3 shadow-sm transition duration-200 hover:border-[#D4AF37]/60 hover:shadow-lg sm:rounded-3xl sm:p-4"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#123C49] text-[#F3CF63]">
-                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#123C49] text-[#F3CF63] sm:h-10 sm:w-10 sm:rounded-2xl">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
-                    <h3 className="mt-5 text-xl font-black">{service.title}</h3>
-                    <p className="mt-2 leading-7 text-slate-600">{service.description}</p>
+                    <h3 className="mt-2 text-[13px] font-black leading-5 sm:mt-3 sm:text-base sm:leading-6">
+                      {service.title}
+                    </h3>
+                    <p className="mt-1 hidden text-xs leading-5 text-slate-600 sm:block sm:text-sm sm:leading-6">
+                      {service.description}
+                    </p>
                   </article>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        <section id="turkey-packages" className="scroll-mt-24 bg-[#0B0B0B] py-20 text-white">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <span className="font-bold text-[#F3CF63]">محدّثة من لوحة الإدارة</span>
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">فنادق وباقات تركيا المتاحة</h2>
+              <p className="mt-4 leading-8 text-white/70">
+                اختر الفندق أو الباقة لعرض الصور والموقع والأسعار والتواريخ وجميع التفاصيل.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <PublicTripGrid
+                pageKey="turkey"
+                fallbackImage="/images/turkey-banner.png"
+                emptyContent={
+                  <div className="col-span-full rounded-3xl border border-[#D4AF37]/30 bg-white/5 px-6 py-12 text-center">
+                    <Hotel className="mx-auto h-10 w-10 text-[#F3CF63]" aria-hidden="true" />
+                    <h3 className="mt-5 text-2xl font-black">الفنادق الجديدة قيد التجهيز</h3>
+                    <p className="mt-3 text-white/65">
+                      ستظهر هنا مباشرة فور إضافتها من لوحة الإدارة.
+                    </p>
+                  </div>
+                }
+              />
             </div>
           </div>
         </section>
@@ -182,34 +214,6 @@ function TurkeyTripsPage() {
                   </div>
                 </article>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="turkey-packages" className="scroll-mt-24 bg-[#0B0B0B] py-20 text-white">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8">
-            <div className="mx-auto mb-12 max-w-3xl text-center">
-              <span className="font-bold text-[#F3CF63]">محدّثة من لوحة الإدارة</span>
-              <h2 className="mt-3 text-3xl font-black sm:text-4xl">فنادق وباقات تركيا المتاحة</h2>
-              <p className="mt-4 leading-8 text-white/70">
-                اختر الفندق أو الباقة لعرض الصور والموقع والأسعار والتواريخ وجميع التفاصيل.
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <PublicTripGrid
-                pageKey="turkey"
-                fallbackImage="/images/turkey-banner.png"
-                emptyContent={
-                  <div className="col-span-full rounded-3xl border border-[#D4AF37]/30 bg-white/5 px-6 py-12 text-center">
-                    <Hotel className="mx-auto h-10 w-10 text-[#F3CF63]" aria-hidden="true" />
-                    <h3 className="mt-5 text-2xl font-black">الفنادق الجديدة قيد التجهيز</h3>
-                    <p className="mt-3 text-white/65">
-                      ستظهر هنا مباشرة فور إضافتها من لوحة الإدارة.
-                    </p>
-                  </div>
-                }
-              />
             </div>
           </div>
         </section>

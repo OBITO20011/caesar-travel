@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   ArrowLeft,
   BedDouble,
+  Bus,
   CalendarDays,
   CheckCircle2,
   ChevronLeft,
@@ -127,6 +128,8 @@ const pageMeta: Partial<Record<TripPageKey, PageMeta>> = {
   },
 };
 
+const optionalTripsLabel = "الرحلات الداخلية الأخرى اختيارية";
+
 function TripPackageDetailsPage() {
   const { id } = useParams({ from: "/trips/$id" });
   const tripQuery = usePublicTrip(id);
@@ -171,6 +174,32 @@ function TripPackageDetailsPage() {
     .split(/\r?\n/)
     .map((item) => item.trim())
     .filter(Boolean);
+  const optionalTripsItem = programItems.find((item) => item.startsWith(optionalTripsLabel));
+  const standardProgramItems = programItems.filter((item) => item !== optionalTripsItem);
+  const displayedProgramItems =
+    standardProgramItems.length > 0
+      ? standardProgramItems
+      : programItems.length === 0
+        ? ["برنامج متكامل وخدمة متابعة من فريق قيصر طوال الرحلة."]
+        : [];
+  const optionalTripOptions = optionalTripsItem
+    ? optionalTripsItem
+        .replace(new RegExp(`^${optionalTripsLabel}\\s*[:：]?\\s*`), "")
+        .replace(/\.$/, "")
+        .split(/[،,]/)
+        .map((option) => option.trim())
+        .filter(Boolean)
+        .map((option) => {
+          const priceStart = option.indexOf("+");
+
+          return priceStart > 0
+            ? {
+                label: option.slice(0, priceStart).trim(),
+                price: option.slice(priceStart).trim(),
+              }
+            : { label: option, price: "" };
+        })
+    : [];
   const hotelFeatures = trip.hotel_features ?? [];
   const detailImages = Array.from(
     new Set([trip.main_image_url, ...(trip.additional_image_urls ?? [])].filter(Boolean)),
@@ -434,10 +463,7 @@ function TripPackageDetailsPage() {
             <h2 className="mt-2 text-3xl font-black">{meta.programTitle}</h2>
 
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              {(programItems.length > 0
-                ? programItems
-                : ["برنامج متكامل وخدمة متابعة من فريق قيصر طوال الرحلة."]
-              ).map((item, index) => (
+              {displayedProgramItems.map((item, index) => (
                 <div
                   key={`${item}-${index}`}
                   className="flex gap-3 rounded-2xl border border-[#15343A]/10 bg-[#F8F4EA] p-4 leading-7"
@@ -450,6 +476,45 @@ function TripPackageDetailsPage() {
                 </div>
               ))}
             </div>
+
+            {optionalTripOptions.length > 0 ? (
+              <section
+                aria-labelledby="optional-turkey-trips-title"
+                className="mt-5 rounded-3xl border border-[#D4AF37]/35 bg-gradient-to-br from-[#FFF9E8] to-[#F8F4EA] p-5 sm:p-6"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#123C49] text-[#F3CF63]">
+                    <Bus className="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h3 id="optional-turkey-trips-title" className="text-lg font-black">
+                      الرحلات الداخلية الاختيارية
+                    </h3>
+                    <p className="mt-1 text-sm leading-6 text-[#15343A]/70">
+                      اختر عدد الرحلات الذي يناسب برنامجك؛ المبلغ الإضافي محسوب للشخص.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {optionalTripOptions.map((option) => (
+                    <div
+                      key={`${option.label}-${option.price}`}
+                      className="rounded-2xl border border-[#D4AF37]/30 bg-white px-3 py-4 text-center shadow-sm"
+                    >
+                      <span className="block text-sm font-bold text-[#15343A]/75">
+                        {option.label}
+                      </span>
+                      {option.price ? (
+                        <strong className="mt-2 block text-lg font-black text-[#9B7617]">
+                          {option.price}
+                        </strong>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             {hotelFeatures.length > 0 ? (
               <div className="mt-9">
