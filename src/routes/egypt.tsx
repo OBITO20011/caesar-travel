@@ -112,6 +112,32 @@ function EgyptPage() {
           </div>
         </section>
 
+        <section id="hotels" className="relative overflow-hidden bg-[#071F29] py-20 sm:py-28">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(212,175,55,0.12),transparent_30%)]" />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <span className="inline-flex items-center gap-2 font-black text-[#F3CF63]">
+                  <CalendarRange className="h-5 w-5" aria-hidden="true" />
+                  اختر الفندق ثم مدة الإقامة
+                </span>
+                <h2 className="mt-3 text-4xl font-black text-white sm:text-6xl">فنادق شرم الشيخ</h2>
+                <p className="mt-4 text-lg leading-8 text-white/65">
+                  افتح أي فندق لتشاهد الصور والمزايا، ثم اختر 4 أو 5 أو 6 أو 7 أيام ويظهر السعر
+                  الصحيح مباشرة.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-[#D4AF37]/25 bg-white/5 px-5 py-4 text-sm leading-7 text-white/75 backdrop-blur">
+                الأسعار للشخص في الغرفة الثنائية أو الثلاثية، والتأكيد النهائي يتم مع موظف الحجز.
+              </div>
+            </div>
+
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <PublicTripGrid pageKey="egypt" fallbackImage={egyptHero} />
+            </div>
+          </div>
+        </section>
+
         <section id="destinations" className="bg-[#F8F4EA] py-16 text-[#15343A] sm:py-20">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="mx-auto max-w-3xl text-center">
@@ -140,32 +166,6 @@ function EgyptPage() {
                   </div>
                 </article>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="hotels" className="relative overflow-hidden bg-[#071F29] py-20 sm:py-28">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(212,175,55,0.12),transparent_30%)]" />
-          <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <span className="inline-flex items-center gap-2 font-black text-[#F3CF63]">
-                  <CalendarRange className="h-5 w-5" aria-hidden="true" />
-                  اختر الفندق ثم مدة الإقامة
-                </span>
-                <h2 className="mt-3 text-4xl font-black text-white sm:text-6xl">فنادق شرم الشيخ</h2>
-                <p className="mt-4 text-lg leading-8 text-white/65">
-                  افتح أي فندق لتشاهد الصور والمزايا، ثم اختر 4 أو 5 أو 6 أو 7 أيام ويظهر السعر
-                  الصحيح مباشرة.
-                </p>
-              </div>
-              <div className="rounded-3xl border border-[#D4AF37]/25 bg-white/5 px-5 py-4 text-sm leading-7 text-white/75 backdrop-blur">
-                الأسعار للشخص في الغرفة الثنائية أو الثلاثية، والتأكيد النهائي يتم مع موظف الحجز.
-              </div>
-            </div>
-
-            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <PublicTripGrid pageKey="egypt" fallbackImage={egyptHero} />
             </div>
           </div>
         </section>

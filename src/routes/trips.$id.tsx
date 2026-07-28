@@ -301,105 +301,8 @@ function TripPackageDetailsPage() {
           </div>
         </section>
 
-        <section className="relative z-10 mx-auto -mt-5 grid max-w-7xl gap-7 px-5 sm:px-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <div className="relative rounded-[2rem] border border-[#D4AF37]/25 bg-white p-6 shadow-xl sm:p-9">
-            <span className="font-bold text-[#9B7617]">
-              {isHotelPackage ? "معلومات الفندق" : "تفاصيل الرحلة"}
-            </span>
-            <h2 className="mt-2 text-3xl font-black">{meta.programTitle}</h2>
-
-            <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              {(programItems.length > 0
-                ? programItems
-                : ["برنامج متكامل وخدمة متابعة من فريق قيصر طوال الرحلة."]
-              ).map((item, index) => (
-                <div
-                  key={`${item}-${index}`}
-                  className="flex gap-3 rounded-2xl border border-[#15343A]/10 bg-[#F8F4EA] p-4 leading-7"
-                >
-                  <CheckCircle2
-                    className="mt-1 h-5 w-5 shrink-0 text-[#B88912]"
-                    aria-hidden="true"
-                  />
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
-
-            {hotelFeatures.length > 0 ? (
-              <div className="mt-9">
-                <h2 className="text-2xl font-black">مميزات الفندق</h2>
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {hotelFeatures.map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FFF9E8] p-4 font-bold"
-                    >
-                      <Hotel className="h-5 w-5 shrink-0 text-[#9B7617]" aria-hidden="true" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <InfoCard icon={Moon} title="مدة الرحلة" value={duration} />
-              <InfoCard
-                icon={UtensilsCrossed}
-                title="الوجبات"
-                value={trip.meals || "حسب البرنامج"}
-              />
-              {trip.airline ? (
-                <InfoCard icon={Plane} title="شركة الطيران" value={trip.airline} />
-              ) : null}
-            </div>
-
-            {detailImages.length > 1 ? (
-              <div className="mt-10">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <span className="font-bold text-[#9B7617]">جولة بصرية</span>
-                    <h2 className="mt-1 text-2xl font-black">
-                      {isHotelPackage ? "اكتشف الفندق قبل الحجز" : "صور الرحلة"}
-                    </h2>
-                  </div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#15343A] px-4 py-2 text-sm font-bold text-white">
-                    <Images className="h-4 w-4 text-[#F3CF63]" aria-hidden="true" />
-                    {detailImages.length - 1} صور
-                  </span>
-                </div>
-                <div className="mt-5 grid auto-rows-[180px] gap-4 sm:grid-cols-2">
-                  {detailImages.slice(1).map((imageUrl, index) => (
-                    <button
-                      key={imageUrl}
-                      type="button"
-                      onClick={() => setGalleryIndex(index + 1)}
-                      aria-label={`تكبير صورة ${index + 2} من ${trip.title}`}
-                      className={`group relative cursor-zoom-in overflow-hidden rounded-3xl bg-[#15343A] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D4AF37] ${
-                        index === 0 || index % 5 === 0 ? "sm:row-span-2" : ""
-                      }`}
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={`${trip.title} - صورة ${index + 2}`}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                      />
-                      <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-70 transition group-hover:opacity-100" />
-                      <span className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-2 text-sm font-bold text-white backdrop-blur">
-                        <Images className="h-4 w-4" aria-hidden="true" />
-                        تكبير الصورة
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          <aside className="relative h-fit rounded-[2rem] border border-[#D4AF37]/35 bg-[#102F3A] p-6 text-white shadow-xl lg:sticky lg:top-28">
+        <section className="relative z-10 mx-auto -mt-5 flex max-w-7xl flex-col gap-7 px-5 sm:px-8 lg:flex-row-reverse">
+          <aside className="relative h-fit rounded-[2rem] border border-[#D4AF37]/35 bg-[#102F3A] p-6 text-white shadow-xl lg:sticky lg:top-28 lg:w-[380px] lg:shrink-0">
             <div className="flex items-center gap-3 text-[#F3CF63]">
               <WalletCards className="h-6 w-6" aria-hidden="true" />
               <h2 className="text-xl font-black">الأسعار والحجز</h2>
@@ -417,7 +320,7 @@ function TripPackageDetailsPage() {
                   </span>
                 </div>
               ) : null}
-              <p className="mt-2 text-4xl font-black text-[#F3CF63]">
+              <p className="mt-2 text-4xl font-black text-[#F3CF63]" aria-live="polite">
                 {selectedPrice !== undefined && selectedPrice !== null
                   ? formatTripAmount(selectedPrice, trip.currency)
                   : formatTripPrice(trip)}
@@ -523,6 +426,103 @@ function TripPackageDetailsPage() {
               <p>حجز ومتابعة مباشرة من فريق قيصر حتى تأكيد تفاصيل رحلتك.</p>
             </div>
           </aside>
+
+          <div className="relative min-w-0 flex-1 rounded-[2rem] border border-[#D4AF37]/25 bg-white p-6 shadow-xl sm:p-9">
+            <span className="font-bold text-[#9B7617]">
+              {isHotelPackage ? "معلومات الفندق" : "تفاصيل الرحلة"}
+            </span>
+            <h2 className="mt-2 text-3xl font-black">{meta.programTitle}</h2>
+
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              {(programItems.length > 0
+                ? programItems
+                : ["برنامج متكامل وخدمة متابعة من فريق قيصر طوال الرحلة."]
+              ).map((item, index) => (
+                <div
+                  key={`${item}-${index}`}
+                  className="flex gap-3 rounded-2xl border border-[#15343A]/10 bg-[#F8F4EA] p-4 leading-7"
+                >
+                  <CheckCircle2
+                    className="mt-1 h-5 w-5 shrink-0 text-[#B88912]"
+                    aria-hidden="true"
+                  />
+                  <p>{item}</p>
+                </div>
+              ))}
+            </div>
+
+            {hotelFeatures.length > 0 ? (
+              <div className="mt-9">
+                <h2 className="text-2xl font-black">مميزات الفندق</h2>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {hotelFeatures.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FFF9E8] p-4 font-bold"
+                    >
+                      <Hotel className="h-5 w-5 shrink-0 text-[#9B7617]" aria-hidden="true" />
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <InfoCard icon={Moon} title="مدة الرحلة" value={duration} />
+              <InfoCard
+                icon={UtensilsCrossed}
+                title="الوجبات"
+                value={trip.meals || "حسب البرنامج"}
+              />
+              {trip.airline ? (
+                <InfoCard icon={Plane} title="شركة الطيران" value={trip.airline} />
+              ) : null}
+            </div>
+
+            {detailImages.length > 1 ? (
+              <div className="mt-10">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <span className="font-bold text-[#9B7617]">جولة بصرية</span>
+                    <h2 className="mt-1 text-2xl font-black">
+                      {isHotelPackage ? "اكتشف الفندق قبل الحجز" : "صور الرحلة"}
+                    </h2>
+                  </div>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#15343A] px-4 py-2 text-sm font-bold text-white">
+                    <Images className="h-4 w-4 text-[#F3CF63]" aria-hidden="true" />
+                    {detailImages.length - 1} صور
+                  </span>
+                </div>
+                <div className="mt-5 grid auto-rows-[180px] gap-4 sm:grid-cols-2">
+                  {detailImages.slice(1).map((imageUrl, index) => (
+                    <button
+                      key={imageUrl}
+                      type="button"
+                      onClick={() => setGalleryIndex(index + 1)}
+                      aria-label={`تكبير صورة ${index + 2} من ${trip.title}`}
+                      className={`group relative cursor-zoom-in overflow-hidden rounded-3xl bg-[#15343A] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D4AF37] ${
+                        index === 0 || index % 5 === 0 ? "sm:row-span-2" : ""
+                      }`}
+                    >
+                      <img
+                        src={imageUrl}
+                        alt={`${trip.title} - صورة ${index + 2}`}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                      <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-70 transition group-hover:opacity-100" />
+                      <span className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-2 text-sm font-bold text-white backdrop-blur">
+                        <Images className="h-4 w-4" aria-hidden="true" />
+                        تكبير الصورة
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
         </section>
 
         {galleryImage && galleryIndex !== null ? (
