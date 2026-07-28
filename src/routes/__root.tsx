@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "../components/header";
+import { TravelAssistant } from "../components/travel-assistant/travel-assistant";
 
 function NotFoundComponent() {
   return (
@@ -80,6 +81,7 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <Header />
         <Outlet />
+        <TravelAssistant />
       </QueryClientProvider>
     </HelmetProvider>
   );

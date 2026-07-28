@@ -70,6 +70,31 @@ export const tripsService = {
     return ((data as Trip[]) || []).filter(isTripPubliclyVisible);
   },
 
+  async getAssistantRecommendations() {
+    const recommendationPages: TripPageKey[] = [
+      "umrah",
+      "hajj",
+      "egypt",
+      "turkey",
+      "dubai",
+      "switzerland",
+      "maldives",
+      "georgia",
+      "domestic",
+      "flights",
+      "hotels",
+    ];
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*")
+      .in("page_key", recommendationPages)
+      .neq("status", "hidden")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    return ((data as Trip[]) || []).filter(isTripPubliclyVisible);
+  },
+
   async getFeatured() {
     const { data, error } = await supabase
       .from("trips")

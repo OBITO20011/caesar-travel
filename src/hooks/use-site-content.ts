@@ -41,6 +41,16 @@ export function useFeaturedTrips() {
   });
 }
 
+export function useTravelAssistantTrips(enabled: boolean) {
+  return useQuery({
+    queryKey: ["travel-assistant-trips"],
+    queryFn: tripsService.getAssistantRecommendations,
+    enabled,
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+}
+
 export function usePublicTrip(id: string) {
   return useQuery({
     queryKey: ["public-trip", id],
