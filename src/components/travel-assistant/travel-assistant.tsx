@@ -90,6 +90,10 @@ function getTripMonths(trip: Trip) {
   return [...months];
 }
 
+function getTripDetailsRoute(trip: Trip) {
+  return trip.page_key === "umrah" ? "/umrah/$id" : "/trips/$id";
+}
+
 function ChoiceButton({
   choice,
   selected = false,
@@ -247,7 +251,7 @@ function RecommendationCard({ trip, closeAssistant }: { trip: Trip; closeAssista
       </div>
 
       <Link
-        to="/trips/$id"
+        to={getTripDetailsRoute(trip)}
         params={{ id: trip.id }}
         onClick={closeAssistant}
         className="flex min-h-11 w-full items-center justify-center gap-2 border-t border-teal/10 bg-teal px-4 text-sm font-black text-white transition-colors hover:bg-teal-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-gold/60"
