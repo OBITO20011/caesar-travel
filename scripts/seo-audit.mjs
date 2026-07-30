@@ -33,10 +33,11 @@ const titles = new Map();
 const descriptions = new Map();
 
 for (const route of manifest.routes) {
+  const routeSegments = route.path.split("/").filter(Boolean);
   const htmlPath =
     route.path === "/"
       ? path.join(distDirectory, "index.html")
-      : path.join(distDirectory, ...route.path.split("/").filter(Boolean), "index.html");
+      : path.join(distDirectory, ...routeSegments.slice(0, -1), `${routeSegments.at(-1)}.html`);
   let html;
   try {
     html = await fs.readFile(htmlPath, "utf8");

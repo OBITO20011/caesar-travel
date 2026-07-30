@@ -99,10 +99,11 @@ const rootIndexPath = path.join(distDirectory, "index.html");
 const baseHtml = await fs.readFile(rootIndexPath, "utf8");
 
 for (const route of manifest.routes) {
+  const routeSegments = route.path.split("/").filter(Boolean);
   const outputPath =
     route.path === "/"
       ? rootIndexPath
-      : path.join(distDirectory, ...route.path.split("/").filter(Boolean), "index.html");
+      : path.join(distDirectory, ...routeSegments.slice(0, -1), `${routeSegments.at(-1)}.html`);
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, withRouteSeo(baseHtml, route), "utf8");
 }
