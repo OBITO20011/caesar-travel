@@ -8,13 +8,16 @@ import {
   PlaneLanding,
   UtensilsCrossed,
 } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
 import { PublicTripGrid } from "@/components/public-trip-grid";
+import { Seo } from "@/components/seo";
+import { getStaticSeoPage } from "@/lib/seo-config";
 
 export const Route = createFileRoute("/turkey-trip")({
   component: TurkeyTripsPage,
 });
+
+const pageSeo = getStaticSeoPage("/turkey-trip")!;
 
 const services = [
   {
@@ -80,21 +83,7 @@ const destinations = [
 function TurkeyTripsPage() {
   return (
     <>
-      <Helmet>
-        <title>فنادق وباقات تركيا | قيصر للسياحة والسفر</title>
-        <meta
-          name="description"
-          content="اكتشف فنادق وباقات تركيا مع قيصر للسياحة والسفر، مع صور وأسعار ومواعيد ومقاعد محدثة."
-        />
-        <link rel="canonical" href="https://caesar-travel.pages.dev/turkey-trip" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="فنادق وباقات تركيا | قيصر للسياحة والسفر" />
-        <meta
-          property="og:description"
-          content="فنادق مختارة وبرامج سياحية متكاملة إلى أجمل مدن تركيا."
-        />
-        <meta property="og:image" content="/images/turkey-banner.png" />
-      </Helmet>
+      <Seo {...pageSeo} />
 
       <main className="min-h-screen bg-slate-50 text-slate-900" dir="rtl">
         <section
@@ -203,7 +192,11 @@ function TurkeyTripsPage() {
                   <img
                     src={destination.image}
                     alt={destination.title}
+                    title={destination.title}
                     loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
                     className="h-52 w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                   <div className="p-5">

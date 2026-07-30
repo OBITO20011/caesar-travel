@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-  import { Helmet } from "react-helmet-async";
+
+import { Seo } from "@/components/seo";
 import { fallbackVisas } from "@/data/visas";
 import { usePublicVisas } from "@/hooks/use-site-content";
+import { getStaticSeoPage } from "@/lib/seo-config";
 import type { Visa } from "@/types/admin";
 
 const visaFlags: Record<string, string> = {
@@ -29,38 +31,15 @@ export const Route = createFileRoute("/visa/")({
   component: VisaPage,
 });
 
+const pageSeo = getStaticSeoPage("/visa")!;
+
 function VisaPage() {
   const visasQuery = usePublicVisas();
   const visas = visasQuery.isError || visasQuery.isPending ? fallbackVisas : visasQuery.data ?? [];
 
   return (
-  <><Helmet>
-      <title>رحلات التأشيرات السياحية | قصر للسياحة والسفر</title>
-      <meta
-        name="description"
-        content="أفضل عروض السفر إلى مختلف الدول مع قصر للسياحة والسفر."
-      />
-      <meta
-        name="keywords"
-        content="التأشيرة، السياحة، السفر, قصر للسياحة"
-      />
-      <link
-        rel="canonical"
-        href="https://caesar-travel.pages.dev/visa"
-      />
-      <meta
-        property="og:title"
-        content="رحلات التأشيرات السياحية | قصر للسياحة"
-      />
-      <meta
-        property="og:description"
-        content="احجز أفضل عروض السفر إلى مختلف الدول مع قصر للسياحة والسفر."
-      />
-      <meta
-        property="og:url"
-        content="https://caesar-travel.pages.dev/visa"
-      />
-    </Helmet>
+  <><Seo {...pageSeo} />
+    <main>
     <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{
@@ -166,6 +145,11 @@ function VisaPage() {
         <img
           src={visa.card_image_url}
           alt={visa.country_name}
+          title={`تأشيرة ${visa.country_name}`}
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={800}
           className="h-64 w-full object-cover group-hover:scale-105 transition duration-300"
         />
       ) : null}
@@ -181,6 +165,7 @@ function VisaPage() {
 </div>
 </div>
 </section>
+    </main>
       </>
   );
 }

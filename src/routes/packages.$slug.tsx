@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarClock, Sparkles } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
 import { PublicTripGrid } from "@/components/public-trip-grid";
+import { Seo } from "@/components/seo";
 import { getPackageDestination } from "@/data/package-destinations";
+import { getStaticSeoPage } from "@/lib/seo-config";
 
 export const Route = createFileRoute("/packages/$slug")({
   component: PackageDestinationPage,
@@ -52,34 +53,35 @@ function PackageDestinationPage() {
 
   if (!destination) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center bg-[#F5EFD9] px-6 text-center">
-        <div>
-          <h1 className="text-3xl font-black text-[#15343A]">القسم غير موجود</h1>
-          <Link to="/" className="mt-6 inline-block font-bold text-[#9B7617]">
-            العودة للرئيسية
-          </Link>
-        </div>
-      </main>
+      <>
+        <Seo
+          title="القسم غير موجود | قيصر للسياحة والسفر"
+          description="القسم المطلوب غير موجود. استعرض الوجهات والرحلات المتاحة لدى قيصر للسياحة والسفر."
+          path={`/packages/${slug}`}
+          noIndex
+        />
+        <main className="flex min-h-[70vh] items-center justify-center bg-[#F5EFD9] px-6 text-center">
+          <div>
+            <h1 className="text-3xl font-black text-[#15343A]">القسم غير موجود</h1>
+            <Link to="/" className="mt-6 inline-block font-bold text-[#9B7617]">
+              العودة للرئيسية
+            </Link>
+          </div>
+        </main>
+      </>
     );
   }
 
+  const pageSeo = getStaticSeoPage(`/packages/${destination.slug}`);
+
   return (
     <>
-      <Helmet>
-        <title>{destination.title} | قيصر للسياحة والسفر</title>
-        <meta name="description" content={destination.description} />
-        <link
-          rel="canonical"
-          href={`https://caesar-travel.pages.dev/packages/${destination.slug}`}
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={`${destination.title} | قيصر للسياحة والسفر`} />
-        <meta property="og:description" content={destination.description} />
-        <meta
-          property="og:url"
-          content={`https://caesar-travel.pages.dev/packages/${destination.slug}`}
-        />
-      </Helmet>
+      <Seo
+        title={pageSeo?.title || `${destination.title} | قيصر للسياحة والسفر`}
+        description={pageSeo?.description || destination.description}
+        path={`/packages/${destination.slug}`}
+        image={pageSeo?.image || destination.image}
+      />
 
       <main className="min-h-screen bg-[#F5EFD9]">
         <section

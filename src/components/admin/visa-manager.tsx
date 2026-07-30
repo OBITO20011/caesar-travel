@@ -377,6 +377,11 @@ export function VisaManager() {
                                 <img
                                   src={visa.card_image_url}
                                   alt=""
+                                  title={`صورة ${visa.country_name}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  width={1200}
+                                  height={800}
                                   className="h-full w-full object-cover"
                                 />
                               ) : null}

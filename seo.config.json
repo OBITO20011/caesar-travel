@@ -1,0 +1,205 @@
+{
+  "site": {
+    "url": "https://caesar-travel.pages.dev",
+    "name": "قيصر للسياحة والسفر",
+    "alternateName": "Caesar Travel",
+    "language": "ar-JO",
+    "locale": "ar_JO",
+    "description": "قيصر للسياحة والسفر، وكالة سفر في الأردن لخدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والسياحة الداخلية والخارجية.",
+    "defaultImage": "/og-image.jpg",
+    "logo": "/android-chrome-512x512.png",
+    "telephone": "+962795207900",
+    "additionalTelephones": ["+962798337711", "+962798691003"],
+    "email": "Caesar.co@hotmail.com",
+    "address": {
+      "streetAddress": "خط الشام",
+      "addressLocality": "الرمثا",
+      "addressRegion": "إربد",
+      "postalCode": "",
+      "addressCountry": "JO"
+    },
+    "sameAs": ["https://www.facebook.com/caesartravel", "https://www.instagram.com/caesar__travel/"]
+  },
+  "pages": [
+    {
+      "path": "/",
+      "title": "قيصر للسياحة والسفر | وكالة سفر في الأردن",
+      "description": "قيصر للسياحة والسفر في الأردن لخدمات الحج والعمرة، رحلات تركيا ودبي ومصر، التأشيرات، وحجوزات الفنادق والطيران بخدمة موثوقة.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "الرئيسية"
+    },
+    {
+      "path": "/services",
+      "title": "خدمات قيصر للسياحة والسفر | حج وعمرة وطيران",
+      "description": "تعرف إلى خدمات قيصر للسياحة والسفر: الحج والعمرة، التأشيرات، حجوزات الطيران والفنادق، والسياحة الداخلية والخارجية من الأردن.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "خدماتنا"
+    },
+    {
+      "path": "/gallery",
+      "title": "لمحات من رحلات قيصر | سياحة داخلية وخارجية",
+      "description": "شاهد لمحات من رحلات قيصر للسياحة والسفر إلى الحج والعمرة وتركيا ودبي ومصر، واكتشف وجهات السياحة الداخلية والخارجية.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "لمحات من رحلاتنا"
+    },
+    {
+      "path": "/hajj",
+      "title": "رحلات الحج من الأردن | قيصر للسياحة والسفر",
+      "description": "برامج ورحلات الحج من الأردن مع قيصر للسياحة والسفر، تتضمن تفاصيل المواعيد والخدمات والأسعار والمقاعد المتاحة للحجز.",
+      "image": "/images/hajj-banner.jpg",
+      "breadcrumbName": "رحلات الحج"
+    },
+    {
+      "path": "/umrah",
+      "title": "رحلات العمرة من الأردن | فنادق وباقات قيصر",
+      "description": "اختر من باقات ورحلات العمرة من الأردن، وشاهد فنادق مكة والمدينة والأسعار والمواعيد والمقاعد مع قيصر للسياحة والسفر.",
+      "image": "/images/hajj-banner.jpg",
+      "breadcrumbName": "رحلات العمرة"
+    },
+    {
+      "path": "/visa",
+      "title": "التأشيرات السياحية | قيصر للسياحة والسفر",
+      "description": "خدمات استخراج التأشيرات السياحية وتأشيرات الزيارة والأعمال مع متابعة الطلب وتجهيز المتطلبات من قيصر للسياحة والسفر في الأردن.",
+      "image": "/images/visaa-banner.png",
+      "breadcrumbName": "التأشيرات"
+    },
+    {
+      "path": "/turkey-trip",
+      "title": "رحلات تركيا من الأردن | فنادق وباقات قيصر",
+      "description": "رحلات تركيا من الأردن مع تذاكر الطيران والفنادق والإفطار والمواصلات والجولات، وأسعار الإقامة المحدثة من قيصر للسياحة والسفر.",
+      "image": "/images/turkey-banner.png",
+      "breadcrumbName": "رحلات تركيا"
+    },
+    {
+      "path": "/egypt",
+      "title": "رحلات مصر وشرم الشيخ | قيصر للسياحة والسفر",
+      "description": "رحلات مصر وشرم الشيخ من الأردن مع فنادق مختارة وصور حقيقية وأسعار إقامة واضحة من 4 إلى 7 أيام لدى قيصر للسياحة والسفر.",
+      "image": "/hotels/egypt/aurora-oriental-resort/main.jpg",
+      "breadcrumbName": "رحلات مصر"
+    },
+    {
+      "path": "/dubai",
+      "title": "رحلات دبي من الأردن | قيصر للسياحة والسفر",
+      "description": "اكتشف رحلات دبي من الأردن وبرامج الإقامة والجولات إلى أشهر معالم دبي مع قيصر للسياحة والسفر وخيارات حجز تناسبك.",
+      "image": "/images/uae-banner.png",
+      "breadcrumbName": "رحلات دبي"
+    },
+    {
+      "path": "/saudi",
+      "title": "تأشيرة السعودية | قيصر للسياحة والسفر",
+      "description": "خدمة تأشيرة السعودية السياحية والزيارة والأعمال مع تجهيز المتطلبات ومتابعة الطلب من قيصر للسياحة والسفر في الأردن.",
+      "image": "/images/saudi-banner.jpg",
+      "breadcrumbName": "تأشيرة السعودية",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/uae",
+      "title": "تأشيرة الإمارات | قيصر للسياحة والسفر",
+      "description": "استخراج تأشيرة الإمارات السياحية والزيارة والأعمال مع متابعة كاملة للطلب لدى قيصر للسياحة والسفر في الأردن.",
+      "image": "/images/uae-banner.png",
+      "breadcrumbName": "تأشيرة الإمارات",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/qatar",
+      "title": "تأشيرة قطر | قيصر للسياحة والسفر",
+      "description": "خدمة تأشيرة قطر للسياحة والزيارة والأعمال مع توضيح المتطلبات ومتابعة الطلب من قيصر للسياحة والسفر.",
+      "image": "/images/qatar-banner.png",
+      "breadcrumbName": "تأشيرة قطر",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/syria",
+      "title": "خدمات تأشيرات السوريين | قيصر للسياحة والسفر",
+      "description": "تعرف إلى خدمات التأشيرات المتاحة للسوريين ومتطلبات التقديم والمتابعة لدى قيصر للسياحة والسفر في الأردن.",
+      "image": "/images/syria-banner.png",
+      "breadcrumbName": "خدمات تأشيرات السوريين",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/schengen",
+      "title": "تأشيرة شنغن من الأردن | قيصر للسياحة والسفر",
+      "description": "تجهيز ومتابعة طلب تأشيرة شنغن من الأردن مع توضيح المستندات والمتطلبات وخدمة احترافية من قيصر للسياحة والسفر.",
+      "image": "/images/schengen-banner.png",
+      "breadcrumbName": "تأشيرة شنغن",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/uk",
+      "title": "تأشيرة بريطانيا من الأردن | قيصر للسياحة والسفر",
+      "description": "خدمة تأشيرة بريطانيا للزيارة والسياحة مع تجهيز الملف ومتابعة خطوات الطلب لدى قيصر للسياحة والسفر في الأردن.",
+      "image": "/images/uk-banner.png",
+      "breadcrumbName": "تأشيرة بريطانيا",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/usa",
+      "title": "تأشيرة أمريكا من الأردن | قيصر للسياحة والسفر",
+      "description": "مساعدة في تجهيز طلب تأشيرة أمريكا السياحية والأعمال وتوضيح المتطلبات والمقابلة مع قيصر للسياحة والسفر.",
+      "image": "/images/usa-banner.png",
+      "breadcrumbName": "تأشيرة أمريكا",
+      "parentPath": "/visa",
+      "parentName": "التأشيرات"
+    },
+    {
+      "path": "/packages/switzerland",
+      "title": "رحلات سويسرا | قيصر للسياحة والسفر",
+      "description": "اكتشف باقات رحلات سويسرا بين جبال الألب والبحيرات والمدن الأوروبية مع قيصر للسياحة والسفر من الأردن.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "رحلات سويسرا",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    },
+    {
+      "path": "/packages/maldives",
+      "title": "رحلات المالديف | قيصر للسياحة والسفر",
+      "description": "باقات رحلات المالديف وإقامات الشواطئ والجزر الساحرة مع خيارات تناسب الأزواج والعائلات من قيصر للسياحة والسفر.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "رحلات المالديف",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    },
+    {
+      "path": "/packages/georgia",
+      "title": "رحلات جورجيا | قيصر للسياحة والسفر",
+      "description": "رحلات جورجيا وبرامج الطبيعة والمدن التاريخية للعائلات والشباب مع قيصر للسياحة والسفر من الأردن.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "رحلات جورجيا",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    },
+    {
+      "path": "/packages/domestic",
+      "title": "السياحة الداخلية في الأردن | رحلات قيصر",
+      "description": "رحلات السياحة الداخلية في الأردن إلى البتراء ووادي رم والعقبة وعجلون وجرش والسلط مع قيصر للسياحة والسفر.",
+      "image": "/images/domestic/golden-triangle.webp",
+      "breadcrumbName": "السياحة الداخلية",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    },
+    {
+      "path": "/packages/flights",
+      "title": "حجوزات الطيران من الأردن | قيصر للسياحة والسفر",
+      "description": "استفسر عن حجوزات الطيران من الأردن إلى الوجهات العربية والعالمية وخيارات الرحلات المناسبة مع قيصر للسياحة والسفر.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "حجوزات الطيران",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    },
+    {
+      "path": "/packages/hotels",
+      "title": "حجوزات الفنادق | قيصر للسياحة والسفر",
+      "description": "خيارات حجوزات الفنادق في أشهر الوجهات وبمستويات وأسعار متنوعة، مع متابعة فريق قيصر للسياحة والسفر في الأردن.",
+      "image": "/og-image.jpg",
+      "breadcrumbName": "حجوزات الفنادق",
+      "parentPath": "/gallery",
+      "parentName": "الوجهات"
+    }
+  ]
+}

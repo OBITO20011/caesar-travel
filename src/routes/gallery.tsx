@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async";
 
+import { Seo } from "@/components/seo";
 import galleryGeorgia from "@/assets/gallery-georgia.webp";
 import gallerySwitzerland from "@/assets/gallery-switzerland.webp";
 import galleryMaldives from "@/assets/gallery-maldives.webp";
@@ -16,10 +16,13 @@ import galleryHotel from "@/assets/gallery-hotel.jpg";
 import heroImg from "@/assets/hero-hajj.jpg";
 import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages } from "@/hooks/use-site-content";
+import { getStaticSeoPage } from "@/lib/seo-config";
 
 export const Route = createFileRoute("/gallery")({
   component: GalleryPage,
 });
+
+const pageSeo = getStaticSeoPage("/gallery")!;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -120,14 +123,7 @@ function GalleryPage() {
 
   return (
     <>
-      <Helmet>
-        <title>معرض الصور - لمحات من رحلاتنا | قيصر للسياحة والسفر</title>
-        <meta
-          name="description"
-          content="معرض صور من رحلاتنا إلى الحج والعمرة والسياحة الداخلية والخارجية"
-        />
-        <meta name="keywords" content="معرض صور، رحلات، حج، عمرة، سياحة، قيصر للسياحة" />
-      </Helmet>
+      <Seo {...pageSeo} />
       <main className="min-h-screen bg-cream-dark pt-28 md:pt-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
           <motion.div
@@ -173,7 +169,11 @@ function GalleryPage() {
                   <img
                     src={img.src}
                     alt={img.alt}
+                    title={img.alt}
                     loading="lazy"
+                    decoding="async"
+                    width={1200}
+                    height={800}
                     className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                   />
 

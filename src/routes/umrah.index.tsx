@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import umrahBg from "@/assets/umrah-bg.png";
+import umrahBg from "@/assets/umrah-bg.jpg";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrips } from "@/hooks/use-site-content";
 import {
@@ -67,6 +67,11 @@ function UmrahPage() {
                       <img
                         src={trip.main_image_url || umrahBg}
                         alt={hotelName}
+                        title={hotelName}
+                        loading="lazy"
+                        decoding="async"
+                        width={1200}
+                        height={800}
                         className="h-full w-full object-cover"
                         onError={(event) => {
                           event.currentTarget.onerror = null;

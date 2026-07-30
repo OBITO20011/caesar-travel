@@ -133,10 +133,14 @@ function LoginPage() {
           background: "#fff",
         }}
       >
-        <h2>تسجيل دخول الإدارة</h2>
+        <h1 style={{ fontSize: "1.5em", marginBlock: "0.83em", fontWeight: "bold" }}>
+          تسجيل دخول الإدارة
+        </h1>
 
         <input
           type="email"
+          aria-label="البريد الإلكتروني"
+          autoComplete="email"
           placeholder="البريد الإلكتروني"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -149,6 +153,8 @@ function LoginPage() {
 
         <input
           type="password"
+          aria-label="كلمة المرور"
+          autoComplete="current-password"
           placeholder="كلمة المرور"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

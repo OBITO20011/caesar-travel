@@ -9,22 +9,25 @@ import {
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
-import egyptDahab from "@/assets/egypt-dahab.png";
-import egyptHero from "@/assets/egypt-bg.png";
-import egyptKhaleg from "@/assets/egypt-khaleg.png";
-import egyptMsmd from "@/assets/egypt-msmd.png";
-import egyptNabg from "@/assets/egypt-nabg.png";
-import egyptRas from "@/assets/egypt-ras.png";
-import egyptSoha from "@/assets/egypt-soha.png";
-import egyptTwran from "@/assets/egypt-twran.png";
-import egyptWadi from "@/assets/egypt-wadi.png";
+import egyptDahab from "@/assets/egypt-dahab.jpg";
+import egyptHero from "@/assets/egypt-bg.jpg";
+import egyptKhaleg from "@/assets/egypt-khaleg.jpg";
+import egyptMsmd from "@/assets/egypt-msmd.jpg";
+import egyptNabg from "@/assets/egypt-nabg.jpg";
+import egyptRas from "@/assets/egypt-ras.jpg";
+import egyptSoha from "@/assets/egypt-soha.jpg";
+import egyptTwran from "@/assets/egypt-twran.jpg";
+import egyptWadi from "@/assets/egypt-wadi.jpg";
 import { PublicTripGrid } from "@/components/public-trip-grid";
+import { Seo } from "@/components/seo";
+import { getStaticSeoPage } from "@/lib/seo-config";
 
 export const Route = createFileRoute("/egypt")({
   component: EgyptPage,
 });
+
+const pageSeo = getStaticSeoPage("/egypt")!;
 
 const attractions = [
   { title: "خليج نعمة", image: egyptKhaleg },
@@ -40,24 +43,7 @@ const attractions = [
 function EgyptPage() {
   return (
     <>
-      <Helmet>
-        <title>رحلات شرم الشيخ والفنادق | قيصر للسياحة والسفر</title>
-        <meta
-          name="description"
-          content="اختر من أفضل فنادق شرم الشيخ، شاهد الصور والتفاصيل، وقارن أسعار الإقامة من 4 إلى 7 أيام مع قيصر للسياحة والسفر."
-        />
-        <meta
-          name="keywords"
-          content="شرم الشيخ، مصر، رحلات مصر، فنادق شرم الشيخ، عروض شرم الشيخ، قيصر للسياحة"
-        />
-        <link rel="canonical" href="https://caesar-travel.pages.dev/egypt" />
-        <meta property="og:title" content="فنادق ورحلات شرم الشيخ | قيصر للسياحة" />
-        <meta
-          property="og:description"
-          content="فنادق 5 نجوم وخيارات إقامة متعددة وأسعار واضحة قبل الحجز."
-        />
-        <meta property="og:url" content="https://caesar-travel.pages.dev/egypt" />
-      </Helmet>
+      <Seo {...pageSeo} />
 
       <main className="min-h-screen bg-[#071F29] text-white" dir="rtl">
         <section
@@ -157,8 +143,11 @@ function EgyptPage() {
                   <img
                     src={item.image}
                     alt={item.title}
+                    title={item.title}
                     loading="lazy"
                     decoding="async"
+                    width={800}
+                    height={600}
                     className="h-28 w-full object-cover transition duration-300 group-hover:scale-105"
                   />
                   <div className="p-3">

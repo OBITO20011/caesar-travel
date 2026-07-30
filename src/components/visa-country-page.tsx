@@ -1,8 +1,9 @@
-import { Helmet } from "react-helmet-async";
 import type { ReactNode } from "react";
 
+import { Seo } from "@/components/seo";
 import { getFallbackVisa } from "@/data/visas";
 import { usePublicVisa, useSiteSettings } from "@/hooks/use-site-content";
+import { getBreadcrumbItems } from "@/lib/seo-config";
 import { buildWhatsAppUrl, normalizeJordanPhoneNumber } from "@/lib/trip-format";
 import { formatVisaPrice } from "@/lib/visa-utils";
 import type { Visa } from "@/types/admin";
@@ -20,24 +21,51 @@ export function VisaCountryPage({
   const visaQuery = usePublicVisa(slug);
   const settingsQuery = useSiteSettings();
 
-  if (visaQuery.isError && fallbackContent) return <>{fallbackContent}</>;
+  if (visaQuery.isError && fallbackContent) {
+    const detailPath = legacyPaths.has(slug) ? `/${slug}` : `/visa/${slug}`;
+    return (
+      <>
+        {fallbackContent}
+        {fallback ? (
+          <Seo
+            title={`${fallback.headline} | قيصر للسياحة والسفر`}
+            description={fallback.description}
+            path={detailPath}
+            image={fallback.banner_image_url || fallback.card_image_url}
+            breadcrumbs={getBreadcrumbItems(detailPath, fallback.headline, {
+              name: "التأشيرات",
+              path: "/visa",
+            })}
+          />
+        ) : null}
+      </>
+    );
+  }
 
   const visa = visaQuery.isError || visaQuery.isPending ? fallback : visaQuery.data;
 
   if (!visa) {
     return (
-      <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-6" dir="rtl">
-        <div className="rounded-3xl bg-white p-10 text-center shadow-lg">
-          <h1 className="text-3xl font-black">هذه التأشيرة غير متاحة حالياً</h1>
-          <p className="mt-3 text-slate-600">يمكنك العودة إلى صفحة التأشيرات واختيار دولة أخرى.</p>
-          <a
-            href="/visa"
-            className="mt-6 inline-block rounded-full bg-yellow-400 px-8 py-3 font-bold text-black"
-          >
-            عرض التأشيرات
-          </a>
-        </div>
-      </main>
+      <>
+        <Seo
+          title="التأشيرة غير متاحة | قيصر للسياحة والسفر"
+          description="هذه التأشيرة غير متاحة حالياً. يمكنك استعراض خدمات التأشيرات الأخرى لدى قيصر للسياحة والسفر."
+          path={`/visa/${slug}`}
+          noIndex
+        />
+        <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-6" dir="rtl">
+          <div className="rounded-3xl bg-white p-10 text-center shadow-lg">
+            <h1 className="text-3xl font-black">هذه التأشيرة غير متاحة حالياً</h1>
+            <p className="mt-3 text-slate-600">يمكنك العودة إلى صفحة التأشيرات واختيار دولة أخرى.</p>
+            <a
+              href="/visa"
+              className="mt-6 inline-block rounded-full bg-yellow-400 px-8 py-3 font-bold text-black"
+            >
+              عرض التأشيرات
+            </a>
+          </div>
+        </main>
+      </>
     );
   }
 
@@ -52,15 +80,19 @@ export function VisaCountryPage({
 
   return (
     <>
-      <Helmet>
-        <title>{visa.headline} | قيصر للسياحة والسفر</title>
-        <meta name="description" content={visa.description} />
-        <link rel="canonical" href={`https://caesar-travel.pages.dev${detailPath}`} />
-        <meta property="og:title" content={`${visa.headline} | قيصر للسياحة`} />
-        <meta property="og:description" content={visa.description} />
-        <meta property="og:url" content={`https://caesar-travel.pages.dev${detailPath}`} />
-      </Helmet>
+      <Seo
+        title={`${visa.headline} | قيصر للسياحة والسفر`}
+        description={visa.description}
+        path={detailPath}
+        image={visa.banner_image_url || visa.card_image_url}
+        imageAlt={visa.headline}
+        breadcrumbs={getBreadcrumbItems(detailPath, visa.headline, {
+          name: "التأشيرات",
+          path: "/visa",
+        })}
+      />
 
+      <main>
       <section
         className="relative flex min-h-[70vh] items-center justify-center bg-cover bg-center"
         style={{ backgroundImage: `url('${visa.banner_image_url || visa.card_image_url || ""}')` }}
@@ -157,6 +189,7 @@ export function VisaCountryPage({
           </div>
         </div>
       </section>
+      </main>
     </>
   );
 }

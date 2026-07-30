@@ -1,0 +1,59 @@
+{
+  "id": "/",
+  "name": "قيصر للسياحة والسفر",
+  "short_name": "قيصر للسياحة",
+  "description": "وكالة سفر في الأردن لخدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والرحلات السياحية.",
+  "lang": "ar-JO",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8f4ea",
+  "theme_color": "#15343a",
+  "categories": ["travel", "business"],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "رحلات العمرة",
+      "short_name": "العمرة",
+      "url": "/umrah",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "خدمات التأشيرات",
+      "short_name": "التأشيرات",
+      "url": "/visa",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

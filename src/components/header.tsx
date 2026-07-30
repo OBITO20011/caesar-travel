@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import logo from "@/assets/caesar-mark.png";
+import logo from "@/assets/caesar-mark-256.png";
 import { useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 
@@ -46,10 +46,19 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 md:px-8 md:py-3">
         {/* Logo and brand */}
-        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <Link
+          to="/"
+          aria-label="قيصر للسياحة والسفر — الصفحة الرئيسية"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <img
             src={resolveSiteAsset(settings?.logo_url, BUILTIN_LOGO_URL, logo)}
             alt="شعار قيصر للسياحة والسفر"
+            title="قيصر للسياحة والسفر"
+            loading="eager"
+            decoding="async"
+            width={256}
+            height={256}
             className="h-11 w-11 object-contain"
           />
           <div className="text-right leading-tight">
@@ -61,7 +70,10 @@ export function Header() {
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-7">
+        <nav
+          className="hidden md:flex items-center gap-7"
+          aria-label="التنقل الرئيسي"
+        >
           {NAV_LINKS.map((item) => (
             <Link
               key={`${item.path}-${item.hash || ""}`}
@@ -84,7 +96,7 @@ export function Header() {
           >
             احجز الآن
           </Link>
-        </div>
+        </nav>
 
       </div>
 

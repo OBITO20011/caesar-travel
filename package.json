@@ -4,11 +4,15 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/generate-seo.mjs",
     "dev": "vite dev",
     "build": "vite build",
+    "postbuild": "node scripts/prerender-seo.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "audit:seo": "node scripts/seo-audit.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

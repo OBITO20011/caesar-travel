@@ -2,7 +2,6 @@ import galleryGeorgia from "@/assets/gallery-georgia.webp";
 import { supabase } from "@/lib/supabase";
 import gallerySwitzerland from "@/assets/gallery-switzerland.webp";
 import { Link } from "@tanstack/react-router";
-import { Helmet } from "react-helmet-async";
 import galleryMaldives from "@/assets/gallery-maldives.webp";
 import galleryEgypt from "@/assets/gallery-egypt.webp";
 import galleryVisa from "@/assets/gallery-visa.webp";
@@ -32,7 +31,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-import logo from "@/assets/caesar-mark.png";
+import logo from "@/assets/caesar-mark-256.png";
 import heroImg from "@/assets/hero-hajj.jpg";
 import galleryMedina from "@/assets/gallery-medina.jpg";
 import galleryFlight from "@/assets/gallery-flight.jpg";
@@ -41,8 +40,10 @@ import galleryDubai from "@/assets/gallery-dubai.jpg";
 import galleryIstanbul from "@/assets/gallery-istanbul.jpg";
 import galleryHotel from "@/assets/gallery-hotel.jpg";
 import { QuickQuoteSection } from "@/components/quick-quote-section";
+import { Seo } from "@/components/seo";
 import { galleryPackagePaths } from "@/data/package-destinations";
 import { useGalleryImages, useSiteSettings } from "@/hooks/use-site-content";
+import { getStaticSeoPage } from "@/lib/seo-config";
 import { BUILTIN_HERO_URL, BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 import { buildWhatsAppUrl } from "@/lib/trip-format";
 import type { SiteSettings } from "@/types/admin";
@@ -50,6 +51,8 @@ import type { SiteSettings } from "@/types/admin";
 export const Route = createFileRoute("/")({
   component: Index,
 });
+
+const pageSeo = getStaticSeoPage("/")!;
 
 /* ──────────────── Contact constants ──────────────── */
 const PHONES = [
@@ -119,6 +122,9 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
         <img
           src={resolveSiteAsset(settings?.hero_image_url, BUILTIN_HERO_URL, heroImg)}
           alt="الكعبة المشرفة في المسجد الحرام"
+          title="رحلات الحج والعمرة مع قيصر للسياحة والسفر"
+          loading="eager"
+          decoding="async"
           className="h-full w-full object-cover"
           width={1920}
           height={1280}
@@ -177,6 +183,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             <a
               href={buildWhatsAppUrl(settings?.whatsapp || WHATSAPP)}
               target="_blank"
+              rel="noopener noreferrer"
               className="rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-white hover:scale-105 transition-all duration-300 shadow-xl"
             >
               واتساب
@@ -449,7 +456,11 @@ function GallerySection() {
                 <img
                   src={img.src}
                   alt={img.alt}
+                  title={img.alt}
                   loading="lazy"
+                  decoding="async"
+                  width={1200}
+                  height={800}
                   className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -802,6 +813,11 @@ function Footer({ settings }: { settings?: SiteSettings }) {
               <img
                 src={resolveSiteAsset(settings?.logo_url, BUILTIN_LOGO_URL, logo)}
                 alt="شعار قيصر للسياحة"
+                title="قيصر للسياحة والسفر"
+                loading="lazy"
+                decoding="async"
+                width={256}
+                height={256}
                 className="h-12 w-12 object-contain"
               />
               <div className="leading-tight">
@@ -950,66 +966,7 @@ function Index() {
 
   return (
     <>
-      <Helmet>
-        <title>قيصر للسياحة والسفر | رحلات الحج والعمرة والسياحة</title>
-
-        <meta
-          name="description"
-          content="قيصر للسياحة والسفر في الأردن - رحلات الحج والعمرة، حجوزات الطيران، الفنادق، والتأشيرات بأفضل الأسعار."
-        />
-
-        <meta
-          name="keywords"
-          content="قيصر للسياحة، الحج، العمرة، رحلات، الأردن، حجز طيران، فنادق، تأشيرات"
-        />
-
-        <link rel="canonical" href="https://caesar-travel.pages.dev/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="قيصر للسياحة والسفر" />
-        <meta
-          property="og:description"
-          content="قيصر للسياحة والسفر في الرمثا - إربد. خدمات الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
-        />
-        <meta property="og:url" content="https://caesar-travel.pages.dev/" />
-        <meta property="og:image" content="https://caesar-travel.pages.dev/og-image.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="قيصر للسياحة والسفر" />
-        <meta
-          name="twitter:description"
-          content="الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق."
-        />
-        <meta name="twitter:image" content="https://caesar-travel.pages.dev/og-image.png" />
-      </Helmet>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "TravelAgency",
-            name: "قيصر للسياحة والسفر",
-            url: "https://caesar-travel.pages.dev",
-            logo: "https://caesar-travel.pages.dev/logo.png",
-            telephone: "+962795207900",
-            description:
-              "وكالة سفر وسياحة في الرمثا - إربد متخصصة في الحج والعمرة والتأشيرات وحجوزات الطيران والفنادق والرحلات السياحية.",
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: "الرمثا",
-              addressLocality: "الرمثا",
-              addressRegion: "إربد",
-              addressCountry: "JO",
-            },
-            areaServed: "Jordan",
-            sameAs: [
-              "https://www.facebook.com/caesartravel",
-              "https://www.instagram.com/caesar__travel/",
-            ],
-          }),
-        }}
-      />
+      <Seo {...pageSeo} />
       <main className="min-h-screen">
         <HeroSection settings={settings} />
         <AboutSection />

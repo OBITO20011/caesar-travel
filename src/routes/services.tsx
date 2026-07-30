@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async";
 
+import { Seo } from "@/components/seo";
+import { getStaticSeoPage } from "@/lib/seo-config";
 import {
   Plane,
   Compass,
@@ -16,6 +17,8 @@ import {
 export const Route = createFileRoute("/services")({
   component: ServicesPage,
 });
+
+const pageSeo = getStaticSeoPage("/services")!;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -41,17 +44,7 @@ function ServicesPage() {
 
   return (
     <>
-      <Helmet>
-        <title>خدماتنا المميزة | قيصر للسياحة والسفر</title>
-        <meta
-          name="description"
-          content="خدماتنا المتنوعة تشمل الحج والعمرة وحجز الطيران والفنادق والتأشيرات والسياحة الداخلية والخارجية"
-        />
-        <meta
-          name="keywords"
-          content="خدمات، حج، عمرة، طيران، فنادق، تأشيرات، قيصر للسياحة"
-        />
-      </Helmet>
+      <Seo {...pageSeo} />
       <main className="min-h-screen bg-cream pt-28 md:pt-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 py-16">
           <motion.div

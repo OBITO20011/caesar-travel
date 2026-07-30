@@ -2,8 +2,10 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { Seo } from "@/components/seo";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrip, useSiteSettings } from "@/hooks/use-site-content";
+import { getBreadcrumbItems } from "@/lib/seo-config";
 import {
   buildWhatsAppUrl,
   formatTripAmount,
@@ -37,9 +39,17 @@ function HotelDetailsPage() {
   const trip = tripQuery.data;
   if (tripQuery.isError || !trip || trip.page_key !== "umrah") {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F5EFD9]">
-        <h1 className="text-2xl font-bold">رحلة العمرة غير موجودة</h1>
-      </main>
+      <>
+        <Seo
+          title="رحلة العمرة غير موجودة | قيصر للسياحة والسفر"
+          description="رحلة العمرة المطلوبة غير موجودة أو لم تعد متاحة. استعرض رحلات العمرة الحالية لدى قيصر للسياحة والسفر."
+          path={`/umrah/${id}`}
+          noIndex
+        />
+        <main className="flex min-h-screen items-center justify-center bg-[#F5EFD9]">
+          <h1 className="text-2xl font-bold">رحلة العمرة غير موجودة</h1>
+        </main>
+      </>
     );
   }
 
@@ -60,12 +70,33 @@ function HotelDetailsPage() {
   const available = trip.status === "available" && !seatState.soldOut;
 
   return (
-    <main className="min-h-screen bg-[#F5EFD9] p-8">
+    <>
+      <Seo
+        title={`${hotelName} | رحلة عمرة مع قيصر للسياحة والسفر`}
+        description={`${hotelName}: ${
+          trip.description ||
+          "تفاصيل رحلة العمرة والإقامة والأسعار والمواعيد وخيارات الغرف مع قيصر للسياحة والسفر."
+        }`.slice(0, 180)}
+        path={`/umrah/${trip.id}`}
+        image={trip.main_image_url}
+        imageAlt={hotelName}
+        breadcrumbs={getBreadcrumbItems(`/umrah/${trip.id}`, hotelName, {
+          name: "رحلات العمرة",
+          path: "/umrah",
+        })}
+      />
+      <main className="min-h-screen bg-[#F5EFD9] p-8">
       <div className="mx-auto max-w-6xl rounded-3xl bg-[#F8F4EA] p-8 shadow-2xl backdrop-blur-md">
         {trip.main_image_url ? (
           <img
             src={trip.main_image_url}
             alt={hotelName}
+            title={hotelName}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width={1200}
+            height={800}
             className="h-[650px] w-full rounded-3xl bg-[#F8F4EA] object-contain"
           />
         ) : null}
@@ -165,6 +196,11 @@ function HotelDetailsPage() {
                   <img
                     src={imageUrl}
                     alt={`${hotelName} - صورة ${index + 1}`}
+                    title={`${hotelName} - صورة ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    width={1200}
+                    height={800}
                     className="h-[500px] w-full rounded-3xl object-cover"
                   />
                 </SwiperSlide>
@@ -181,6 +217,11 @@ function HotelDetailsPage() {
                 <img
                   src={trip.madinah_image_url}
                   alt={trip.madinah_hotel || "فندق المدينة"}
+                  title={trip.madinah_hotel || "فندق المدينة"}
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={560}
                   className="h-56 w-80 rounded-3xl object-cover"
                 />
               ) : null}
@@ -191,6 +232,7 @@ function HotelDetailsPage() {
           </>
         ) : null}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

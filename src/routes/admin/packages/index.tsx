@@ -35,6 +35,11 @@ function PackageSectionsPage() {
               <img
                 src={destination.image}
                 alt={destination.adminTitle}
+                title={destination.adminTitle}
+                loading="lazy"
+                decoding="async"
+                width={1200}
+                height={800}
                 className="h-44 w-full object-cover transition duration-500 group-hover:scale-105"
               />
               <div className="p-6">

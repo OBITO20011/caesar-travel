@@ -84,12 +84,15 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
         </Link>
 
         <div className="relative h-56 overflow-hidden">
-          <img
-            src={trip.main_image_url || fallbackImage}
-            alt={trip.title}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+            <img
+              src={trip.main_image_url || fallbackImage}
+              alt={trip.title}
+              title={trip.title}
+              loading="lazy"
+              decoding="async"
+              width={1200}
+              height={800}
+              className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
             onError={(event) => {
               event.currentTarget.onerror = null;
               event.currentTarget.src = fallbackImage;

@@ -596,6 +596,11 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                                 <img
                                   src={trip.main_image_url}
                                   alt={trip.title}
+                                  title={trip.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  width={1200}
+                                  height={800}
                                   className="h-full w-full object-cover"
                                 />
                               ) : null}
@@ -752,10 +757,7 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 }
               />
             </Field>
-            <Field
-              label="فترة الرحلات"
-              hint="اختياري — مثال: رحلات شهر 8 و9 و10. عند تعبئته سيظهر بدل التاريخ المحدد."
-            >
+            <Field label="فترة الرحلات">
               <Input
                 value={form.schedule_label}
                 onChange={(event) => setForm({ ...form, schedule_label: event.target.value })}

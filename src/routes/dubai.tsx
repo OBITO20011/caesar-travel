@@ -1,18 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Helmet } from "react-helmet-async";
-import dubaiHero from "@/assets/dubai-gb.png";
-import burjArab from "@/assets/burj-al-arab.png";
-import dubaiAlamia from "@/assets/dubai-alalmia.png";
-import dubaiBurj from "@/assets/dubai-burj.png";
-import dubaiKhor from "@/assets/dubai-khor.png";
-import dubaiMall from "@/assets/dubai-mall.png";
-import dubaiMostgbal from "@/assets/dubai-mostgbal.png";
-import dubaiNaklah from "@/assets/dubai-naklah.png";
-import dubaiSahra from "@/assets/dubai-sahra.png";
+import dubaiHero from "@/assets/dubai-gb.jpg";
+import burjArab from "@/assets/burj-al-arab.jpg";
+import dubaiAlamia from "@/assets/dubai-alalmia.jpg";
+import dubaiBurj from "@/assets/dubai-burj.jpg";
+import dubaiKhor from "@/assets/dubai-khor.jpg";
+import dubaiMall from "@/assets/dubai-mall.jpg";
+import dubaiMostgbal from "@/assets/dubai-mostgbal.jpg";
+import dubaiNaklah from "@/assets/dubai-naklah.jpg";
+import dubaiSahra from "@/assets/dubai-sahra.jpg";
 import { PublicTripGrid } from "@/components/public-trip-grid";
+import { Seo } from "@/components/seo";
+import { getStaticSeoPage } from "@/lib/seo-config";
 export const Route = createFileRoute("/dubai")({
   component: DubaiPage,
 });
+const pageSeo = getStaticSeoPage("/dubai")!;
 const attractions = [
   { title: "برج العرب", image: burjArab },
   { title: "القرية العالمية", image: dubaiAlamia },
@@ -27,30 +29,7 @@ const attractions = [
 function DubaiPage() {
   return (
     <>
-      <Helmet>
-        <title>رحلات دبي | قصر للسياحة والسفر</title>
-
-        <meta
-          name="description"
-          content="أفضل عروض دبي مع قصر للسياحة والسفر، برج خليفة، دبي مول، برج العرب، رحلات وسكن فاخر بأفضل الأسعار."
-        />
-
-        <meta
-          name="keywords"
-          content="دبي، رحلات دبي، برج خليفة، برج العرب، دبي مول، نخلة جميرا، قصر للسياحة"
-        />
-
-        <link rel="canonical" href="https://caesar-travel.pages.dev/dubai" />
-
-        <meta property="og:title" content="رحلات دبي | قصر للسياحة" />
-
-        <meta
-          property="og:description"
-          content="اكتشف أفضل عروض السفر إلى دبي مع قصر للسياحة والسفر."
-        />
-
-        <meta property="og:url" content="https://caesar-travel.pages.dev/dubai" />
-      </Helmet>
+      <Seo {...pageSeo} />
 
       <main className="bg-[#0B0B0B] text-white">
         {/* Hero */}
@@ -106,6 +85,11 @@ function DubaiPage() {
                   <img
                     src={item.image}
                     alt={item.title}
+                    title={item.title}
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
                     className="h-24 w-full object-cover transition duration-500 group-hover:scale-110"
                   />
 

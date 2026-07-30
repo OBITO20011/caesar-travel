@@ -191,8 +191,12 @@ function RecommendationCard({ trip, closeAssistant }: { trip: Trip; closeAssista
           {trip.main_image_url ? (
             <img
               src={trip.main_image_url}
-              alt=""
+              alt={trip.title}
+              title={trip.title}
               loading="lazy"
+              decoding="async"
+              width={800}
+              height={600}
               className="h-full w-full object-cover"
             />
           ) : (

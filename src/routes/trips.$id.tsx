@@ -22,10 +22,11 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
+import { Seo } from "@/components/seo";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrip, useSiteSettings } from "@/hooks/use-site-content";
+import { getBreadcrumbItems } from "@/lib/seo-config";
 import {
   buildWhatsAppUrl,
   formatTripAmount,
@@ -150,20 +151,28 @@ function TripPackageDetailsPage() {
 
   if (tripQuery.isError || !trip || trip.category !== "tourism" || !meta) {
     return (
-      <main
-        className="flex min-h-[70vh] items-center justify-center bg-[#F5EFD9] px-6 text-center"
-        dir="rtl"
-      >
-        <div>
-          <h1 className="text-3xl font-black text-[#15343A]">العرض غير موجود</h1>
-          <a
-            href="/"
-            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#15343A] px-7 py-3 font-bold text-white"
-          >
-            العودة للرئيسية
-          </a>
-        </div>
-      </main>
+      <>
+        <Seo
+          title="العرض غير موجود | قيصر للسياحة والسفر"
+          description="العرض المطلوب غير موجود أو لم يعد متاحاً. استعرض الرحلات والباقات الحالية لدى قيصر للسياحة والسفر."
+          path={`/trips/${id}`}
+          noIndex
+        />
+        <main
+          className="flex min-h-[70vh] items-center justify-center bg-[#F5EFD9] px-6 text-center"
+          dir="rtl"
+        >
+          <div>
+            <h1 className="text-3xl font-black text-[#15343A]">العرض غير موجود</h1>
+            <a
+              href="/"
+              className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#15343A] px-7 py-3 font-bold text-white"
+            >
+              العودة للرئيسية
+            </a>
+          </div>
+        </main>
+      </>
     );
   }
 
@@ -244,20 +253,24 @@ function TripPackageDetailsPage() {
     }.`,
   );
   const galleryImage = galleryIndex !== null ? detailImages[galleryIndex] : null;
+  const seoDescription =
+    `${trip.title}: ${
+      programItems[0] || "صور وأسعار وتفاصيل الرحلة مع قيصر للسياحة والسفر."
+    }`.slice(0, 180);
 
   return (
     <>
-      <Helmet>
-        <title>{trip.title} | قيصر للسياحة والسفر</title>
-        <meta
-          name="description"
-          content={programItems[0] || `صور وأسعار وتفاصيل ${trip.title} مع قيصر للسياحة والسفر.`}
-        />
-        <link rel="canonical" href={`https://caesar-travel.pages.dev/trips/${trip.id}`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={`${trip.title} | قيصر للسياحة والسفر`} />
-        {trip.main_image_url ? <meta property="og:image" content={trip.main_image_url} /> : null}
-      </Helmet>
+      <Seo
+        title={`${trip.title} | قيصر للسياحة والسفر`}
+        description={seoDescription}
+        path={`/trips/${trip.id}`}
+        image={trip.main_image_url}
+        imageAlt={trip.title}
+        breadcrumbs={getBreadcrumbItems(`/trips/${trip.id}`, trip.title, {
+          name: meta.backLabel,
+          path: meta.backHref,
+        })}
+      />
 
       <main dir="rtl" className="min-h-screen bg-[#F5EFD9] pb-20 text-[#15343A]">
         <section className="relative min-h-[58vh] overflow-hidden bg-[#0B2E3A]">
@@ -265,6 +278,12 @@ function TripPackageDetailsPage() {
             <img
               src={trip.main_image_url}
               alt={trip.title}
+              title={trip.title}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              width={1600}
+              height={900}
               className="absolute inset-0 h-full w-full object-cover"
             />
           ) : null}
@@ -573,8 +592,11 @@ function TripPackageDetailsPage() {
                       <img
                         src={imageUrl}
                         alt={`${trip.title} - صورة ${index + 2}`}
+                        title={`${trip.title} - صورة ${index + 2}`}
                         loading="lazy"
                         decoding="async"
+                        width={1200}
+                        height={800}
                         className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       />
                       <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-70 transition group-hover:opacity-100" />
@@ -620,6 +642,11 @@ function TripPackageDetailsPage() {
             <img
               src={galleryImage}
               alt={`${trip.title} - صورة مكبرة ${galleryIndex + 1}`}
+              title={`${trip.title} - صورة مكبرة ${galleryIndex + 1}`}
+              loading="eager"
+              decoding="async"
+              width={1200}
+              height={800}
               className="max-h-[84vh] max-w-full rounded-3xl object-contain shadow-2xl"
             />
 

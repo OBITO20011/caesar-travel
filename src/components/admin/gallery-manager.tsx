@@ -173,6 +173,11 @@ export function GalleryManager() {
                 <img
                   src={image.image_url}
                   alt={image.title}
+                  title={image.title}
+                  loading="lazy"
+                  decoding="async"
+                  width={1200}
+                  height={900}
                   className="aspect-[4/3] w-full object-cover"
                 />
                 <CardContent className="flex items-center justify-between gap-3 p-4">

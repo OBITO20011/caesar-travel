@@ -33,6 +33,7 @@ function HajjPage() {
       className="min-h-screen bg-cover bg-center bg-no-repeat py-16"
       style={{ backgroundImage: "url('/images/hajj-banner.jpg')" }}
     >
+      <h1 className="sr-only">رحلات الحج من الأردن مع قيصر للسياحة والسفر</h1>
       <div className="mx-auto max-w-6xl space-y-8 px-6 py-16">
         {tripsQuery.isLoading ? (
           <div className="rounded-3xl bg-white/35 p-10 text-center text-lg backdrop-blur-md">
@@ -70,10 +71,10 @@ function HajjPage() {
                     : statusLabels[trip.status as keyof typeof statusLabels] || "غير متاح"}
                 </span>
 
-                <h1 className="mt-6 flex items-center justify-center gap-3 text-5xl font-bold text-blue-900">
+                <h2 className="mt-6 flex items-center justify-center gap-3 text-5xl font-bold text-blue-900">
                   🕋
                   <span>{trip.title}</span>
-                </h1>
+                </h2>
 
                 {trip.description ? (
                   <p className="mt-6 text-xl leading-9 text-gray-700">{trip.description}</p>
@@ -81,7 +82,7 @@ function HajjPage() {
 
                 {trip.start_date || trip.end_date ? (
                   <div className="mt-10 rounded-2xl bg-slate-50 p-6">
-                    <h2 className="mb-4 text-2xl font-bold">📅 موعد الحج المتوقع</h2>
+                    <h3 className="mb-4 text-2xl font-bold">📅 موعد الحج المتوقع</h3>
 
                     {trip.start_date ? (
                       <p className="text-lg">
