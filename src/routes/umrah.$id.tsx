@@ -80,6 +80,13 @@ function HotelDetailsPage() {
   const seatState = getTripSeatState(trip);
   const discount = getTripDiscountPercentage(trip);
   const available = trip.status === "available" && !seatState.soldOut;
+  const scheduleText = trip.start_date
+    ? trip.schedule_label || formatTripDate(trip.start_date)
+    : trip.schedule_label;
+  const durationText = trip.description || (trip.nights > 0 ? `${trip.nights} ليالٍ` : "");
+  const hasTripSummary = Boolean(
+    scheduleText || durationText || trip.airline || trip.meals || trip.hotel_location,
+  );
 
   return (
     <>
@@ -138,42 +145,93 @@ function HotelDetailsPage() {
           </p>
           <h1 className="mt-8 text-4xl font-bold">{hotelName}</h1>
 
-          {trip.start_date ? (
-            <p className="mt-4 flex items-center gap-2 text-lg text-gray-600">
-              <CalendarDays className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-              {trip.schedule_label || formatTripDate(trip.start_date)}
-            </p>
-          ) : trip.schedule_label ? (
-            <p className="mt-4 flex items-center gap-2 text-lg text-gray-600">
-              <CalendarDays className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-              {trip.schedule_label}
-            </p>
-          ) : null}
-          {trip.description || trip.nights > 0 ? (
-            <p className="mt-3 flex items-start gap-2 leading-8 text-slate-700">
-              <BedDouble className="mt-1 h-5 w-5 shrink-0 text-[#B8860B]" aria-hidden="true" />
-              <span>
-                <b>المدة والتفاصيل:</b> {trip.description || `${trip.nights} ليالٍ`}
-              </span>
-            </p>
-          ) : null}
-          {trip.airline ? (
-            <p className="mt-3 flex items-center gap-2 text-slate-700">
-              <Plane className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-              <b>شركة الطيران:</b> {trip.airline}
-            </p>
-          ) : null}
-          {trip.meals ? (
-            <p className="mt-3 flex items-center gap-2 text-slate-700">
-              <UtensilsCrossed className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-              <b>الوجبات:</b> {trip.meals}
-            </p>
-          ) : null}
-          {trip.hotel_location ? (
-            <p className="mt-3 flex items-center gap-2 text-slate-700">
-              <MapPin className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-              <b>الموقع:</b> {trip.hotel_location}
-            </p>
+          {hasTripSummary ? (
+            <section
+              className="mt-6 rounded-3xl border border-[#D7BA68]/50 bg-white/75 p-3 shadow-[0_16px_45px_rgba(70,53,17,0.08)] sm:p-5"
+              aria-labelledby="trip-summary-title"
+            >
+              <h2
+                id="trip-summary-title"
+                className="mb-3 flex items-center gap-2 px-1 text-lg font-black text-[#153B46] sm:text-xl"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#153B46] text-[#E7C56D]">
+                  <ClipboardCheck className="h-5 w-5" aria-hidden="true" />
+                </span>
+                ملخص برنامج الرحلة
+              </h2>
+
+              <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+                {scheduleText ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-[#E8D9AC] bg-[#FFF8E6] p-4 sm:col-span-1 lg:col-span-2">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#B8860B] shadow-sm">
+                      <CalendarDays className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-sm font-bold text-slate-500">موعد الرحلة</dt>
+                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
+                        {scheduleText}
+                      </dd>
+                    </div>
+                  </div>
+                ) : null}
+
+                {durationText ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-[#D8E2E3] bg-[#F5F9F8] p-4 sm:col-span-2 lg:col-span-4">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#B8860B] shadow-sm">
+                      <BedDouble className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-sm font-bold text-slate-500">المدة والتفاصيل</dt>
+                      <dd className="mt-1 break-words text-base font-semibold leading-8 text-slate-700">
+                        {durationText}
+                      </dd>
+                    </div>
+                  </div>
+                ) : null}
+
+                {trip.airline ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-1 lg:col-span-2">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
+                      <Plane className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-sm font-bold text-slate-500">شركة الطيران</dt>
+                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
+                        {trip.airline}
+                      </dd>
+                    </div>
+                  </div>
+                ) : null}
+
+                {trip.meals ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-1 lg:col-span-2">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
+                      <UtensilsCrossed className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-sm font-bold text-slate-500">الوجبات</dt>
+                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
+                        {trip.meals}
+                      </dd>
+                    </div>
+                  </div>
+                ) : null}
+
+                {trip.hotel_location ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-2 lg:col-span-2">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
+                      <MapPin className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-sm font-bold text-slate-500">الموقع</dt>
+                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
+                        {trip.hotel_location}
+                      </dd>
+                    </div>
+                  </div>
+                ) : null}
+              </dl>
+            </section>
           ) : null}
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
