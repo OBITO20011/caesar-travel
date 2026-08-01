@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CalendarRange,
+  BusFront,
   Clock3,
   Edit3,
   Eye,
@@ -9,6 +10,7 @@ import {
   ImagePlus,
   Loader2,
   Plus,
+  Plane,
   Search,
   Trash2,
 } from "lucide-react";
@@ -26,7 +28,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { imageService, tripsService } from "@/services/admin";
-import type { Trip, TripCategory, TripPageKey, TripStatus } from "@/types/admin";
+import type {
+  Trip,
+  TripCategory,
+  TripPageKey,
+  TripStatus,
+  UmrahRoute,
+  UmrahTransport,
+} from "@/types/admin";
 
 const PAGE_SIZE = 10;
 
@@ -77,6 +86,8 @@ type TripForm = {
   title: string;
   category: TripCategory;
   page_key: TripPageKey;
+  umrah_transport: UmrahTransport;
+  umrah_route: UmrahRoute;
   description: string;
   schedule_label: string;
   start_date: string;
@@ -97,11 +108,16 @@ type TripForm = {
   hotel_stars: string;
   hotel_features: string;
   stay_options: StayOptionForm[];
+  single_price: string;
   double_price: string;
   triple_price: string;
   quad_price: string;
   additional_image_urls: string;
   madinah_image_url: string;
+  flight_details: string;
+  program_inclusions: string;
+  program_requirements: string;
+  program_notes: string;
   status: TripStatus;
   is_featured: boolean;
   is_visible: boolean;
@@ -113,6 +129,8 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     title: "",
     category,
     page_key: pageKey,
+    umrah_transport: "land",
+    umrah_route: "makkah_madinah",
     description: "",
     schedule_label: "",
     start_date: "",
@@ -133,11 +151,16 @@ function emptyForm(category: TripCategory, pageKey: TripPageKey): TripForm {
     hotel_stars: "",
     hotel_features: "",
     stay_options: [],
+    single_price: "",
     double_price: "",
     triple_price: "",
     quad_price: "",
     additional_image_urls: "",
     madinah_image_url: "",
+    flight_details: "",
+    program_inclusions: "",
+    program_requirements: "",
+    program_notes: "",
     status: "available",
     is_featured: false,
     is_visible: true,
@@ -158,6 +181,8 @@ function formFromTrip(trip: Trip): TripForm {
     title: trip.title,
     category: trip.category,
     page_key: trip.page_key,
+    umrah_transport: trip.umrah_transport ?? "land",
+    umrah_route: trip.umrah_route ?? (trip.madinah_hotel ? "makkah_madinah" : "makkah"),
     description: trip.description ?? "",
     schedule_label: trip.schedule_label ?? "",
     start_date: trip.start_date ?? "",
@@ -183,11 +208,16 @@ function formFromTrip(trip: Trip): TripForm {
       nights: option.nights.toString(),
       price: option.price.toString(),
     })),
+    single_price: trip.single_price?.toString() ?? "",
     double_price: trip.double_price?.toString() ?? "",
     triple_price: trip.triple_price?.toString() ?? "",
     quad_price: trip.quad_price?.toString() ?? "",
     additional_image_urls: (trip.additional_image_urls ?? []).join("\n"),
     madinah_image_url: trip.madinah_image_url ?? "",
+    flight_details: (trip.flight_details ?? []).join("\n"),
+    program_inclusions: (trip.program_inclusions ?? []).join("\n"),
+    program_requirements: (trip.program_requirements ?? []).join("\n"),
+    program_notes: (trip.program_notes ?? []).join("\n"),
     status: trip.status,
     is_featured: trip.is_featured,
     is_visible: trip.is_visible !== false && trip.status !== "hidden",
@@ -200,6 +230,9 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
     title: form.title.trim(),
     category: form.category,
     page_key: form.page_key,
+    umrah_transport: form.page_key === "umrah" ? form.umrah_transport : null,
+    umrah_route:
+      form.page_key === "umrah" && form.umrah_transport === "air" ? form.umrah_route : null,
     description: form.description.trim() || undefined,
     schedule_label: form.schedule_label.trim() || undefined,
     start_date: form.start_date || undefined,
@@ -238,6 +271,7 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
           option.price > 0,
       )
       .sort((first, second) => first.days - second.days),
+    single_price: form.single_price ? Number(form.single_price) : undefined,
     double_price: form.double_price ? Number(form.double_price) : undefined,
     triple_price: form.triple_price ? Number(form.triple_price) : undefined,
     quad_price: form.quad_price ? Number(form.quad_price) : undefined,
@@ -246,11 +280,22 @@ function toTripPayload(form: TripForm): Omit<Trip, "id" | "created_at" | "update
       .map((url) => url.trim())
       .filter(Boolean),
     madinah_image_url: form.madinah_image_url.trim() || undefined,
+    flight_details: splitLines(form.flight_details),
+    program_inclusions: splitLines(form.program_inclusions),
+    program_requirements: splitLines(form.program_requirements),
+    program_notes: splitLines(form.program_notes),
     status: form.status,
     is_featured: form.is_featured,
     is_visible: form.is_visible,
     offer_ends_at: form.offer_ends_at ? new Date(form.offer_ends_at).toISOString() : null,
   };
+}
+
+function splitLines(value: string) {
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 }
 
 function getErrorMessage(error: unknown) {
@@ -605,7 +650,26 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                                 />
                               ) : null}
                             </div>
-                            <p className="font-semibold text-slate-900">{trip.title}</p>
+                            <div>
+                              <p className="font-semibold text-slate-900">{trip.title}</p>
+                              {pageKey === "umrah" ? (
+                                <div className="mt-1 flex flex-wrap gap-1.5">
+                                  <Badge className="gap-1 bg-slate-100 text-slate-700 hover:bg-slate-100">
+                                    {trip.umrah_transport === "air" ? (
+                                      <Plane className="h-3 w-3" aria-hidden="true" />
+                                    ) : (
+                                      <BusFront className="h-3 w-3" aria-hidden="true" />
+                                    )}
+                                    {trip.umrah_transport === "air" ? "جو" : "بر"}
+                                  </Badge>
+                                  {trip.umrah_transport === "air" ? (
+                                    <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+                                      {trip.umrah_route === "makkah" ? "مكة فقط" : "مكة والمدينة"}
+                                    </Badge>
+                                  ) : null}
+                                </div>
+                              ) : null}
+                            </div>
                           </div>
                         </td>
                         <td className="px-5 py-4">
@@ -757,6 +821,49 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 }
               />
             </Field>
+            {pageKey === "umrah" ? (
+              <section className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
+                <div className="mb-4">
+                  <h3 className="font-bold text-slate-900">تصنيف برنامج العمرة</h3>
+                  <p className="mt-1 text-xs leading-6 text-slate-600">
+                    يحدد مكان ظهور البرنامج في تبويبات صفحة العمرة.
+                  </p>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="طريقة السفر">
+                    <select
+                      value={form.umrah_transport}
+                      onChange={(event) =>
+                        setForm({
+                          ...form,
+                          umrah_transport: event.target.value as UmrahTransport,
+                          umrah_route:
+                            event.target.value === "air" ? form.umrah_route : "makkah_madinah",
+                        })
+                      }
+                      className="h-11 rounded-md border border-input bg-white px-3 text-sm"
+                    >
+                      <option value="land">برنامج بر</option>
+                      <option value="air">برنامج جو</option>
+                    </select>
+                  </Field>
+                  {form.umrah_transport === "air" ? (
+                    <Field label="مسار برنامج الجو">
+                      <select
+                        value={form.umrah_route}
+                        onChange={(event) =>
+                          setForm({ ...form, umrah_route: event.target.value as UmrahRoute })
+                        }
+                        className="h-11 rounded-md border border-input bg-white px-3 text-sm"
+                      >
+                        <option value="makkah">مكة فقط</option>
+                        <option value="makkah_madinah">مكة والمدينة</option>
+                      </select>
+                    </Field>
+                  ) : null}
+                </div>
+              </section>
+            ) : null}
             <Field label="فترة الرحلات">
               <Input
                 value={form.schedule_label}
@@ -892,7 +999,16 @@ export function TripManager({ title, description, category, pageKey }: TripManag
               </Field>
             </div>
             {hasHotelDetails ? (
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Field label="سعر الغرفة المفردة">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.single_price}
+                    onChange={(event) => setForm({ ...form, single_price: event.target.value })}
+                  />
+                </Field>
                 <Field label="سعر الغرفة الثنائية">
                   <Input
                     type="number"
@@ -921,6 +1037,53 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                   />
                 </Field>
               </div>
+            ) : null}
+            {pageKey === "umrah" ? (
+              <section className="grid gap-4 rounded-2xl border border-sky-200 bg-sky-50/70 p-4">
+                <div>
+                  <h3 className="font-bold text-slate-900">تفاصيل البرنامج الكاملة</h3>
+                  <p className="mt-1 text-xs leading-6 text-slate-600">
+                    اكتب كل بند في سطر مستقل ليظهر كبطاقة مرتبة داخل صفحة البرنامج.
+                  </p>
+                </div>
+                <Field label="تفاصيل رحلات الطيران">
+                  <Textarea
+                    rows={4}
+                    value={form.flight_details}
+                    onChange={(event) => setForm({ ...form, flight_details: event.target.value })}
+                    placeholder="عمان ← جدة – رقم الرحلة – وقت الإقلاع والوصول"
+                  />
+                </Field>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="ما يشمله البرنامج">
+                    <Textarea
+                      rows={6}
+                      value={form.program_inclusions}
+                      onChange={(event) =>
+                        setForm({ ...form, program_inclusions: event.target.value })
+                      }
+                      placeholder="تأشيرة العمرة\nتذاكر الطيران\nالإقامة في الفنادق"
+                    />
+                  </Field>
+                  <Field label="الوثائق المطلوبة">
+                    <Textarea
+                      rows={6}
+                      value={form.program_requirements}
+                      onChange={(event) =>
+                        setForm({ ...form, program_requirements: event.target.value })
+                      }
+                      placeholder="جواز سفر ساري\nصورة شخصية بخلفية بيضاء"
+                    />
+                  </Field>
+                </div>
+                <Field label="ملاحظات وشروط الحجز">
+                  <Textarea
+                    rows={5}
+                    value={form.program_notes}
+                    onChange={(event) => setForm({ ...form, program_notes: event.target.value })}
+                  />
+                </Field>
+              </section>
             ) : null}
             {isHotelPackage ? (
               <Field label="مميزات الفندق">

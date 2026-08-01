@@ -15,6 +15,8 @@ export type TripPageKey =
   | "flights"
   | "hotels";
 export type TripStatus = "available" | "fully_booked" | "cancelled" | "completed" | "hidden";
+export type UmrahTransport = "land" | "air";
+export type UmrahRoute = "makkah" | "makkah_madinah";
 
 export interface TripStayOption {
   days: number;
@@ -27,6 +29,8 @@ export interface Trip {
   title: string;
   category: TripCategory;
   page_key: TripPageKey;
+  umrah_transport?: UmrahTransport | null;
+  umrah_route?: UmrahRoute | null;
   description?: string;
   schedule_label?: string;
   start_date?: string;
@@ -47,11 +51,16 @@ export interface Trip {
   hotel_stars?: number | null;
   hotel_features: string[];
   stay_options: TripStayOption[];
+  single_price?: number;
   double_price?: number;
   triple_price?: number;
   quad_price?: number;
   additional_image_urls: string[];
   madinah_image_url?: string;
+  flight_details: string[];
+  program_inclusions: string[];
+  program_requirements: string[];
+  program_notes: string[];
   status: TripStatus;
   is_featured: boolean;
   is_visible: boolean;
