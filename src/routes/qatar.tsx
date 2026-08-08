@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-  import { Helmet } from "react-helmet-async";
 import { Link } from "@tanstack/react-router";
 import { VisaCountryPage } from "@/components/visa-country-page";
 export const Route = createFileRoute("/qatar")({
@@ -10,40 +9,6 @@ function VisaPage() {
   return (
   <VisaCountryPage slug="qatar" fallbackContent={
   <>
-  <Helmet>
-    <title>رحلات قطر | قصر للسياحة والسفر</title>
-
-    <meta
-      name="description"
-      content="أفضل عروض السفر إلى قطر، الدوحة، الرياض، العلا، المدينة المنورة مع قصر للسياحة والسفر."
-    />
-
-    <meta
-      name="keywords"
-      content="قطر، الدوحة، رحلات قطر، قصر للسياحة"
-    />
-
-    <link
-      rel="canonical"
-      href="https://caesar-travel.pages.dev/qatar"
-    />
-
-    <meta
-      property="og:title"
-      content="رحلات قطر | قصر للسياحة"
-    />
-
-    <meta
-      property="og:description"
-      content="احجز أفضل عروض السفر إلى قطر مع قصر للسياحة والسفر."
-    />
-
-    <meta
-      property="og:url"
-      content="https://caesar-travel.pages.dev/qatar"
-    />
-  </Helmet>
-
   <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{

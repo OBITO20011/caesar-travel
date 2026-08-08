@@ -20,7 +20,7 @@ function xmlEscape(value) {
 function validLastModified(value) {
   if (!value) return null;
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
 }
 
 const manifest = await buildSeoRouteManifest();

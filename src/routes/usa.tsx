@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-  import { Helmet } from "react-helmet-async";
 import { VisaCountryPage } from "@/components/visa-country-page";
 export const Route = createFileRoute("/usa")({
   component: VisaPage,
@@ -9,33 +8,7 @@ export const Route = createFileRoute("/usa")({
 function VisaPage() {
   return (
   <VisaCountryPage slug="usa" fallbackContent={
-  <><Helmet>
-      <title>رحلات الولايات المتحدة الأمريكية | قصر للسياحة والسفر</title>
-      <meta
-        name="description"
-        content="أفضل عروض السفر إلى الولايات المتحدة الأمريكية، نيويورك، لوس أنجلوس، سان فرانسيسكو مع قصر للسياحة والسفر."
-      />
-      <meta
-        name="keywords"
-        content="الولايات المتحدة، نيويورك، لوس أنجلوس، سان فرانسيسكو، رحلات الولايات المتحدة، قصر للسياحة"
-      />
-      <link
-        rel="canonical"
-        href="https://caesar-travel.pages.dev/usa"
-      />
-      <meta
-        property="og:title"
-        content="رحلات الولايات المتحدة الأمريكية | قصر للسياحة"
-      />
-      <meta
-        property="og:description"
-        content="احجز أفضل عروض السفر إلى الولايات المتحدة الأمريكية مع قصر للسياحة والسفر."
-      />
-      <meta
-        property="og:url"
-        content="https://caesar-travel.pages.dev/usa"
-      />
-    </Helmet>
+  <>
     <section
       className="relative min-h-[70vh] flex items-center justify-center bg-cover bg-center"
       style={{

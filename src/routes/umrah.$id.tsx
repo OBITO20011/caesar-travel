@@ -65,6 +65,14 @@ function HotelDetailsPage() {
   }
 
   const hotelName = trip.makkah_hotel || trip.title;
+  const programName = trip.title || hotelName;
+  const transportName = trip.umrah_transport === "air" ? "جو" : "بر";
+  const destinationName =
+    trip.umrah_transport === "air"
+      ? trip.umrah_route === "makkah"
+        ? "إلى مكة فقط"
+        : "إلى مكة والمدينة"
+      : "";
   const roomPrices = [
     { label: "غرفة مفردة", price: trip.single_price },
     { label: "غرفة ثنائية", price: trip.double_price },
@@ -91,15 +99,17 @@ function HotelDetailsPage() {
   return (
     <>
       <Seo
-        title={`${hotelName} | رحلة عمرة مع قيصر للسياحة والسفر`}
-        description={`${hotelName}: ${
+        title={`${programName} | برنامج عمرة ${transportName} ${destinationName} مع قيصر`
+          .replace(/\s+/g, " ")
+          .trim()}
+        description={`${programName}، برنامج عمرة ${transportName} ${destinationName}: ${
           trip.description ||
           "تفاصيل رحلة العمرة والإقامة والأسعار والمواعيد وخيارات الغرف مع قيصر للسياحة والسفر."
         }`.slice(0, 180)}
         path={`/umrah/${trip.id}`}
         image={trip.main_image_url}
         imageAlt={hotelName}
-        breadcrumbs={getBreadcrumbItems(`/umrah/${trip.id}`, hotelName, {
+        breadcrumbs={getBreadcrumbItems(`/umrah/${trip.id}`, programName, {
           name: "رحلات العمرة",
           path: "/umrah",
         })}

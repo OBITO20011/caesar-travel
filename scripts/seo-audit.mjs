@@ -31,6 +31,7 @@ const manifest = await readGeneratedManifest();
 const distDirectory = path.join(projectRoot, "dist");
 const titles = new Map();
 const descriptions = new Map();
+let homepageHtml = "";
 
 for (const route of manifest.routes) {
   const routeSegments = route.path.split("/").filter(Boolean);
@@ -45,6 +46,8 @@ for (const route of manifest.routes) {
     errors.push(`${route.path}: missing generated HTML shell.`);
     continue;
   }
+
+  if (route.path === "/") homepageHtml = html;
 
   const title = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim();
   const description = attribute(html, /<meta\b[^>]*name=["']description["'][^>]*>/i, "content");
@@ -126,6 +129,34 @@ expect(
 );
 
 const sitemap = await fs.readFile(path.join(projectRoot, "dist", "sitemap.xml"), "utf8");
+expect(
+  sitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>'),
+  "sitemap.xml has a valid UTF-8 XML declaration.",
+);
+expect(
+  sitemap.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'),
+  "sitemap.xml uses the standard sitemap namespace.",
+);
+const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+expect(sitemapUrls.length > 0, "sitemap.xml contains URLs.");
+expect(
+  new Set(sitemapUrls).size === sitemapUrls.length,
+  "sitemap.xml contains no duplicate URLs.",
+);
+expect(
+  sitemapUrls.every((url) => url.startsWith(`${site.url}/`) || url === `${site.url}/`),
+  "sitemap.xml contains only canonical HTTPS production URLs.",
+);
+expect(
+  sitemapUrls.every((url) => !/\/(?:admin|login|auth|preview|test)(?:\/|$)/i.test(url)),
+  "sitemap.xml excludes admin, authentication, preview, and test routes.",
+);
+expect(
+  [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].every((match) =>
+    /^\d{4}-\d{2}-\d{2}$/.test(match[1]),
+  ),
+  "sitemap.xml lastmod values use YYYY-MM-DD.",
+);
 for (const route of manifest.routes.filter((item) => !item.noIndex)) {
   expect(
     sitemap.includes(`<loc>${absoluteUrl(route.path)}</loc>`),
@@ -142,6 +173,46 @@ for (const header of [
   "Permissions-Policy:",
 ]) {
   expect(headers.includes(header), `_headers includes ${header.slice(0, -1)}.`);
+}
+expect(
+  /\/sitemap\.xml[\s\S]*?Content-Type:\s*application\/xml;\s*charset=UTF-8/i.test(headers),
+  "_headers serves sitemap.xml as application/xml.",
+);
+expect(
+  /\/robots\.txt[\s\S]*?Content-Type:\s*text\/plain;\s*charset=UTF-8/i.test(headers),
+  "_headers serves robots.txt as text/plain.",
+);
+expect(
+  /\/admin\/?(?:\*|\s)[\s\S]*?X-Robots-Tag:\s*noindex/i.test(headers),
+  "_headers prevents indexing of admin routes.",
+);
+
+const structuredDataMatch = homepageHtml.match(
+  /<script\b[^>]*id=["']seo-site-structured-data["'][^>]*>([\s\S]*?)<\/script>/i,
+);
+let siteStructuredData = null;
+try {
+  siteStructuredData = structuredDataMatch ? JSON.parse(structuredDataMatch[1]) : null;
+  expect(Boolean(siteStructuredData), "Homepage site JSON-LD is valid JSON.");
+} catch {
+  errors.push("Homepage site JSON-LD is not valid JSON.");
+}
+
+if (siteStructuredData) {
+  const graph = Array.isArray(siteStructuredData["@graph"]) ? siteStructuredData["@graph"] : [];
+  const organization = graph.find((node) => node["@id"] === `${site.url}/#organization`);
+  const website = graph.find((node) => node["@id"] === `${site.url}/#website`);
+  expect(organization?.name === site.name, "Organization schema uses the official business name.");
+  expect(website?.name === site.name, "WebSite schema uses the official business name.");
+  expect(
+    site.sameAs.every((url) => organization?.sameAs?.includes(url)),
+    "Organization schema contains the clean official social profile URLs.",
+  );
+}
+
+const homepageSource = await fs.readFile(path.join(projectRoot, "src", "routes", "index.tsx"), "utf8");
+for (const socialUrl of site.sameAs) {
+  expect(homepageSource.includes(`href: "${socialUrl}"`), `Homepage links to ${socialUrl}.`);
 }
 
 const manifestJson = JSON.parse(

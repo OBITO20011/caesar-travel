@@ -160,22 +160,31 @@ function dynamicTripRoute(trip) {
 
   if (trip.page_key === "umrah") {
     const routePath = `/umrah/${trip.id}`;
-    const title = trip.makkah_hotel || trip.title;
+    const programName = trip.title || trip.makkah_hotel;
+    const transportName = trip.umrah_transport === "air" ? "جو" : "بر";
+    const destinationName =
+      trip.umrah_transport === "air"
+        ? trip.umrah_route === "makkah"
+          ? "إلى مكة فقط"
+          : "إلى مكة والمدينة"
+        : "";
     return {
       path: routePath,
-      title: `${title} | رحلة عمرة مع قيصر للسياحة والسفر`,
+      title: `${programName} | برنامج عمرة ${transportName} ${destinationName} مع قيصر`
+        .replace(/\s+/g, " ")
+        .trim(),
       description: cleanText(
-        `${title}: ${
+        `${programName}، برنامج عمرة ${transportName} ${destinationName}: ${
           trip.description ||
           `تفاصيل رحلة العمرة والإقامة والأسعار والمواعيد وخيارات الغرف مع قيصر للسياحة والسفر.`
         }`,
       ),
       image: trip.main_image_url || "/images/hajj-banner.jpg",
-      breadcrumbName: title,
+      breadcrumbName: programName,
       breadcrumbs: [
         { name: "الرئيسية", path: "/" },
         { name: "رحلات العمرة", path: "/umrah" },
-        { name: title, path: routePath },
+        { name: programName, path: routePath },
       ],
       lastModified: trip.updated_at,
       source: "supabase-trip",
@@ -256,7 +265,7 @@ export async function buildSeoRouteManifest() {
 
   const trips = await fetchSupabaseRows(
     "trips",
-    "select=id,title,description,page_key,category,main_image_url,makkah_hotel,status,is_visible,offer_ends_at,updated_at&status=neq.hidden",
+    "select=id,title,description,page_key,category,main_image_url,makkah_hotel,umrah_transport,umrah_route,status,is_visible,offer_ends_at,updated_at&status=neq.hidden",
     warnings,
   );
   for (const trip of trips) {

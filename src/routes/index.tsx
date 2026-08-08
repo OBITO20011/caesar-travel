@@ -153,15 +153,20 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
 
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.12] text-white tracking-tight"
+            className="font-black leading-[1.12] text-white tracking-tight"
           >
-            {heroTitle}
-            {heroSubtitle ? (
-              <>
-                <br />
-                <span className="text-gold">{heroSubtitle}</span>
-              </>
-            ) : null}
+            <span className="mb-4 block text-base font-bold leading-8 text-white/85 sm:text-lg">
+              شركة قيصر للسياحة والسفر والحج والعمرة
+            </span>
+            <span className="block text-4xl sm:text-5xl md:text-7xl">
+              {heroTitle}
+              {heroSubtitle ? (
+                <>
+                  <br />
+                  <span className="text-gold">{heroSubtitle}</span>
+                </>
+              ) : null}
+            </span>
           </motion.h1>
 
           <motion.p
@@ -842,13 +847,13 @@ function Footer({ settings }: { settings?: SiteSettings }) {
                 },
                 {
                   icon: Facebook,
-                  href: "https://www.facebook.com/caesartravel?locale=ar_AR",
-                  label: "فيسبوك",
+                  href: "https://www.facebook.com/caesartravel",
+                  label: "صفحة قيصر الرسمية على فيسبوك",
                 },
                 {
                   icon: Instagram,
-                  href: "https://www.instagram.com/caesar__travel?igsh=MWUwY3U1NWNvN2NkcQ==",
-                  label: "انستغرام",
+                  href: "https://www.instagram.com/caesar__travel/",
+                  label: "حساب قيصر الرسمي على إنستغرام",
                 },
               ].map((s, i) => (
                 <a
