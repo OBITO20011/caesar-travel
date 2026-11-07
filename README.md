@@ -70,7 +70,19 @@ Use the project's public anon key in the browser. Keep service-role keys and oth
 
 The SQL history lives in [`supabase/migrations`](supabase/migrations). It includes schema creation, CMS simplification, storage policies, and content seeds. Review these files against the target database before applying them, especially when upgrading an existing project: some migrations remove legacy tables or change existing content. Back up existing data first.
 
-Provision a Supabase Auth user for the agency's management team, and verify database and storage access policies before exposing a new deployment. The current CMS policies grant management access to authenticated users, so public account creation should not be enabled without reviewing that access model.
+Provision a Supabase Auth user for the agency's management team and register it in `public.admin_users` before applying [`019_restrict_cms_to_admins.sql`](supabase/migrations/019_restrict_cms_to_admins.sql); the migration aborts without changes if no admin is registered. Keep public sign-up disabled in Supabase Auth.
+
+### Access model
+
+The browser uses the public anon key, so access control is enforced in PostgreSQL with Row-Level Security:
+
+| Who                                 | Access                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| Visitor                             | Read published trips, visas, gallery, and site settings; submit bookings |
+| Signed-in user not in `admin_users` | Same as a visitor                                                        |
+| Admin listed in `admin_users`       | Manage all CMS tables, bookings, and the `admin-media` storage bucket    |
+
+`public.admin_users` has no API grants and is managed from the SQL editor. Policies call the `SECURITY DEFINER` function `public.is_admin()`, which checks `auth.uid()` against that table. Migration 019 replaces earlier policies that gave every authenticated account management access; it was verified against a local Supabase Postgres database with attacker, visitor, and admin test cases.
 
 ### 4. Run locally
 
