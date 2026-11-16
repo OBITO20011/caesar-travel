@@ -37,7 +37,6 @@ const roomLabels = [
   ["quad_price", "غرفة رباعية"],
   ["triple_price", "غرفة ثلاثية"],
   ["double_price", "غرفة ثنائية"],
-  ["single_price", "غرفة مفردة"],
 ] as const;
 
 function UmrahDetailsPage() {
