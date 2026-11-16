@@ -1,9 +1,9 @@
 import { supabase } from "@/lib/supabase";
-import { isTripOfferExpired } from "@/lib/trip-format";
+import { isTripDatePassed, isTripOfferExpired } from "@/lib/trip-format";
 import type { GalleryImage, SiteSettings, Trip, TripPageKey, Visa } from "@/types/admin";
 
 function isTripPubliclyVisible(trip: Trip) {
-  return trip.is_visible !== false && !isTripOfferExpired(trip);
+  return trip.is_visible !== false && !isTripOfferExpired(trip) && !isTripDatePassed(trip);
 }
 
 export const tripsService = {

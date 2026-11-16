@@ -148,8 +148,25 @@ async function fetchSupabaseRows(table, query, warnings) {
   }
 }
 
+function jordanToday() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Amman",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+// Mirrors isTripDatePassed in src/lib/trip-format.ts.
+function tripDatePassed(trip) {
+  const lastDate = String(trip.end_date || trip.start_date || "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(lastDate)) return false;
+  return lastDate < jordanToday();
+}
+
 function visibleTrip(trip) {
   if (trip.status === "hidden" || trip.is_visible === false) return false;
+  if (tripDatePassed(trip)) return false;
   if (!trip.offer_ends_at) return true;
   const expiresAt = new Date(trip.offer_ends_at).getTime();
   return Number.isNaN(expiresAt) || expiresAt > Date.now();
@@ -265,7 +282,7 @@ export async function buildSeoRouteManifest() {
 
   const trips = await fetchSupabaseRows(
     "trips",
-    "select=id,title,description,page_key,category,main_image_url,makkah_hotel,umrah_transport,umrah_route,status,is_visible,offer_ends_at,updated_at&status=neq.hidden",
+    "select=id,title,description,page_key,category,main_image_url,makkah_hotel,umrah_transport,umrah_route,status,is_visible,offer_ends_at,start_date,end_date,updated_at&status=neq.hidden",
     warnings,
   );
   for (const trip of trips) {

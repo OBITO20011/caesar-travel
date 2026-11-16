@@ -147,7 +147,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
           >
             <Star size={14} className="text-gold fill-gold" />
             <span className="text-sm font-semibold text-gold-light">
-              ثقة أكثر من {(settings?.happy_customers ?? 15000).toLocaleString("ar-JO")} عميل سعيد
+              مكتب سياحة وسفر في الرمثا
             </span>{" "}
           </motion.div>
 
@@ -173,8 +173,7 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
             variants={fadeInUp}
             className="mt-6 text-lg md:text-xl text-white/80 leading-relaxed max-w-lg"
           >
-            رحلات حج وعمرة وسياحة داخلية وخارجية، وحجوزات طيران وفنادق وتأشيرات بأفضل الأسعار وخدمة
-            احترافية منذ أكثر من 20 عاماً..
+            رحلات حج وعمرة وسياحة، وحجوزات طيران وفنادق وتأشيرات، مع متابعة مباشرة عبر واتساب.
           </motion.p>
 
           <motion.div variants={fadeInUp} className="mt-9 flex flex-wrap gap-4">
@@ -203,26 +202,17 @@ function HeroSection({ settings }: { settings?: SiteSettings }) {
           </motion.div>
         </motion.div>
 
+        {/* Confirmed facts only. Numeric claims (years, customers) stay off until the owner confirms them. */}
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.years_experience ?? 20}+</h3>
-            <p className="text-white/80 text-sm">سنة خبرة</p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.happy_customers ?? 15000}+</h3>
-            <p className="text-white/80 text-sm">عميل سعيد</p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.completed_trips ?? 30}+</h3>
-            <p className="text-white/80 text-sm">وجهة سياحية</p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20">
-            <h3 className="text-gold text-xl font-bold">{settings?.support_hours || "24/7"}</h3>
-            <p className="text-white/80 text-sm">دعم العملاء</p>
-          </div>
+          {HERO_FACTS.map((fact) => (
+            <div
+              key={fact.value}
+              className="rounded-2xl bg-white/10 backdrop-blur-md p-4 text-center border border-white/10 transition-all duration-300 hover:-translate-y-2 hover:bg-white/15 hover:border-gold/50 hover:shadow-2xl hover:shadow-gold/20"
+            >
+              <h3 className="text-gold text-xl font-bold">{fact.value}</h3>
+              <p className="text-white/80 text-sm">{fact.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -236,8 +226,7 @@ function AboutSection() {
 
         <p className="mt-6 text-lg leading-8">
           قيصر للسياحة والسفر هي وكالة سياحية في الرمثا، الأردن، متخصصة في تنظيم رحلات الحج والعمرة،
-          وحجز تذاكر الطيران، والفنادق، والتأشيرات، والرحلات السياحية الداخلية والخارجية منذ أكثر من
-          20 عاماً.
+          وحجز تذاكر الطيران، والفنادق، والتأشيرات، والرحلات السياحية.
         </p>
       </div>
     </section>
@@ -346,12 +335,20 @@ function ServicesSection() {
 }
 
 /* ──────────────── Stats ──────────────── */
-function StatsSection({ settings }: { settings?: SiteSettings }) {
+// Confirmed facts only (business-profile). Re-add numeric claims once the owner confirms them.
+const HERO_FACTS = [
+  { value: "حج وعمرة", label: "تنظيم وحجز" },
+  { value: "طيران", label: "حجز تذاكر" },
+  { value: "تأشيرات", label: "متابعة الطلب" },
+  { value: "واتساب", label: "0798 337 711" },
+];
+
+function StatsSection() {
   const stats = [
-    { value: `${settings?.years_experience ?? 20}+`, label: "سنة خبرة" },
-    { value: `${settings?.happy_customers ?? 15000}+`, label: "عميل سعيد" },
-    { value: `${settings?.completed_trips ?? 30}+`, label: "رحلة مكتملة" },
-    { value: settings?.support_hours || "24/7", label: "دعم العملاء" },
+    { value: "الرمثا", label: "مكتبنا في محافظة إربد" },
+    { value: "٩:٣٠ – ٩:٠٠", label: "السبت – الخميس" },
+    { value: "واتساب", label: "0798 337 711" },
+    { value: "حج وعمرة", label: "طيران · فنادق · تأشيرات" },
   ];
 
   return (
@@ -835,8 +832,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
               </div>
             </div>
             <p className="text-sm text-white/60 leading-relaxed max-w-md">
-              وكالتك الموثوقة للحج والعمرة والسياحة منذ أكثر من 20 عاماً. نصنع لك رحلات لا تُنسى
-              بأعلى معايير الجودة والراحة.
+              مكتب سياحة وسفر في الرمثا للحج والعمرة وتذاكر الطيران والتأشيرات والرحلات السياحية.
             </p>
             <div className="flex items-center gap-3 mt-5">
               {[
@@ -917,7 +913,7 @@ function Footer({ settings }: { settings?: SiteSettings }) {
               ) : null}
               <li className="flex items-center gap-2">
                 <Clock size={15} className="text-gold shrink-0" />
-                <span>السبت — الخميس: 9:30 ص — 7:00 م</span>
+                <span>السبت — الخميس: 9:30 ص — 9:00 م · الجمعة عطلة</span>
               </li>
             </ul>
           </div>
@@ -977,7 +973,7 @@ function Index() {
         <AboutSection />
         <GallerySection />
         <ServicesSection />
-        <StatsSection settings={settings} />
+        <StatsSection />
         <QuickQuoteSection settings={settings} />
         <ReviewsSection />
         <ContactSection settings={settings} />

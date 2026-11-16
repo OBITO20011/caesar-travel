@@ -103,7 +103,7 @@ function ServicesPage() {
                   "خبرة تزيد عن 20 سنة في مجال السياحة والسفر",
                   "فريق احترافي مدرب على أعلى مستويات الخدمة",
                   "أسعار تنافسية وعروض حصرية",
-                  "دعم عملاء على مدار الساعة",
+                  "تواصل مباشر عبر واتساب",
                   "رحلات منظمة بعناية فائقة",
                 ].map((item, i) => (
                   <motion.div
@@ -121,9 +121,11 @@ function ServicesPage() {
             </motion.div>
             <motion.div variants={fadeInUp} className="rounded-3xl bg-gradient-to-br from-teal/20 to-gold/20 p-8 border border-teal/20">
               <div className="text-center">
-                <div className="text-5xl md:text-6xl font-black text-gold mb-4">15000+</div>
-                <div className="text-2xl font-bold text-teal mb-2">عميل سعيد</div>
-                <div className="text-muted-foreground">يثقون بخدماتنا</div>
+                <div className="text-5xl md:text-6xl font-black text-gold mb-4">الرمثا</div>
+                <div className="text-2xl font-bold text-teal mb-2">مكتبنا في محافظة إربد</div>
+                <div className="text-muted-foreground">
+                  السبت – الخميس، 9:30 ص – 9:00 م · واتساب 0798 337 711
+                </div>
               </div>
             </motion.div>
           </motion.div>
