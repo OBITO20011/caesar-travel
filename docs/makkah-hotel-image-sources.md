@@ -15,8 +15,8 @@ WebP compression). Nothing in the scene was added or removed.
 | `mathaba-room-triple.webp` | Mathaba Hotel (Al Taysir) | https://www.mathabahotels.com/upload/rooms/1715629073.2E6A2635.JPG |
 | `mathaba-reception.webp` | Mathaba Hotel (Al Taysir) | https://www.mathabahotels.com/site/img/galery/2E6A3031.JPG |
 | `mathaba-lobby.webp` | Mathaba Hotel (Al Taysir) | https://www.mathabahotels.com/site/img/galery/2E6A2946.JPG |
-| `talayie-exterior.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Operator site https://www.wosolgroup.com/hotels/al-talayie-al-masy-hotel (joodbooking blob 35351889-1c62-410b-85c7-0ff8c1aa973c.jpeg). Portrait photo shown whole, sides filled with a blurred copy of itself |
-| `mathaba-exterior.webp` | Mathaba Hotel (Al Taysir) | Google Hotels listing photo for Mathaba Hotel (uploader not verified; the hotel name is lit on the facade). Portrait photo shown whole, sides filled with a blurred copy of itself |
+| `talayie-front.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Operator site https://www.wosolgroup.com/hotels/al-talayie-al-masy-hotel (joodbooking blob 35351889-1c62-410b-85c7-0ff8c1aa973c.jpeg). Portrait photo cropped to a 16:9 band around the hotel sign |
+| `mathaba-front.webp` | Mathaba Hotel (Al Taysir) | Google Hotels listing photo for Mathaba Hotel (uploader not verified; the hotel name is lit on the facade). Portrait photo cropped to a 16:9 band around the hotel sign |
 | `talayie-room-quad.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Google Hotels listing, photos filtered "By owner" (hotel's official site link on Google is dead) |
 | `talayie-room.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Google Hotels listing, photos filtered "By owner" |
 | `talayie-dining.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Google Hotels listing, photos filtered "By owner" |
