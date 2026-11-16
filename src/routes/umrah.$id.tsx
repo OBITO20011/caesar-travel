@@ -1,40 +1,46 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
-import {
-  BedDouble,
-  Building2,
-  CalendarDays,
-  CheckCircle2,
-  CircleAlert,
-  ClipboardCheck,
-  MapPin,
-  Plane,
-  UtensilsCrossed,
-} from "lucide-react";
-import { Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Building2, CalendarDays, Moon, Plane, UtensilsCrossed } from "lucide-react";
 
 import { Seo } from "@/components/seo";
-import { TripOfferCountdown } from "@/components/trip-offer-countdown";
+import {
+  BookingCard,
+  DetailBody,
+  DetailHero,
+  DetailPage,
+  DetailSection,
+  PhotoGallery,
+  type DetailFact,
+  type PriceOption,
+} from "@/components/trip-details";
 import { usePublicTrip, useSiteSettings } from "@/hooks/use-site-content";
 import { getBreadcrumbItems } from "@/lib/seo-config";
 import {
   buildWhatsAppUrl,
   formatTripAmount,
   formatTripDate,
-  formatTripPrice,
   getTripDiscountPercentage,
   getTripSeatState,
 } from "@/lib/trip-format";
 
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
 export const Route = createFileRoute("/umrah/$id")({
-  component: HotelDetailsPage,
+  component: UmrahDetailsPage,
 });
 
-function HotelDetailsPage() {
+// Lines the page already says elsewhere (price heading, booking footnote, airline chip),
+// so they are not repeated in the notes / flight lists.
+const REDUNDANT_LINE =
+  /^الأسعار للشخص|الموعد والمقاعد يتأكد|^على متن .*(الموعد|موظف الحجز)/;
+// "عمرة جو 5 أيام / 4 ليالي في مكة المكرمة على …" only repeats the chips under the title.
+const GENERIC_AIR_DESCRIPTION = /^عمرة جو \d+ أيام/;
+
+const roomLabels = [
+  ["quad_price", "غرفة رباعية"],
+  ["triple_price", "غرفة ثلاثية"],
+  ["double_price", "غرفة ثنائية"],
+  ["single_price", "غرفة مفردة"],
+] as const;
+
+function UmrahDetailsPage() {
   const { id } = useParams({ from: "/umrah/$id" });
   const tripQuery = usePublicTrip(id);
   const { data: settings } = useSiteSettings();
@@ -64,375 +70,136 @@ function HotelDetailsPage() {
     );
   }
 
-  const hotelName = trip.makkah_hotel || trip.title;
-  const programName = trip.title || hotelName;
-  const transportName = trip.umrah_transport === "air" ? "جو" : "بر";
-  const destinationName =
-    trip.umrah_transport === "air"
-      ? trip.umrah_route === "makkah"
-        ? "إلى مكة فقط"
-        : "إلى مكة والمدينة"
-      : "";
-  const roomPrices = [
-    { label: "غرفة مفردة", price: trip.single_price },
-    { label: "غرفة ثنائية", price: trip.double_price },
-    { label: "غرفة ثلاثية", price: trip.triple_price },
-    { label: "غرفة رباعية", price: trip.quad_price },
-  ].filter((item) => item.price !== undefined && item.price !== null);
+  const isAir = trip.umrah_transport === "air";
+  const programName = trip.title || trip.makkah_hotel || "برنامج عمرة";
+  const routeName = isAir
+    ? trip.umrah_route === "makkah"
+      ? "مكة فقط"
+      : "مكة والمدينة"
+    : "مكة والمدينة";
+  const transportName = isAir ? "عمرة جو" : "عمرة بر";
 
-  if (roomPrices.length === 0 && trip.price !== undefined && trip.price !== null) {
-    roomPrices.push({ label: "سعر الباقة", price: trip.price });
+  const lines: DetailFact[] = [];
+  if (trip.makkah_hotel) lines.push({ icon: Building2, text: `فندق مكة: ${trip.makkah_hotel}` });
+  if (trip.madinah_hotel)
+    lines.push({ icon: Building2, text: `فندق المدينة: ${trip.madinah_hotel}` });
+
+  const scheduleText = trip.schedule_label || (trip.start_date ? formatTripDate(trip.start_date) : "");
+  const facts: DetailFact[] = [];
+  if (scheduleText) facts.push({ icon: CalendarDays, text: scheduleText });
+  if (isAir && trip.nights > 0)
+    facts.push({ icon: Moon, text: `${trip.nights + 1} أيام / ${trip.nights} ليالٍ` });
+  if (trip.airline) facts.push({ icon: Plane, text: trip.airline });
+  if (trip.meals) facts.push({ icon: UtensilsCrossed, text: trip.meals });
+
+  const lead =
+    trip.description && !GENERIC_AIR_DESCRIPTION.test(trip.description.trim())
+      ? trip.description
+      : undefined;
+
+  const options: PriceOption[] = roomLabels.flatMap(([field, label]) => {
+    const price = trip[field];
+    return typeof price === "number" && price > 0 ? [{ key: field, label, price }] : [];
+  });
+  if (options.length === 0 && typeof trip.price === "number" && trip.price > 0) {
+    options.push({ key: "price", label: "سعر الباقة", price: trip.price });
   }
 
-  const detailImages = trip.additional_image_urls ?? [];
   const seatState = getTripSeatState(trip);
-  const discount = getTripDiscountPercentage(trip);
   const available = trip.status === "available" && !seatState.soldOut;
-  const scheduleText = trip.start_date
-    ? trip.schedule_label || formatTripDate(trip.start_date)
-    : trip.schedule_label;
-  const durationText = trip.description || (trip.nights > 0 ? `${trip.nights} ليالٍ` : "");
-  const hasTripSummary = Boolean(
-    scheduleText || durationText || trip.airline || trip.meals || trip.hotel_location,
-  );
+  const seatBadge = seatState.tracksSeats
+    ? seatState.soldOut
+      ? "اكتمل الحجز"
+      : seatState.lastSeats
+        ? trip.remaining_seats === 1
+          ? "آخر مقعد"
+          : "آخر مقعدين"
+        : `متبقي ${trip.remaining_seats} مقعد`
+    : undefined;
+
+  const flightLines = (trip.flight_details ?? []).filter((line) => !REDUNDANT_LINE.test(line));
+  const notes = (trip.program_notes ?? []).filter((line) => !REDUNDANT_LINE.test(line));
+  const gallery = Array.from(
+    new Set([...(trip.additional_image_urls ?? []), trip.madinah_image_url].filter(Boolean)),
+  ) as string[];
+
+  const buildBookingUrl = (option?: PriceOption) =>
+    buildWhatsAppUrl(
+      settings?.whatsapp,
+      [
+        `السلام عليكم، أرغب بحجز ${transportName} – ${programName}`,
+        trip.airline ? `على ${trip.airline}` : "",
+        option ? `(${option.label} بسعر ${formatTripAmount(option.price, trip.currency)} للشخص)` : "",
+      ]
+        .filter(Boolean)
+        .join(" ") + ".",
+    );
 
   return (
     <>
       <Seo
-        title={`${programName} | برنامج عمرة ${transportName} ${destinationName} مع قيصر`
-          .replace(/\s+/g, " ")
-          .trim()}
-        description={`${programName}، برنامج عمرة ${transportName} ${destinationName}: ${
-          trip.description ||
-          "تفاصيل رحلة العمرة والإقامة والأسعار والمواعيد وخيارات الغرف مع قيصر للسياحة والسفر."
-        }`.slice(0, 180)}
+        title={`${programName} | برنامج ${transportName} ${routeName} مع قيصر`}
+        description={`${programName}، برنامج ${transportName} إلى ${routeName}${
+          trip.airline ? ` على ${trip.airline}` : ""
+        }: ${trip.description || "الأسعار والفندق والمواعيد وخيارات الغرف مع قيصر للسياحة والسفر."}`.slice(
+          0,
+          180,
+        )}
         path={`/umrah/${trip.id}`}
-        image={trip.main_image_url}
-        imageAlt={hotelName}
+        image={trip.main_image_url || gallery[0] || undefined}
+        imageAlt={programName}
         breadcrumbs={getBreadcrumbItems(`/umrah/${trip.id}`, programName, {
           name: "رحلات العمرة",
           path: "/umrah",
         })}
       />
-      <main className="min-h-screen bg-[#F5EFD9] px-4 pb-8 pt-24 sm:px-6 md:p-8">
-        <div
-          className="mx-auto max-w-6xl rounded-3xl bg-[#F8F4EA] p-4 shadow-2xl backdrop-blur-md sm:p-6 md:p-8"
-          dir="rtl"
-        >
-          {trip.main_image_url ? (
-            <img
-              src={trip.main_image_url}
-              alt={hotelName}
-              title={hotelName}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              width={1200}
-              height={800}
-              className="max-h-[650px] min-h-64 w-full rounded-3xl bg-[#F8F4EA] object-contain"
+      <DetailPage>
+        <DetailHero
+          backHref="/umrah"
+          backLabel="كل برامج العمرة"
+          image={trip.main_image_url || gallery[0] || undefined}
+          imageAlt={programName}
+          badges={[transportName, routeName]}
+          title={programName}
+          lines={lines}
+          lead={lead}
+          facts={facts}
+        />
+
+        <DetailBody
+          aside={
+            <BookingCard
+              heading="السعر للشخص حسب الغرفة"
+              options={options}
+              currency={trip.currency}
+              oldPrice={trip.old_price}
+              discount={getTripDiscountPercentage(trip)}
+              available={available}
+              badges={seatBadge ? [seatBadge] : undefined}
+              offerEndsAt={trip.offer_ends_at}
+              footnote="الموعد والمقاعد يتأكدوا مع موظف الحجز على واتساب."
+              buildBookingUrl={buildBookingUrl}
             />
-          ) : null}
-
-          <div className="mt-5 flex flex-wrap gap-2">
-            <span className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#153B46] px-4 py-2 text-sm font-bold text-white">
-              {trip.umrah_transport === "air" ? (
-                <Plane className="h-4 w-4 text-[#E7C56D]" aria-hidden="true" />
-              ) : (
-                <MapPin className="h-4 w-4 text-[#E7C56D]" aria-hidden="true" />
-              )}
-              {trip.umrah_transport === "air" ? "برنامج عمرة جو" : "برنامج عمرة بر"}
-            </span>
-            {trip.umrah_transport === "air" ? (
-              <span className="inline-flex min-h-10 items-center rounded-full border border-[#C9A227]/40 bg-[#F8E4A1]/60 px-4 py-2 text-sm font-bold text-[#6B4F00]">
-                {trip.umrah_route === "makkah" ? "مكة فقط" : "مكة والمدينة"}
-              </span>
-            ) : null}
-          </div>
-
-          <p className="mt-5 flex items-center gap-2 text-base font-bold text-gray-600">
-            <Building2 className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-            فندق مكة
-          </p>
-          <h1 className="mt-8 text-4xl font-bold">{hotelName}</h1>
-
-          {hasTripSummary ? (
-            <section
-              className="mt-6 rounded-3xl border border-[#D7BA68]/50 bg-white/75 p-3 shadow-[0_16px_45px_rgba(70,53,17,0.08)] sm:p-5"
-              aria-labelledby="trip-summary-title"
-            >
-              <h2
-                id="trip-summary-title"
-                className="mb-3 flex items-center gap-2 px-1 text-lg font-black text-[#153B46] sm:text-xl"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#153B46] text-[#E7C56D]">
-                  <ClipboardCheck className="h-5 w-5" aria-hidden="true" />
-                </span>
-                ملخص برنامج الرحلة
-              </h2>
-
-              <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-                {scheduleText ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-[#E8D9AC] bg-[#FFF8E6] p-4 sm:col-span-1 lg:col-span-2">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#B8860B] shadow-sm">
-                      <CalendarDays className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm font-bold text-slate-500">موعد الرحلة</dt>
-                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
-                        {scheduleText}
-                      </dd>
-                    </div>
-                  </div>
-                ) : null}
-
-                {durationText ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-[#D8E2E3] bg-[#F5F9F8] p-4 sm:col-span-2 lg:col-span-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#B8860B] shadow-sm">
-                      <BedDouble className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm font-bold text-slate-500">المدة والتفاصيل</dt>
-                      <dd className="mt-1 break-words text-base font-semibold leading-8 text-slate-700">
-                        {durationText}
-                      </dd>
-                    </div>
-                  </div>
-                ) : null}
-
-                {trip.airline ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-1 lg:col-span-2">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
-                      <Plane className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm font-bold text-slate-500">شركة الطيران</dt>
-                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
-                        {trip.airline}
-                      </dd>
-                    </div>
-                  </div>
-                ) : null}
-
-                {trip.meals ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-1 lg:col-span-2">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
-                      <UtensilsCrossed className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm font-bold text-slate-500">الوجبات</dt>
-                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
-                        {trip.meals}
-                      </dd>
-                    </div>
-                  </div>
-                ) : null}
-
-                {trip.hotel_location ? (
-                  <div className="flex min-w-0 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-2 lg:col-span-2">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7BC] text-[#8A6500]">
-                      <MapPin className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm font-bold text-slate-500">الموقع</dt>
-                      <dd className="mt-1 break-words text-base font-extrabold leading-7 text-slate-800">
-                        {trip.hotel_location}
-                      </dd>
-                    </div>
-                  </div>
-                ) : null}
-              </dl>
-            </section>
-          ) : null}
-
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            {discount > 0 && trip.old_price ? (
-              <>
-                <span className="rounded-full bg-rose-600 px-4 py-2 text-sm font-black text-white">
-                  خصم {discount}%
-                </span>
-                <span className="text-gray-500 line-through">
-                  {formatTripAmount(trip.old_price, trip.currency)}
-                </span>
-              </>
-            ) : null}
-            {seatState.tracksSeats ? (
-              <span
-                className={`rounded-full px-4 py-2 text-sm font-bold ${seatState.soldOut ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"}`}
-              >
-                {seatState.soldOut
-                  ? "اكتمل الحجز"
-                  : seatState.lastSeats
-                    ? trip.remaining_seats === 1
-                      ? "آخر مقعد"
-                      : "آخر مقعدين"
-                    : `متبقي ${trip.remaining_seats} مقعد`}
-              </span>
-            ) : null}
-            <TripOfferCountdown
-              endsAt={trip.offer_ends_at}
-              className="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700"
-            />
-          </div>
-
-          {roomPrices.length > 0 ? (
+          }
+          main={
             <>
-              <h2 className="mb-5 mt-8 text-2xl font-bold">أسعار الغرف</h2>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {roomPrices.map((option) => (
-                  <div
-                    key={option.label}
-                    className="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 shadow"
-                  >
-                    <div>
-                      <h3 className="flex items-center gap-2 text-lg font-bold">
-                        <BedDouble className="h-5 w-5 text-[#B8860B]" aria-hidden="true" />
-                        {option.label}
-                      </h3>
-                      <p className="text-2xl font-bold text-green-600">
-                        {formatTripPrice({ price: option.price, currency: trip.currency })}
-                      </p>
-                    </div>
-
-                    {available ? (
-                      <a
-                        href={buildWhatsAppUrl(
-                          settings?.whatsapp,
-                          `السلام عليكم، أرغب بحجز رحلة ${hotelName} (${option.label}) بسعر ${formatTripPrice({ price: option.price, currency: trip.currency })}.`,
-                        )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-xl bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700"
-                      >
-                        احجز الآن
-                      </a>
-                    ) : (
-                      <span className="rounded-xl bg-gray-200 px-6 py-3 font-bold text-gray-600">
-                        غير متاحة للحجز
-                      </span>
-                    )}
-                  </div>
-                ))}
+              <DetailSection title="يشمل البرنامج" items={trip.program_inclusions} />
+              <DetailSection title="مواعيد الطيران" items={flightLines} />
+              <div
+                className={
+                  trip.program_requirements?.length && notes.length
+                    ? "grid gap-6 md:grid-cols-2"
+                    : "space-y-6"
+                }
+              >
+                <DetailSection title="الأوراق المطلوبة" items={trip.program_requirements} />
+                <DetailSection title="ملاحظات مهمة" items={notes} />
               </div>
+              <PhotoGallery title="صور الفندق" images={gallery} alt={programName} />
             </>
-          ) : null}
-
-          <ProgramDetailsSection
-            title="ما يشمله البرنامج"
-            items={trip.program_inclusions}
-            icon={CheckCircle2}
-            tone="emerald"
-          />
-          <ProgramDetailsSection
-            title="تفاصيل رحلات الطيران"
-            items={trip.flight_details}
-            icon={Plane}
-            tone="blue"
-          />
-          <ProgramDetailsSection
-            title="الوثائق المطلوبة"
-            items={trip.program_requirements}
-            icon={ClipboardCheck}
-            tone="amber"
-          />
-          <ProgramDetailsSection
-            title="ملاحظات وشروط الحجز"
-            items={trip.program_notes}
-            icon={CircleAlert}
-            tone="slate"
-          />
-
-          {detailImages.length > 0 ? (
-            <>
-              <h2 className="mb-4 mt-10 text-2xl font-bold">صور الفندق</h2>
-              <Swiper
-                modules={[Navigation, Pagination]}
-                navigation
-                pagination={{ clickable: true }}
-                spaceBetween={20}
-                slidesPerView={1}
-              >
-                {detailImages.map((imageUrl, index) => (
-                  <SwiperSlide key={imageUrl}>
-                    <img
-                      src={imageUrl}
-                      alt={`${hotelName} - صورة ${index + 1}`}
-                      title={`${hotelName} - صورة ${index + 1}`}
-                      loading="lazy"
-                      decoding="async"
-                      width={1200}
-                      height={800}
-                      className="h-[500px] w-full rounded-3xl object-cover"
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </>
-          ) : null}
-
-          {trip.madinah_hotel || trip.madinah_image_url ? (
-            <>
-              <h2 className="mb-6 mt-12 text-2xl font-bold">فندق المدينة</h2>
-              <div className="flex flex-col items-center gap-6 sm:flex-row">
-                {trip.madinah_image_url ? (
-                  <img
-                    src={trip.madinah_image_url}
-                    alt={trip.madinah_hotel || "فندق المدينة"}
-                    title={trip.madinah_hotel || "فندق المدينة"}
-                    loading="lazy"
-                    decoding="async"
-                    width={800}
-                    height={560}
-                    className="h-56 w-80 rounded-3xl object-cover"
-                  />
-                ) : null}
-                <div>
-                  <h3 className="text-2xl font-bold">{trip.madinah_hotel || "فندق المدينة"}</h3>
-                </div>
-              </div>
-            </>
-          ) : null}
-        </div>
-      </main>
+          }
+        />
+      </DetailPage>
     </>
-  );
-}
-
-const detailToneClasses = {
-  emerald: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  blue: "border-sky-200 bg-sky-50 text-sky-800",
-  amber: "border-amber-200 bg-amber-50 text-amber-900",
-  slate: "border-slate-200 bg-slate-50 text-slate-800",
-} as const;
-
-function ProgramDetailsSection({
-  title,
-  items,
-  icon: Icon,
-  tone,
-}: {
-  title: string;
-  items?: string[];
-  icon: typeof Plane;
-  tone: keyof typeof detailToneClasses;
-}) {
-  if (!items?.length) return null;
-
-  return (
-    <section className="mt-10" aria-labelledby={`section-${title}`}>
-      <h2 id={`section-${title}`} className="mb-4 text-2xl font-black text-slate-900">
-        {title}
-      </h2>
-      <div className="grid gap-3 md:grid-cols-2">
-        {items.map((item, index) => (
-          <div
-            key={`${title}-${index}`}
-            className={`flex items-start gap-3 rounded-2xl border p-4 leading-7 ${detailToneClasses[tone]}`}
-          >
-            <Icon className="mt-1 h-5 w-5 shrink-0" aria-hidden="true" />
-            <p>{item}</p>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }

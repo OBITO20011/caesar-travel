@@ -1,30 +1,17 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
-import { useState } from "react";
-import {
-  ArrowLeft,
-  BedDouble,
-  Bus,
-  CalendarDays,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  Clock3,
-  Hotel,
-  Images,
-  MapPin,
-  MessageCircle,
-  Moon,
-  Plane,
-  ShieldCheck,
-  Star,
-  Users,
-  UtensilsCrossed,
-  WalletCards,
-  X,
-} from "lucide-react";
+import { Bus, CalendarDays, MapPin, Moon, Plane, Star, UtensilsCrossed } from "lucide-react";
 
 import { Seo } from "@/components/seo";
-import { TripOfferCountdown } from "@/components/trip-offer-countdown";
+import {
+  BookingCard,
+  DetailBody,
+  DetailHero,
+  DetailPage,
+  DetailSection,
+  PhotoGallery,
+  type DetailFact,
+  type PriceOption,
+} from "@/components/trip-details";
 import { usePublicTrip, useSiteSettings } from "@/hooks/use-site-content";
 import { getBreadcrumbItems } from "@/lib/seo-config";
 import {
@@ -135,8 +122,6 @@ function TripPackageDetailsPage() {
   const { id } = useParams({ from: "/trips/$id" });
   const tripQuery = usePublicTrip(id);
   const { data: settings } = useSiteSettings();
-  const [selectedStayIndex, setSelectedStayIndex] = useState(0);
-  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
 
   if (tripQuery.isLoading) {
     return (
@@ -185,12 +170,6 @@ function TripPackageDetailsPage() {
     .filter(Boolean);
   const optionalTripsItem = programItems.find((item) => item.startsWith(optionalTripsLabel));
   const standardProgramItems = programItems.filter((item) => item !== optionalTripsItem);
-  const displayedProgramItems =
-    standardProgramItems.length > 0
-      ? standardProgramItems
-      : programItems.length === 0
-        ? ["برنامج متكامل وخدمة متابعة من فريق قيصر طوال الرحلة."]
-        : [];
   const optionalTripOptions = optionalTripsItem
     ? optionalTripsItem
         .replace(new RegExp(`^${optionalTripsLabel}\\s*[:：]?\\s*`), "")
@@ -210,49 +189,68 @@ function TripPackageDetailsPage() {
         })
     : [];
   const hotelFeatures = trip.hotel_features ?? [];
-  const detailImages = Array.from(
-    new Set([trip.main_image_url, ...(trip.additional_image_urls ?? [])].filter(Boolean)),
-  ) as string[];
+  const gallery = Array.from(new Set((trip.additional_image_urls ?? []).filter(Boolean)));
+  const heroImage = trip.main_image_url || gallery[0] || undefined;
   const stayOptions = [...(trip.stay_options ?? [])].sort(
     (first, second) => first.days - second.days,
   );
-  const selectedStayOption =
-    stayOptions[Math.min(selectedStayIndex, Math.max(stayOptions.length - 1, 0))];
-  const selectedPrice = selectedStayOption?.price ?? trip.price;
-  const roomPrices = [
-    { label: "غرفة ثنائية", price: trip.double_price },
-    { label: "غرفة ثلاثية", price: trip.triple_price },
-    { label: "غرفة رباعية", price: trip.quad_price },
-  ].filter(
-    (option): option is { label: string; price: number } =>
-      option.price !== undefined && option.price !== null,
-  );
+  const roomOptions: PriceOption[] = (
+    [
+      ["double_price", "غرفة ثنائية"],
+      ["triple_price", "غرفة ثلاثية"],
+      ["quad_price", "غرفة رباعية"],
+    ] as const
+  ).flatMap(([field, label]) => {
+    const price = trip[field];
+    return typeof price === "number" && price > 0 ? [{ key: field, label, price }] : [];
+  });
+  const priceOptions: PriceOption[] =
+    stayOptions.length > 0
+      ? stayOptions.map((option) => ({
+          key: `${option.days}-${option.nights}-${option.price}`,
+          label: `${option.days} أيام / ${option.nights} ليالٍ`,
+          price: option.price,
+        }))
+      : roomOptions.length > 0
+        ? roomOptions
+        : typeof trip.price === "number" && trip.price > 0
+          ? [{ key: "price", label: "السعر للشخص", price: trip.price }]
+          : [];
   const isHotelPackage =
-    Boolean(trip.hotel_location || trip.hotel_stars || roomPrices.length || hotelFeatures.length) ||
+    Boolean(trip.hotel_location || trip.hotel_stars || roomOptions.length || hotelFeatures.length) ||
     ["egypt", "turkey", "dubai", "hotels"].includes(trip.page_key);
-  const duration = selectedStayOption
-    ? `${selectedStayOption.days} أيام / ${selectedStayOption.nights} ليالي`
-    : trip.nights > 0
-      ? `${trip.nights + 1} يوم / ${trip.nights} ليلة`
-      : "حسب البرنامج";
-  const seatsLabel = seatState.tracksSeats
+  const duration =
+    stayOptions.length === 0 && trip.nights > 0 ? `${trip.nights + 1} يوم / ${trip.nights} ليلة` : "";
+  const dateLabel =
+    trip.schedule_label || (trip.start_date ? formatTripDate(trip.start_date, true) : "");
+  const destinationLabel = trip.hotel_location || meta.destination;
+  const seatBadge = seatState.tracksSeats
     ? seatState.soldOut
       ? "اكتمل الحجز"
-      : `${trip.remaining_seats} مقعد متبقٍ من ${trip.total_seats}`
-    : "مقاعد محدودة — تواصل معنا";
-  const dateLabel =
-    trip.schedule_label ||
-    (trip.start_date ? formatTripDate(trip.start_date, true) : "الموعد يُحدّد عند الحجز");
-  const destinationLabel = trip.hotel_location || meta.destination;
-  const bookingUrl = buildWhatsAppUrl(
-    settings?.whatsapp,
-    `السلام عليكم، أرغب بحجز ${trip.title}. الوجهة: ${destinationLabel}. المدة: ${duration}. الموعد: ${dateLabel}. السعر للشخص: ${
-      selectedPrice !== undefined && selectedPrice !== null
-        ? formatTripAmount(selectedPrice, trip.currency)
-        : formatTripPrice(trip)
-    }.`,
-  );
-  const galleryImage = galleryIndex !== null ? detailImages[galleryIndex] : null;
+      : `متبقي ${trip.remaining_seats} مقعد`
+    : undefined;
+
+  const lines: DetailFact[] = [{ icon: MapPin, text: destinationLabel }];
+  if (trip.hotel_stars) {
+    lines.push({ icon: Star, text: `فندق ${trip.hotel_stars} نجوم` });
+  }
+  const facts: DetailFact[] = [];
+  if (dateLabel) facts.push({ icon: CalendarDays, text: dateLabel });
+  if (duration) facts.push({ icon: Moon, text: duration });
+  if (trip.airline) facts.push({ icon: Plane, text: trip.airline });
+  if (trip.meals) facts.push({ icon: UtensilsCrossed, text: trip.meals });
+
+  const buildBookingUrl = (option?: PriceOption) =>
+    buildWhatsAppUrl(
+      settings?.whatsapp,
+      [
+        `السلام عليكم، أرغب بحجز ${trip.title}`,
+        option ? `(${option.label} بسعر ${formatTripAmount(option.price, trip.currency)} للشخص)` : "",
+        dateLabel ? `الموعد: ${dateLabel}` : "",
+      ]
+        .filter(Boolean)
+        .join(" ") + ".",
+    );
   const seoDescription =
     `${trip.title}: ${
       programItems[0] || "صور وأسعار وتفاصيل الرحلة مع قيصر للسياحة والسفر."
@@ -264,7 +262,7 @@ function TripPackageDetailsPage() {
         title={`${trip.title} | قيصر للسياحة والسفر`}
         description={seoDescription}
         path={`/trips/${trip.id}`}
-        image={trip.main_image_url}
+        image={heroImage}
         imageAlt={trip.title}
         breadcrumbs={getBreadcrumbItems(`/trips/${trip.id}`, trip.title, {
           name: meta.backLabel,
@@ -272,433 +270,76 @@ function TripPackageDetailsPage() {
         })}
       />
 
-      <main dir="rtl" className="min-h-screen bg-[#F5EFD9] pb-20 text-[#15343A]">
-        <section className="relative min-h-[58vh] overflow-hidden bg-[#0B2E3A]">
-          {trip.main_image_url ? (
-            <img
-              src={trip.main_image_url}
-              alt={trip.title}
-              title={trip.title}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              width={1600}
-              height={900}
-              className="absolute inset-0 h-full w-full object-cover"
+      <DetailPage>
+        <DetailHero
+          backHref={meta.backHref}
+          backLabel={meta.backLabel}
+          image={heroImage}
+          imageAlt={trip.title}
+          badges={[meta.eyebrow]}
+          title={trip.title}
+          lines={lines}
+          facts={facts}
+        />
+
+        <DetailBody
+          aside={
+            <BookingCard
+              heading={stayOptions.length > 0 ? "اختر مدة الإقامة (السعر للشخص)" : "السعر للشخص"}
+              options={priceOptions}
+              currency={trip.currency}
+              oldPrice={trip.old_price}
+              discount={discount}
+              available={available}
+              badges={seatBadge ? [seatBadge] : undefined}
+              offerEndsAt={trip.offer_ends_at}
+              footnote="الموعد والسعر النهائي يتأكدوا مع موظف الحجز على واتساب."
+              buildBookingUrl={buildBookingUrl}
             />
-          ) : null}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#071f29] via-[#071f29]/70 to-black/25" />
+          }
+          main={
+            <>
+              <DetailSection
+                title={isHotelPackage ? "تفاصيل الإقامة" : meta.programTitle}
+                items={standardProgramItems}
+              />
 
-          <div className="relative mx-auto flex min-h-[58vh] max-w-7xl flex-col justify-end px-5 pb-12 pt-28 sm:px-8 sm:pb-16">
-            <a
-              href={meta.backHref}
-              className="mb-8 inline-flex min-h-11 w-fit items-center gap-2 rounded-full border border-white/30 bg-black/25 px-5 py-2.5 font-bold text-white backdrop-blur transition duration-200 hover:bg-white hover:text-[#15343A] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#F3CF63]"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              {meta.backLabel}
-            </a>
-
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#F3CF63]/50 bg-[#D4AF37]/15 px-4 py-2 text-sm font-black text-[#F3CF63] backdrop-blur">
-              {isHotelPackage ? (
-                <Hotel className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <MapPin className="h-4 w-4" aria-hidden="true" />
-              )}
-              {meta.eyebrow}
-            </span>
-            <h1 className="mt-5 max-w-5xl text-4xl font-black leading-tight text-white drop-shadow-xl sm:text-6xl">
-              {trip.title}
-            </h1>
-
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center gap-2 text-lg font-bold text-white/90">
-                <MapPin className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {destinationLabel}
-              </span>
-              {trip.hotel_stars ? (
-                <span
-                  className="inline-flex items-center gap-1 rounded-full bg-black/30 px-3 py-2 text-[#F3CF63] backdrop-blur"
-                  aria-label={`تصنيف الفندق ${trip.hotel_stars} من 5 نجوم`}
-                >
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <Star
-                      key={index}
-                      className="h-4 w-4"
-                      fill={index < trip.hotel_stars! ? "currentColor" : "none"}
-                      aria-hidden="true"
-                    />
-                  ))}
-                </span>
-              ) : null}
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold text-white sm:text-base">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur">
-                <CalendarDays className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {dateLabel}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur">
-                <Clock3 className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {duration}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur">
-                <Users className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {seatsLabel}
-              </span>
-            </div>
-          </div>
-        </section>
-
-        <section className="relative z-10 mx-auto -mt-5 flex max-w-7xl flex-col gap-7 px-5 sm:px-8 lg:flex-row-reverse">
-          <aside className="relative h-fit rounded-[2rem] border border-[#D4AF37]/35 bg-[#102F3A] p-6 text-white shadow-xl lg:sticky lg:top-28 lg:w-[380px] lg:shrink-0">
-            <div className="flex items-center gap-3 text-[#F3CF63]">
-              <WalletCards className="h-6 w-6" aria-hidden="true" />
-              <h2 className="text-xl font-black">الأسعار والحجز</h2>
-            </div>
-
-            <div className="mt-5 rounded-2xl bg-white/10 p-5">
-              <p className="text-sm text-white/70">السعر للشخص يبدأ من</p>
-              {trip.old_price && discount > 0 ? (
-                <div className="mt-2 flex items-center gap-3">
-                  <span className="rounded-full bg-rose-600 px-3 py-1 text-xs font-black">
-                    خصم {discount}%
-                  </span>
-                  <span className="text-white/55 line-through">
-                    {formatTripAmount(trip.old_price, trip.currency)}
-                  </span>
-                </div>
-              ) : null}
-              <p className="mt-2 text-4xl font-black text-[#F3CF63]" aria-live="polite">
-                {selectedPrice !== undefined && selectedPrice !== null
-                  ? formatTripAmount(selectedPrice, trip.currency)
-                  : formatTripPrice(trip)}
-              </p>
-            </div>
-
-            {stayOptions.length > 0 ? (
-              <div className="mt-5">
-                <h3 className="text-base font-black">اختر مدة الإقامة</h3>
-                <p className="mt-1 text-xs leading-6 text-white/60">
-                  السعر للشخص في الغرفة الثنائية أو الثلاثية.
-                </p>
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  {stayOptions.map((option, index) => {
-                    const selected = index === selectedStayIndex;
-                    return (
-                      <button
-                        key={`${option.days}-${option.nights}-${option.price}`}
-                        type="button"
-                        onClick={() => setSelectedStayIndex(index)}
-                        aria-pressed={selected}
-                        className={`min-h-24 cursor-pointer rounded-2xl border p-3 text-right transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/60 ${
-                          selected
-                            ? "border-[#F3CF63] bg-[#F3CF63] text-[#102F3A]"
-                            : "border-white/15 bg-white/5 text-white hover:border-[#F3CF63]/70 hover:bg-white/10"
-                        }`}
+              {optionalTripOptions.length > 0 ? (
+                <DetailSection title="رحلات داخلية اختيارية">
+                  <p className="mt-1 flex items-center gap-2 text-sm text-[#15343A]/70">
+                    <Bus className="h-4 w-4 text-[#B88912]" aria-hidden="true" />
+                    المبلغ الإضافي محسوب للشخص.
+                  </p>
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {optionalTripOptions.map((option) => (
+                      <div
+                        key={`${option.label}-${option.price}`}
+                        className="rounded-2xl border border-[#D4AF37]/30 bg-[#FFF9E8] px-3 py-3 text-center"
                       >
-                        <span className="block text-lg font-black">{option.days} أيام</span>
-                        <span
-                          className={`block text-xs ${selected ? "text-[#102F3A]/70" : "text-white/60"}`}
-                        >
-                          {option.nights} ليالي
+                        <span className="block text-sm font-bold text-[#15343A]/75">
+                          {option.label}
                         </span>
-                        <span className="mt-2 block font-black">
-                          {formatTripAmount(option.price, trip.currency)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
-
-            {roomPrices.length > 0 ? (
-              <div className="mt-4 space-y-2">
-                {roomPrices.map((option) => (
-                  <div
-                    key={option.label}
-                    className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 px-4 py-3"
-                  >
-                    <span className="flex items-center gap-2 font-bold">
-                      <BedDouble className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                      {option.label}
-                    </span>
-                    <span className="font-black text-[#F3CF63]">
-                      {formatTripAmount(option.price, trip.currency)}
-                    </span>
+                        {option.price ? (
+                          <strong className="mt-1 block font-black text-[#9B7617]">
+                            {option.price}
+                          </strong>
+                        ) : null}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : null}
-
-            <div className="mt-4 rounded-2xl border border-white/15 p-4">
-              <div className="flex items-center gap-2 font-bold">
-                <CalendarDays className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {dateLabel}
-              </div>
-              <div className="mt-3 flex items-center gap-2 font-bold">
-                <Users className="h-5 w-5 text-[#F3CF63]" aria-hidden="true" />
-                {seatsLabel}
-              </div>
-              <TripOfferCountdown
-                endsAt={trip.offer_ends_at}
-                className="mt-3 font-bold text-rose-200"
-              />
-            </div>
-
-            {available ? (
-              <a
-                href={bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#D4AF37] px-5 py-4 text-lg font-black text-[#102F3A] transition duration-200 hover:bg-[#F3CF63] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70"
-              >
-                <MessageCircle className="h-6 w-6" aria-hidden="true" />
-                احجز واستفسر الآن
-              </a>
-            ) : (
-              <span className="mt-5 block rounded-2xl bg-white/10 px-5 py-4 text-center font-black text-white/70">
-                العرض غير متاح للحجز حاليًا
-              </span>
-            )}
-
-            <p className="mt-4 text-center text-xs leading-6 text-white/55">
-              تأكيد الموعد والسعر والمقاعد يتم مباشرة مع موظف الحجز.
-            </p>
-
-            <div className="mt-5 flex items-start gap-3 rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-4 text-sm leading-6 text-emerald-50">
-              <ShieldCheck
-                className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300"
-                aria-hidden="true"
-              />
-              <p>حجز ومتابعة مباشرة من فريق قيصر حتى تأكيد تفاصيل رحلتك.</p>
-            </div>
-          </aside>
-
-          <div className="relative min-w-0 flex-1 rounded-[2rem] border border-[#D4AF37]/25 bg-white p-6 shadow-xl sm:p-9">
-            <span className="font-bold text-[#9B7617]">
-              {isHotelPackage ? "معلومات الفندق" : "تفاصيل الرحلة"}
-            </span>
-            <h2 className="mt-2 text-3xl font-black">{meta.programTitle}</h2>
-
-            <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              {displayedProgramItems.map((item, index) => (
-                <div
-                  key={`${item}-${index}`}
-                  className="flex gap-3 rounded-2xl border border-[#15343A]/10 bg-[#F8F4EA] p-4 leading-7"
-                >
-                  <CheckCircle2
-                    className="mt-1 h-5 w-5 shrink-0 text-[#B88912]"
-                    aria-hidden="true"
-                  />
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
-
-            {optionalTripOptions.length > 0 ? (
-              <section
-                aria-labelledby="optional-turkey-trips-title"
-                className="mt-5 rounded-3xl border border-[#D4AF37]/35 bg-gradient-to-br from-[#FFF9E8] to-[#F8F4EA] p-5 sm:p-6"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#123C49] text-[#F3CF63]">
-                    <Bus className="h-6 w-6" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <h3 id="optional-turkey-trips-title" className="text-lg font-black">
-                      الرحلات الداخلية الاختيارية
-                    </h3>
-                    <p className="mt-1 text-sm leading-6 text-[#15343A]/70">
-                      اختر عدد الرحلات الذي يناسب برنامجك؛ المبلغ الإضافي محسوب للشخص.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {optionalTripOptions.map((option) => (
-                    <div
-                      key={`${option.label}-${option.price}`}
-                      className="rounded-2xl border border-[#D4AF37]/30 bg-white px-3 py-4 text-center shadow-sm"
-                    >
-                      <span className="block text-sm font-bold text-[#15343A]/75">
-                        {option.label}
-                      </span>
-                      {option.price ? (
-                        <strong className="mt-2 block text-lg font-black text-[#9B7617]">
-                          {option.price}
-                        </strong>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            {hotelFeatures.length > 0 ? (
-              <div className="mt-9">
-                <h2 className="text-2xl font-black">مميزات الفندق</h2>
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {hotelFeatures.map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-center gap-3 rounded-2xl border border-[#D4AF37]/25 bg-[#FFF9E8] p-4 font-bold"
-                    >
-                      <Hotel className="h-5 w-5 shrink-0 text-[#9B7617]" aria-hidden="true" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <InfoCard icon={Moon} title="مدة الرحلة" value={duration} />
-              <InfoCard
-                icon={UtensilsCrossed}
-                title="الوجبات"
-                value={trip.meals || "حسب البرنامج"}
-              />
-              {trip.airline ? (
-                <InfoCard icon={Plane} title="شركة الطيران" value={trip.airline} />
+                </DetailSection>
               ) : null}
-            </div>
 
-            {detailImages.length > 1 ? (
-              <div className="mt-10">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <span className="font-bold text-[#9B7617]">جولة بصرية</span>
-                    <h2 className="mt-1 text-2xl font-black">
-                      {isHotelPackage ? "اكتشف الفندق قبل الحجز" : "صور الرحلة"}
-                    </h2>
-                  </div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#15343A] px-4 py-2 text-sm font-bold text-white">
-                    <Images className="h-4 w-4 text-[#F3CF63]" aria-hidden="true" />
-                    {detailImages.length - 1} صور
-                  </span>
-                </div>
-                <div className="mt-5 grid auto-rows-[180px] gap-4 sm:grid-cols-2">
-                  {detailImages.slice(1).map((imageUrl, index) => (
-                    <button
-                      key={imageUrl}
-                      type="button"
-                      onClick={() => setGalleryIndex(index + 1)}
-                      aria-label={`تكبير صورة ${index + 2} من ${trip.title}`}
-                      className={`group relative cursor-zoom-in overflow-hidden rounded-3xl bg-[#15343A] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#D4AF37] ${
-                        index === 0 || index % 5 === 0 ? "sm:row-span-2" : ""
-                      }`}
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={`${trip.title} - صورة ${index + 2}`}
-                        title={`${trip.title} - صورة ${index + 2}`}
-                        loading="lazy"
-                        decoding="async"
-                        width={1200}
-                        height={800}
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                      />
-                      <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-70 transition group-hover:opacity-100" />
-                      <span className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-2 text-sm font-bold text-white backdrop-blur">
-                        <Images className="h-4 w-4" aria-hidden="true" />
-                        تكبير الصورة
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </section>
-
-        {galleryImage && galleryIndex !== null ? (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={`معرض صور ${trip.title}`}
-            tabIndex={-1}
-            autoFocus
-            onKeyDown={(event) => {
-              if (event.key === "Escape") setGalleryIndex(null);
-              if (event.key === "ArrowLeft") {
-                setGalleryIndex((galleryIndex + 1) % detailImages.length);
-              }
-              if (event.key === "ArrowRight") {
-                setGalleryIndex((galleryIndex - 1 + detailImages.length) % detailImages.length);
-              }
-            }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#06171d]/95 p-4 backdrop-blur-md focus:outline-none sm:p-8"
-          >
-            <button
-              type="button"
-              onClick={() => setGalleryIndex(null)}
-              aria-label="إغلاق معرض الصور"
-              className="absolute left-4 top-4 z-10 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition hover:bg-white hover:text-[#15343A] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#F3CF63] sm:left-8 sm:top-8"
-            >
-              <X className="h-6 w-6" aria-hidden="true" />
-            </button>
-
-            <img
-              src={galleryImage}
-              alt={`${trip.title} - صورة مكبرة ${galleryIndex + 1}`}
-              title={`${trip.title} - صورة مكبرة ${galleryIndex + 1}`}
-              loading="eager"
-              decoding="async"
-              width={1200}
-              height={800}
-              className="max-h-[84vh] max-w-full rounded-3xl object-contain shadow-2xl"
-            />
-
-            {detailImages.length > 1 ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setGalleryIndex((galleryIndex - 1 + detailImages.length) % detailImages.length)
-                  }
-                  aria-label="الصورة السابقة"
-                  className="absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#15343A] shadow-xl transition hover:bg-[#F3CF63] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:right-8"
-                >
-                  <ChevronRight className="h-6 w-6" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGalleryIndex((galleryIndex + 1) % detailImages.length)}
-                  aria-label="الصورة التالية"
-                  className="absolute left-3 top-1/2 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#15343A] shadow-xl transition hover:bg-[#F3CF63] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white sm:left-8"
-                >
-                  <ChevronLeft className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </>
-            ) : null}
-
-            <span className="absolute bottom-5 rounded-full bg-black/55 px-4 py-2 text-sm font-bold text-white backdrop-blur">
-              {galleryIndex + 1} / {detailImages.length}
-            </span>
-          </div>
-        ) : null}
-      </main>
+              <DetailSection title="مميزات الفندق" items={hotelFeatures} />
+              <PhotoGallery
+                title={isHotelPackage ? "صور الفندق" : "صور الرحلة"}
+                images={gallery}
+                alt={trip.title}
+              />
+            </>
+          }
+        />
+      </DetailPage>
     </>
-  );
-}
-
-function InfoCard({
-  icon: Icon,
-  title,
-  value,
-}: {
-  icon: typeof Moon;
-  title: string;
-  value: string;
-}) {
-  return (
-    <div className="rounded-2xl bg-[#123C49] p-5 text-white">
-      <div className="flex items-center gap-3 text-[#F3CF63]">
-        <Icon className="h-6 w-6" aria-hidden="true" />
-        <h3 className="font-black">{title}</h3>
-      </div>
-      <p className="mt-3 text-lg font-bold">{value}</p>
-    </div>
   );
 }
