@@ -24,9 +24,41 @@ import {
 } from "@/lib/trip-format";
 import type { Trip, UmrahRoute, UmrahTransport } from "@/types/admin";
 
+type AirlineFilter = "all" | "rj" | "flynas";
+
+type UmrahSearch = {
+  type?: UmrahTransport;
+  route?: UmrahRoute;
+  airline?: Exclude<AirlineFilter, "all">;
+};
+
 export const Route = createFileRoute("/umrah/")({
+  // Lets ads link straight to one airline, e.g. /umrah?type=air&airline=flynas
+  validateSearch: (search: Record<string, unknown>): UmrahSearch => ({
+    type: search.type === "air" || search.type === "land" ? search.type : undefined,
+    route:
+      search.route === "makkah" || search.route === "makkah_madinah" ? search.route : undefined,
+    airline: search.airline === "rj" || search.airline === "flynas" ? search.airline : undefined,
+  }),
   component: UmrahPage,
 });
+
+const airlineLabels: Record<Exclude<AirlineFilter, "all">, string> = {
+  rj: "الملكية الأردنية",
+  flynas: "طيران ناس",
+};
+
+function getAirlineKey(airline?: string): Exclude<AirlineFilter, "all"> | null {
+  const value = (airline ?? "").toLowerCase();
+  if (/ملكي|royal|\brj\b/.test(value)) return "rj";
+  if (/ناس|flynas|fly ?nas/.test(value)) return "flynas";
+  return null;
+}
+
+function getAirlineLabel(airline?: string) {
+  const key = getAirlineKey(airline);
+  return key ? airlineLabels[key] : airline?.trim() || "";
+}
 
 const statusLabels = {
   fully_booked: "مكتملة الحجز",
@@ -66,8 +98,12 @@ const airRouteTabs: Array<{ value: UmrahRoute; label: string; description: strin
 
 function UmrahPage() {
   const tripsQuery = usePublicTrips("umrah");
-  const [transport, setTransport] = useState<UmrahTransport>("land");
-  const [airRoute, setAirRoute] = useState<UmrahRoute>("makkah");
+  const search = Route.useSearch();
+  const [transport, setTransport] = useState<UmrahTransport>(
+    search.type ?? (search.airline ? "air" : "land"),
+  );
+  const [airRoute, setAirRoute] = useState<UmrahRoute>(search.route ?? "makkah");
+  const [airline, setAirline] = useState<AirlineFilter>(search.airline ?? "all");
 
   const groupedTrips = useMemo(() => {
     const trips = tripsQuery.data ?? [];
@@ -82,12 +118,28 @@ function UmrahPage() {
     return { land, makkah, makkahMadinah };
   }, [tripsQuery.data]);
 
-  const visibleTrips =
+  const routeTrips =
     transport === "land"
       ? groupedTrips.land
       : airRoute === "makkah"
         ? groupedTrips.makkah
         : groupedTrips.makkahMadinah;
+
+  // Airline chips only appear when the current air route has more than one airline.
+  const airlineOptions = useMemo(() => {
+    if (transport !== "air") return [];
+    const keys = new Set(
+      routeTrips.map((trip) => getAirlineKey(trip.airline)).filter((key) => key !== null),
+    );
+    return keys.size > 1 ? (["rj", "flynas"] as const).filter((key) => keys.has(key)) : [];
+  }, [routeTrips, transport]);
+
+  const activeAirline =
+    airline !== "all" && airlineOptions.includes(airline) ? airline : "all";
+  const visibleTrips =
+    activeAirline === "all"
+      ? routeTrips
+      : routeTrips.filter((trip) => getAirlineKey(trip.airline) === activeAirline);
 
   const sectionTitle =
     transport === "land"
@@ -211,6 +263,32 @@ function UmrahPage() {
           </section>
         ) : null}
 
+        {airlineOptions.length > 0 ? (
+          <section className="mx-auto mt-4 max-w-3xl" aria-label="اختيار شركة الطيران">
+            <div className="flex flex-wrap justify-center gap-2">
+              {(["all", ...airlineOptions] as const).map((key) => {
+                const selected = activeAirline === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setAirline(key)}
+                    className={`inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border px-5 py-2 text-sm font-black transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E7C56D]/45 ${
+                      selected
+                        ? "border-[#E7C56D] bg-[#F8E4A1] text-[#1A1207]"
+                        : "border-white/15 bg-black/30 text-white hover:border-[#E7C56D]/50"
+                    }`}
+                  >
+                    {key !== "all" ? <Plane className="h-4 w-4" aria-hidden="true" /> : null}
+                    {key === "all" ? "كل شركات الطيران" : airlineLabels[key]}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
+
         <section
           id="umrah-results"
           role="tabpanel"
@@ -269,6 +347,7 @@ function UmrahProgramCard({ trip }: { trip: Trip }) {
   const available = trip.status === "available" && !seatState.soldOut;
   const hotelName = trip.makkah_hotel || trip.title;
   const isAir = trip.umrah_transport === "air";
+  const airlineLabel = isAir ? getAirlineLabel(trip.airline) : "";
 
   return (
     <Link
@@ -320,9 +399,17 @@ function UmrahProgramCard({ trip }: { trip: Trip }) {
             </p>
           </div>
           {isAir ? (
-            <span className="shrink-0 rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] font-black text-[#E7C56D]">
-              {trip.umrah_route === "makkah" ? "مكة فقط" : "مكة والمدينة"}
-            </span>
+            <div className="flex shrink-0 flex-col items-end gap-1.5">
+              {airlineLabel ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#F8E4A1] px-2.5 py-1 text-[11px] font-black text-[#1A1207]">
+                  <Plane className="h-3 w-3" aria-hidden="true" />
+                  {airlineLabel}
+                </span>
+              ) : null}
+              <span className="rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] font-black text-[#E7C56D]">
+                {trip.umrah_route === "makkah" ? "مكة فقط" : "مكة والمدينة"}
+              </span>
+            </div>
           ) : null}
         </div>
 
