@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { CalendarDays, Clock3, MapPin, Star } from "lucide-react";
 
 import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
+import { EmptyOffersCta } from "@/components/empty-offers-cta";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import {
   buildWhatsAppUrl,
@@ -20,6 +21,18 @@ interface PublicTripGridProps {
   fallbackImage: string;
   emptyContent?: ReactNode;
 }
+
+const EMPTY_TOPICS: Partial<Record<TripPageKey, string>> = {
+  egypt: "مصر",
+  turkey: "تركيا",
+  dubai: "دبي",
+  switzerland: "سويسرا",
+  maldives: "المالديف",
+  georgia: "جورجيا",
+  domestic: "الرحلات الداخلية",
+  flights: "الطيران",
+  hotels: "الفنادق",
+};
 
 const unavailableLabels = {
   fully_booked: "مكتملة الحجز",
@@ -48,9 +61,7 @@ export function PublicTripGrid({ pageKey, fallbackImage, emptyContent }: PublicT
   if (trips.length === 0) {
     if (emptyContent) return <>{emptyContent}</>;
 
-    return (
-      <p className="col-span-full py-10 text-center text-gray-400">لا توجد رحلات معروضة حالياً.</p>
-    );
+    return <EmptyOffersCta topic={EMPTY_TOPICS[pageKey] ?? "السفر"} />;
   }
 
   return trips.map((trip) => {

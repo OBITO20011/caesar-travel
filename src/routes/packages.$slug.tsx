@@ -4,13 +4,17 @@ import { CalendarClock, Sparkles } from "lucide-react";
 import { PublicTripGrid } from "@/components/public-trip-grid";
 import { Seo } from "@/components/seo";
 import { getPackageDestination } from "@/data/package-destinations";
+import { useSiteSettings } from "@/hooks/use-site-content";
 import { getStaticSeoPage } from "@/lib/seo-config";
+import { buildWhatsAppUrl } from "@/lib/trip-format";
 
 export const Route = createFileRoute("/packages/$slug")({
   component: PackageDestinationPage,
 });
 
 function ComingSoon({ title }: { title: string }) {
+  const { data: settings } = useSiteSettings();
+
   return (
     <div className="col-span-full mx-auto w-full max-w-3xl overflow-hidden rounded-[2rem] border border-[#D4AF37]/35 bg-gradient-to-br from-[#171717] via-[#102d32] to-[#171717] p-1 shadow-[0_30px_80px_rgba(0,0,0,0.3)]">
       <div className="relative overflow-hidden rounded-[1.8rem] px-6 py-14 text-center sm:px-12">
@@ -31,16 +35,26 @@ function ComingSoon({ title }: { title: string }) {
             نحضّر لكم {title} بكل عناية
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/75 sm:text-lg">
-            نعمل الآن على اختيار أجمل البرامج وأفضل الأسعار لنقدّم لكم تجربة سفر استثنائية تليق
-            بتطلعاتكم. ستظهر الباقات هنا فور جاهزيتها، فترقّبوا الجديد قريباً.
+            الباقات بتنزل هون أول ما تجهز. لحد ذلك، راسلنا على واتساب وبنبعتلك التفاصيل والأسعار
+            المتاحة.
           </p>
 
-          <Link
-            to="/"
-            className="mt-8 inline-flex rounded-full bg-[#D4AF37] px-8 py-3 font-black text-[#101010] transition hover:-translate-y-1 hover:bg-[#F3CF63]"
-          >
-            العودة للرئيسية
-          </Link>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a
+              href={buildWhatsAppUrl(settings?.whatsapp, `مرحبا، بدي أعرف عن عروض ${title}`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-full bg-[#25D366] px-8 py-3 font-black text-white transition hover:-translate-y-1"
+            >
+              اسألنا على واتساب
+            </a>
+            <Link
+              to="/"
+              className="inline-flex rounded-full bg-[#D4AF37] px-8 py-3 font-black text-[#101010] transition hover:-translate-y-1 hover:bg-[#F3CF63]"
+            >
+              العودة للرئيسية
+            </Link>
+          </div>
         </div>
       </div>
     </div>

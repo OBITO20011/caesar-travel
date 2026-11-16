@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { isTripDatePassed } from "@/lib/trip-format";
 import { imageService, tripsService } from "@/services/admin";
 import type {
   Trip,
@@ -706,6 +707,11 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                                   }).format(new Date(trip.offer_ends_at))}
                             </div>
                           ) : null}
+                          {isTripDatePassed(trip) ? (
+                            <div className="mt-2 text-xs font-medium text-amber-700">
+                              مخفي عن الزبائن تلقائياً: مرّ تاريخ الرحلة
+                            </div>
+                          ) : null}
                         </td>
                         <td className="px-5 py-4">
                           <Button
@@ -887,6 +893,11 @@ export function TripManager({ title, description, category, pageKey }: TripManag
                 />
               </Field>
             </div>
+            <p className="-mt-2 text-xs leading-6 text-slate-500">
+              الرحلة بتختفي عن الزبائن لحالها بعد تاريخ النهاية، أو بعد تاريخ البداية إذا ما في
+              تاريخ نهاية. إذا البرنامج متكرر («ابتداءً من…»)، حط آخر يوم بتنفع فيه الرحلة كتاريخ
+              نهاية.
+            </p>
             <div className="grid gap-4 md:grid-cols-4">
               <Field label="السعر الحالي">
                 <Input

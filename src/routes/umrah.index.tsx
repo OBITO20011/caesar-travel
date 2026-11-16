@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import umrahBg from "@/assets/umrah-bg.jpg";
+import { EmptyOffersCta } from "@/components/empty-offers-cta";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
 import { usePublicTrips } from "@/hooks/use-site-content";
 import {
@@ -248,15 +249,7 @@ function UmrahPage() {
               تعذر تحميل رحلات العمرة حاليًا. حاول تحديث الصفحة.
             </p>
           ) : visibleTrips.length === 0 ? (
-            <div className="rounded-3xl border border-[#D4AF37]/25 bg-black/35 px-6 py-16 text-center backdrop-blur-xl">
-              <Plane className="mx-auto h-10 w-10 text-[#E7C56D]" aria-hidden="true" />
-              <h3 className="mt-4 text-xl font-black text-[#F8E4A1]">
-                لا توجد برامج معروضة حاليًا
-              </h3>
-              <p className="mt-2 text-sm text-[#F8E4A1]/65">
-                يمكنك اختيار قسم آخر، أو العودة لاحقًا بعد إضافة البرامج الجديدة.
-              </p>
-            </div>
+            <EmptyOffersCta topic="العمرة" />
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {visibleTrips.map((trip) => (

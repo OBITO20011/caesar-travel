@@ -20,6 +20,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SchengenRouteImport } from './routes/schengen'
 import { Route as SaudiRouteImport } from './routes/saudi'
 import { Route as QatarRouteImport } from './routes/qatar'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as HajjRouteImport } from './routes/hajj'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as EgyptRouteImport } from './routes/egypt'
@@ -98,6 +99,11 @@ const SaudiRoute = SaudiRouteImport.update({
 const QatarRoute = QatarRouteImport.update({
   id: '/qatar',
   path: '/qatar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HajjRoute = HajjRouteImport.update({
@@ -227,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/egypt': typeof EgyptRoute
   '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
+  '/privacy': typeof PrivacyRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/egypt': typeof EgyptRoute
   '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
+  '/privacy': typeof PrivacyRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
@@ -300,6 +308,7 @@ export interface FileRoutesById {
   '/egypt': typeof EgyptRoute
   '/gallery': typeof GalleryRoute
   '/hajj': typeof HajjRoute
+  '/privacy': typeof PrivacyRoute
   '/qatar': typeof QatarRoute
   '/saudi': typeof SaudiRoute
   '/schengen': typeof SchengenRoute
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/egypt'
     | '/gallery'
     | '/hajj'
+    | '/privacy'
     | '/qatar'
     | '/saudi'
     | '/schengen'
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/egypt'
     | '/gallery'
     | '/hajj'
+    | '/privacy'
     | '/qatar'
     | '/saudi'
     | '/schengen'
@@ -411,6 +422,7 @@ export interface FileRouteTypes {
     | '/egypt'
     | '/gallery'
     | '/hajj'
+    | '/privacy'
     | '/qatar'
     | '/saudi'
     | '/schengen'
@@ -449,6 +461,7 @@ export interface RootRouteChildren {
   EgyptRoute: typeof EgyptRoute
   GalleryRoute: typeof GalleryRoute
   HajjRoute: typeof HajjRoute
+  PrivacyRoute: typeof PrivacyRoute
   QatarRoute: typeof QatarRoute
   SaudiRoute: typeof SaudiRoute
   SchengenRoute: typeof SchengenRoute
@@ -554,6 +567,13 @@ declare module '@tanstack/react-router' {
       path: '/qatar'
       fullPath: '/qatar'
       preLoaderRoute: typeof QatarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hajj': {
@@ -757,6 +777,7 @@ const rootRouteChildren: RootRouteChildren = {
   EgyptRoute: EgyptRoute,
   GalleryRoute: GalleryRoute,
   HajjRoute: HajjRoute,
+  PrivacyRoute: PrivacyRoute,
   QatarRoute: QatarRoute,
   SaudiRoute: SaudiRoute,
   SchengenRoute: SchengenRoute,

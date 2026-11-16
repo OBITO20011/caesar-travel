@@ -34,6 +34,9 @@
     <loc>https://caesar-travel.pages.dev/packages/switzerland</loc>
   </url>
   <url>
+    <loc>https://caesar-travel.pages.dev/privacy</loc>
+  </url>
+  <url>
     <loc>https://caesar-travel.pages.dev/qatar</loc>
     <lastmod>2026-07-18</lastmod>
   </url>
@@ -57,50 +60,6 @@
     <lastmod>2026-07-18</lastmod>
   </url>
   <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000201</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000210</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000211</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000212</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000213</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000214</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000215</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000216</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000217</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000218</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000219</loc>
-    <lastmod>2026-07-28</lastmod>
-  </url>
-  <url>
     <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000301</loc>
     <lastmod>2026-07-18</lastmod>
   </url>
@@ -115,50 +74,6 @@
   <url>
     <loc>https://caesar-travel.pages.dev/trips/c0e50000-0000-4000-8000-000000000304</loc>
     <lastmod>2026-07-18</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000301</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000302</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000303</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000304</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000305</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000306</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000307</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000308</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000309</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000310</loc>
-    <lastmod>2026-07-29</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/trips/c0e70000-0000-4000-8000-000000000311</loc>
-    <lastmod>2026-07-29</lastmod>
   </url>
   <url>
     <loc>https://caesar-travel.pages.dev/trips/cae50000-0000-4000-8000-000000001001</loc>
@@ -193,78 +108,6 @@
   </url>
   <url>
     <loc>https://caesar-travel.pages.dev/umrah</loc>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000001</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000002</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000003</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000004</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000005</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000000006</loc>
-    <lastmod>2026-08-05</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001001</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001002</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001003</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001004</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001005</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001101</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001102</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001103</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001104</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001105</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001106</loc>
-    <lastmod>2026-08-02</lastmod>
-  </url>
-  <url>
-    <loc>https://caesar-travel.pages.dev/umrah/c0e50000-0000-4000-8000-000000001107</loc>
-    <lastmod>2026-08-02</lastmod>
   </url>
   <url>
     <loc>https://caesar-travel.pages.dev/usa</loc>

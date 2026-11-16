@@ -12,14 +12,6 @@ import {
   MapPin,
   Clock,
   Star,
-  Plane,
-  Compass,
-  Building2,
-  Hotel,
-  Mountain,
-  Globe2,
-  FileCheck,
-  Moon,
   ChevronUp,
   Navigation,
   Send,
@@ -30,6 +22,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { SERVICE_CARDS } from "@/data/service-cards";
 
 import logo from "@/assets/caesar-mark-256.png";
 import heroImg from "@/assets/hero-hajj.jpg";
@@ -235,50 +228,7 @@ function AboutSection() {
 
 /* ──────────────── Services ──────────────── */
 function ServicesSection() {
-  const services = [
-    {
-      icon: Compass,
-      title: "الحج",
-      description:
-        "برامج حج متكاملة تشمل الإقامة القريبة والنقل والإرشاد، بتنظيم يليق بضيوف الرحمن.",
-    },
-    {
-      icon: Moon,
-      title: "العمرة",
-      description:
-        "باقات عمرة مرنة على مدار العام بأسعار تنافسية وخدمة راقية من الوصول حتى العودة.",
-    },
-    {
-      icon: Plane,
-      title: "حجز الطيران",
-      description: "أفضل أسعار تذاكر الطيران لجميع الوجهات مع خطوط عالمية وإقليمية موثوقة.",
-    },
-    {
-      icon: Hotel,
-      title: "حجز الفنادق",
-      description: "فنادق مختارة بعناية في كل الوجهات، من الاقتصادي إلى الفاخر خمس نجوم.",
-    },
-    {
-      icon: Mountain,
-      title: "السياحة الداخلية",
-      description: "اكتشف كنوز الأردن: البتراء، وادي رم، البحر الميت وجرش، ببرامج عائلية وشبابية.",
-    },
-    {
-      icon: Globe2,
-      title: "السياحة الخارجية",
-      description: "رحلات عالمية إلى تركيا، دبي، مصر، أوروبا وآسيا بتجارب لا تُنسى.",
-    },
-    {
-      icon: FileCheck,
-      title: "خدمات التأشيرات",
-      description: "استخراج التأشيرات السياحية والعلاجية بسرعة وموثوقية ومتابعة كاملة لطلبك.",
-    },
-    {
-      icon: Building2,
-      title: "رحلات الشركات",
-      description: "تنظيم رحلات ومؤتمرات ووفود العمل بترتيبات احترافية متكاملة.",
-    },
-  ];
+  const services = SERVICE_CARDS;
 
   return (
     <section id="services" className="py-24 md:py-32 relative bg-cream">
@@ -628,11 +578,9 @@ function ContactSection({ settings }: { settings?: SiteSettings }) {
       },
     ]);
 
-    if (error) {
-      console.error(error);
-      alert(JSON.stringify(error, null, 2));
-      return;
-    }
+    // WhatsApp already opened with the full message, so a failed save must not show the
+    // customer a raw technical error. Log it for the office instead.
+    if (error) console.error("تعذر حفظ الاستفسار", error);
 
     setSent(true);
     form.reset();
@@ -924,13 +872,9 @@ function Footer({ settings }: { settings?: SiteSettings }) {
             جميع الحقوق محفوظة © {new Date().getFullYear()} قيصر للسياحة والسفر والحج والعمرة
           </span>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-gold transition-colors">
+            <Link to="/privacy" className="hover:text-gold transition-colors">
               سياسة الخصوصية
-            </a>
-            <span className="text-white/20">|</span>
-            <a href="#" className="hover:text-gold transition-colors">
-              الشروط والأحكام
-            </a>
+            </Link>
           </div>
         </div>
       </div>

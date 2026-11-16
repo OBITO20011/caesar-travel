@@ -9,6 +9,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 
+import { EmptyOffersCta } from "@/components/empty-offers-cta";
 import { PublicTripGrid } from "@/components/public-trip-grid";
 import { Seo } from "@/components/seo";
 import { getStaticSeoPage } from "@/lib/seo-config";
@@ -162,15 +163,7 @@ function TurkeyTripsPage() {
               <PublicTripGrid
                 pageKey="turkey"
                 fallbackImage="/images/turkey-banner.png"
-                emptyContent={
-                  <div className="col-span-full rounded-3xl border border-[#D4AF37]/30 bg-white/5 px-6 py-12 text-center">
-                    <Hotel className="mx-auto h-10 w-10 text-[#F3CF63]" aria-hidden="true" />
-                    <h3 className="mt-5 text-2xl font-black">الفنادق الجديدة قيد التجهيز</h3>
-                    <p className="mt-3 text-white/65">
-                      ستظهر هنا مباشرة فور إضافتها من لوحة الإدارة.
-                    </p>
-                  </div>
-                }
+                emptyContent={<EmptyOffersCta topic="تركيا" />}
               />
             </div>
           </div>

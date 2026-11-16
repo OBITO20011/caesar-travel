@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useState, type FormEvent } from "react";
 
+import { EmptyOffersCta } from "@/components/empty-offers-cta";
 import { TripOfferCountdown } from "@/components/trip-offer-countdown";
-import { usePublicTrips } from "@/hooks/use-site-content";
+import { usePublicTrips, useSiteSettings } from "@/hooks/use-site-content";
 import {
+  buildWhatsAppUrl,
   formatTripAmount,
   formatTripDate,
   formatTripPrice,
@@ -30,8 +32,12 @@ function HajjPage() {
   const tripsQuery = usePublicTrips("hajj");
   const trips = tripsQuery.data ?? [];
 
+  const { data: settings } = useSiteSettings();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // The Apps Script request is "no-cors", so the site cannot know whether it arrived.
+  // The success screen therefore asks the customer to confirm on WhatsApp with these details.
+  const [confirmationUrl, setConfirmationUrl] = useState("");
 
   async function handleHajjRegistration(
   event: FormEvent<HTMLFormElement>,
@@ -50,6 +56,19 @@ function HajjPage() {
   });
 
   setSubmitting(true);
+  setConfirmationUrl(
+    buildWhatsAppUrl(
+      settings?.whatsapp,
+      [
+        "السلام عليكم، سجّلت على موقع قيصر للاهتمام ببرنامج الحج:",
+        `الاسم: ${payload.get("fullName")}`,
+        `الهاتف: ${payload.get("phone")}`,
+        `المحافظة: ${payload.get("governorate")}`,
+        `العمر: ${payload.get("age")}`,
+        `سبق وأديت الحج: ${payload.get("performedHajj")}`,
+      ].join("\n"),
+    ),
+  );
 
   try {
     const request = fetch(HAJJ_FORM_URL, {
@@ -95,9 +114,7 @@ function HajjPage() {
             تعذر تحميل برامج الحج حالياً. حاول تحديث الصفحة.
           </div>
         ) : trips.length === 0 ? (
-          <div className="rounded-3xl bg-white/35 p-10 text-center text-lg backdrop-blur-md">
-            لا توجد برامج حج معروضة حالياً.
-          </div>
+          <EmptyOffersCta topic="الحج" tone="light" />
         ) : (
           trips.map((trip) => {
             const seatState = getTripSeatState(trip);
@@ -232,13 +249,26 @@ function HajjPage() {
                         <div className="mb-2 text-4xl">✅</div>
 
                         <h4 className="text-xl font-black text-green-700">
-                          تم استلام طلبك بنجاح
+                          تم إرسال طلبك
                         </h4>
 
                         <p className="mt-2 text-gray-600">
-                          سيتم التواصل معك عند توفر تفاصيل التسجيل
-                          وبرامج الحج.
+                          لتأكيد تسجيلك بسرعة، ابعتلنا بياناتك على واتساب
+                          بكبسة وحدة، وبنتواصل معك بتفاصيل برامج الحج.
                         </p>
+
+                        {confirmationUrl ? (
+                          <a
+                            href={confirmationUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-5 inline-flex rounded-xl bg-[#25D366] px-6 py-3 font-bold text-white transition hover:scale-105"
+                          >
+                            أكّد تسجيلك على واتساب
+                          </a>
+                        ) : null}
+
+                        <br />
 
                         <button
                           type="button"

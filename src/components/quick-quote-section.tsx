@@ -81,7 +81,7 @@ export function QuickQuoteSection({ settings }: { settings?: SiteSettings }) {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
             {[
-              { icon: ShieldCheck, title: "خدمة موثوقة", text: "متابعة من التخطيط حتى العودة" },
+              { icon: ShieldCheck, title: "مكتب في الرمثا", text: "زورنا أو راسلنا بالدوام" },
               { icon: CalendarDays, title: "مرونة بالمواعيد", text: "خيارات تناسب وقتك وميزانيتك" },
               { icon: MessageCircle, title: "رد سريع", text: "تواصل مباشر عبر واتساب" },
             ].map((item) => (

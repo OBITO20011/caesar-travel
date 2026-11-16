@@ -2,17 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
 import { Seo } from "@/components/seo";
+import { SERVICE_CARDS } from "@/data/service-cards";
 import { getStaticSeoPage } from "@/lib/seo-config";
-import {
-  Plane,
-  Compass,
-  Building2,
-  Hotel,
-  Mountain,
-  Globe2,
-  FileCheck,
-  Moon,
-} from "lucide-react";
 
 export const Route = createFileRoute("/services")({
   component: ServicesPage,
@@ -31,16 +22,7 @@ const staggerContainer = {
 };
 
 function ServicesPage() {
-  const services = [
-    { icon: Compass, title: "الحج", description: "برامج حج متكاملة تشمل الإقامة القريبة والنقل والإرشاد، بتنظيم يليق بضيوف الرحمن." },
-    { icon: Moon, title: "العمرة", description: "باقات عمرة مرنة على مدار العام بأسعار تنافسية وخدمة راقية من الوصول حتى العودة." },
-    { icon: Plane, title: "حجز الطيران", description: "أفضل أسعار تذاكر الطيران لجميع الوجهات مع خطوط عالمية وإقليمية موثوقة." },
-    { icon: Hotel, title: "حجز الفنادق", description: "فنادق مختارة بعناية في كل الوجهات، من الاقتصادي إلى الفاخر خمس نجوم." },
-    { icon: Mountain, title: "السياحة الداخلية", description: "اكتشف كنوز الأردن: البتراء، وادي رم، البحر الميت وجرش، ببرامج عائلية وشبابية." },
-    { icon: Globe2, title: "السياحة الخارجية", description: "رحلات عالمية إلى تركيا، دبي، مصر، أوروبا وآسيا بتجارب لا تُنسى." },
-    { icon: FileCheck, title: "خدمات التأشيرات", description: "استخراج التأشيرات السياحية والعلاجية بسرعة وموثوقية ومتابعة كاملة لطلبك." },
-    { icon: Building2, title: "رحلات الشركات", description: "تنظيم رحلات ومؤتمرات ووفود العمل بترتيبات احترافية متكاملة." },
-  ];
+  const services = SERVICE_CARDS;
 
   return (
     <>
@@ -100,11 +82,10 @@ function ServicesPage() {
               <h2 className="text-3xl md:text-4xl font-black text-teal mb-6">لماذا تختارنا؟</h2>
               <ul className="space-y-4">
                 {[
-                  "خبرة تزيد عن 20 سنة في مجال السياحة والسفر",
-                  "فريق احترافي مدرب على أعلى مستويات الخدمة",
-                  "أسعار تنافسية وعروض حصرية",
+                  "مكتبنا في الرمثا، وأهلاً فيك بأي وقت بالدوام",
                   "تواصل مباشر عبر واتساب",
-                  "رحلات منظمة بعناية فائقة",
+                  "العروض المنشورة على الموقع محدّثة، والمنتهية بتختفي لحالها",
+                  "دوامنا من السبت للخميس، 9:30 الصبح لـ 9 المسا",
                 ].map((item, i) => (
                   <motion.div
                     key={i}
