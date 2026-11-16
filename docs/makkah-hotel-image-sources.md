@@ -20,6 +20,10 @@ WebP compression). Nothing in the scene was added or removed.
 | `talayie-dining.webp` | Al Talayie Al Masy Hotel (Al Taysir) | Google Hotels listing, photos filtered "By owner" |
 | `shohada-room-twin.webp` | Al Shohada Hotel by Palm Rich (Ajyad) | https://palmrich.com/wp-content/uploads/2025/05/Twin-Room-new-1.png |
 | `shohada-dining.webp` | Al Shohada Hotel by Palm Rich (Ajyad) | https://palmrich.com/wp-content/uploads/2025/05/DINING-scaled.jpg |
+| `shohada-exterior.webp` | Al Shohada Hotel by Palm Rich (Ajyad) | Google Hotels listing, photos filtered "By owner" |
+| `tilal-room-quad.webp` | Tilal Jabal Al Kaabah (Makkah) | https://tilalhotels.com/wp-content/uploads/2025/06/Quad-Room-Twin-1-scaled.webp |
+| `tilal-lobby.webp` | Tilal Jabal Al Kaabah (Makkah) | https://tilalhotels.com/wp-content/uploads/2025/06/Lobby-1-1-scaled.webp (from the Tilal Jabal Al Kabah gallery page) |
+| `tilal-restaurant.webp` | Tilal Jabal Al Kaabah (Makkah) | https://tilalhotels.com/wp-content/uploads/2025/06/Midan-Restaurant-1-scaled.webp (from the Tilal Jabal Al Kabah gallery page) |
 | `clock-tower.webp` | Abraj Al Bait / Makkah Clock Tower | https://commons.wikimedia.org/wiki/File:Clock_Tower_Makkah_2.jpg - by King Eliot, CC BY-SA 4.0. Credit is printed on the image; this edited version is shared under the same licence. |
 
 Suite photos were deliberately not used: Umrah packages book standard rooms.
@@ -28,5 +32,5 @@ The travel company should confirm marketing-use permission with the hotel or its
 supplier (Anjum runs a Travel Agent Portal) before reusing these photos outside
 this website.
 
-Tilal (the Telal option in the "تلال / الشهداء" Flynas package) has no photos yet:
-which Tilal hotel is meant NEEDS CONFIRMATION from the owner.
+Tilal in the "تلال / الشهداء" Flynas package is Tilal Jabal Al Kaabah (tilalhotels.com),
+identified by the owner on 2026-11-16.
