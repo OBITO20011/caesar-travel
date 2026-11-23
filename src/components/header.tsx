@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import logo from "@/assets/caesar-mark-256.png";
+import logo from "@/assets/caesar-plane-mark.png";
 import { useSiteSettings } from "@/hooks/use-site-content";
 import { BUILTIN_LOGO_URL, resolveSiteAsset } from "@/lib/site-assets";
 

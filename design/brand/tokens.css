@@ -1,0 +1,65 @@
+/* Caesar Travel - visual identity tokens (قيصر للسياحة والسفر)
+   Blue + white from the logo, warm beige for calm backgrounds,
+   logo yellow used only as a small accent. */
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=block");
+
+:root {
+  /* Blues (logo navy #253066) */
+  --navy: #253066;
+  --navy-deep: #1a2350;
+  --navy-soft: #3a4a8c;
+  --sky: #dfe7f5;
+
+  /* Whites + beige */
+  --white: #ffffff;
+  --ivory: #fbf8f2;
+  --beige: #f4ede1;
+  --sand: #e6d8bf;
+  --sand-deep: #c9b08a;
+
+  /* Accent - logo arc yellow, small doses only */
+  --gold: #eeb300;
+
+  /* Text */
+  --ink: #1d2550;
+  --ink-soft: #5b6386;
+
+  /* Glass */
+  --glass-light: rgba(255, 252, 246, 0.62);
+  --glass-light-border: rgba(255, 255, 255, 0.75);
+  --glass-dark: rgba(26, 35, 80, 0.62);
+  --glass-dark-border: rgba(255, 255, 255, 0.18);
+  --blur: blur(22px) saturate(140%);
+  --shadow: 0 24px 60px rgba(26, 35, 80, 0.18);
+
+  --radius: 36px;
+  --font: "Tajawal", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: var(--font);
+  direction: rtl;
+  color: var(--ink);
+  background: var(--beige);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass {
+  background: var(--glass-light);
+  border: 1.5px solid var(--glass-light-border);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+}
+.glass-dark {
+  background: var(--glass-dark);
+  border: 1.5px solid var(--glass-dark-border);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius);
+}
+.num { font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }

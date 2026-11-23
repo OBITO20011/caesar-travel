@@ -1,0 +1,43 @@
+{
+  "slug": "rj-offer-sample",
+  "kicker": "عمرة على الملكية الأردنية",
+  "title": "مكة المكرمة",
+  "duration": "5 أيام / 4 ليالٍ",
+  "airline": "الملكية الأردنية",
+  "from_price": "380",
+  "from_room": "غرفة رباعية",
+  "includes": [
+    {
+      "icon": "plane",
+      "text": "تذكرة الطيران"
+    },
+    {
+      "icon": "hotel",
+      "text": "الفندق"
+    },
+    {
+      "icon": "visa",
+      "text": "التأشيرة"
+    },
+    {
+      "icon": "car",
+      "text": "التوصيل من وإلى المطار"
+    }
+  ],
+  "whatsapp": "0798337711",
+  "location": "الرمثا",
+  "photo": "src/assets/hero-hajj.jpg",
+  "photo_position": "center 40%",
+  "photo_credit": "",
+  "outputs": [
+    {
+      "template": "offer",
+      "format": "feed"
+    },
+    {
+      "template": "offer",
+      "format": "story"
+    }
+  ],
+  "facebook_name": "شركة قيصر للسياحة والسفر"
+}

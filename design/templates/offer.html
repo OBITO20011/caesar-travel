@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../brand/tokens.css">
+<style>
+  /* Offer poster: one headline price over a real photo, navy + beige glass */
+  .canvas { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  .photo { position: absolute; inset: 0; background-size: cover; background-position: var(--photo-pos, center); }
+  .veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(26,35,80,0.70) 0%, rgba(26,35,80,0.25) 24%,
+      rgba(26,35,80,0.35) 42%, rgba(26,35,80,0.62) 60%, rgba(26,35,80,0.92) 100%);
+  }
+  .content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 56px 60px 0; text-align: center; color: var(--white); }
+  .logo { height: 160px; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.3)); }
+  .chip { margin-top: 26px; display: inline-flex; gap: 12px; align-items: center; padding: 12px 28px; border-radius: 999px; font-size: 28px; font-weight: 700; }
+  .chip svg { width: 30px; height: 30px; }
+  .kicker { margin-top: auto; font-size: 34px; font-weight: 700; color: var(--sand); }
+  h1 { font-size: 112px; font-weight: 900; line-height: 1.1; text-shadow: 0 4px 30px rgba(0,0,0,0.35); }
+  .duration { margin-top: 10px; font-size: 38px; font-weight: 800; }
+
+  .price-card {
+    margin-top: 34px; width: 100%; padding: 26px 40px 30px;
+    display: flex; align-items: center; justify-content: space-between; gap: 30px;
+    background: rgba(250,245,236,0.78); color: var(--navy);
+  }
+  .price-block { text-align: right; }
+  .from { font-size: 28px; font-weight: 700; color: var(--ink-soft); }
+  .amount { font-size: 150px; font-weight: 900; line-height: 0.95; color: var(--navy); }
+  .amount span { font-size: 40px; font-weight: 800; margin-right: 10px; }
+  .per { font-size: 26px; font-weight: 600; color: var(--ink-soft); margin-top: 6px; }
+  .incs { display: grid; grid-template-columns: 1fr; gap: 14px; text-align: right; }
+  .inc { display: flex; align-items: center; gap: 12px; font-size: 27px; font-weight: 700; }
+  .inc svg { width: 32px; height: 32px; flex: none; }
+
+  .footer {
+    margin: 30px -60px 0; width: calc(100% + 120px); padding: 22px 60px 26px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--navy-deep);
+  }
+  .wa { display: flex; align-items: center; gap: 16px; text-align: right; }
+  .wa .ico { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.12); display: grid; place-items: center; }
+  .wa .ico svg { width: 36px; height: 36px; }
+  .wa .lbl { font-size: 22px; color: var(--sand); }
+  .wa .n { font-size: 50px; font-weight: 900; direction: ltr; line-height: 1; }
+  .loc { font-size: 24px; font-weight: 700; color: var(--sand); text-align: left; }
+  .fb { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin-bottom: 6px; font-size: 25px; font-weight: 800; color: var(--white); }
+  .fbico { width: 34px; height: 34px; flex: none; }
+  .credit { position: absolute; left: 16px; top: 12px; font-size: 14px; color: rgba(255,255,255,0.85); direction: ltr; }
+
+  body[data-format="story"] .content { padding-top: 170px; }
+  body[data-format="story"] h1 { font-size: 124px; }
+  body[data-format="story"] .footer { margin: 28px 0 300px; width: 100%; border-radius: 32px; padding: 24px 36px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="photo" id="photo"></div>
+  <div class="veil"></div>
+  <div class="content">
+    <img class="logo" id="logo" alt="">
+    <div class="chip glass-dark" id="airline"></div>
+    <div class="kicker" id="kicker"></div>
+    <h1 id="title"></h1>
+    <div class="duration num" id="duration"></div>
+    <div class="price-card glass">
+      <div class="price-block">
+        <div class="from">ابتداءً من</div>
+        <div class="amount num"><span id="amount"></span></div>
+        <div class="per" id="per"></div>
+      </div>
+      <div class="incs" id="includes"></div>
+    </div>
+    <div class="footer">
+      <div class="wa">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6z"/><path d="M9 8.6c.3 1.6 1.2 3.2 2.6 4.5 1.3 1.3 2.8 2.1 4.3 2.4l1.1-1.4-2-1-1 .9c-1-.5-1.9-1.4-2.4-2.4l.9-1-1-2-1.5 1z"/></svg></div>
+        <div><div class="lbl">للحجز عالواتساب</div><div class="n num" id="wa"></div></div>
+      </div>
+      <div class="others"><div class="fb"><svg class="fbico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11.4" fill="#fff"/><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span id="fbname"></span></div><div class="loc" id="loc"></div></div>
+    </div>
+  </div>
+  <div class="credit" id="credit"></div>
+</div>
+<script>
+const ICONS = {
+  plane: '<path d="M10.5 13.5 3 11l1.2-1.2 9 .6 4.3-4.3a1.8 1.8 0 0 1 2.5 2.5l-4.3 4.3.6 9-1.2 1.2-2.5-7.5-3.3 3.3.3 2.4-.9.9-1.6-3.1-3.1-1.6.9-.9 2.4.3z"/>',
+  hotel: '<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 10h4a1 1 0 0 1 1 1v10M2 21h20M8 8h3M8 12h3M8 16h3"/>',
+  visa: '<path d="M6 3h9l4 4v14H6z"/><path d="M9 14l2 2 4-4"/>',
+  car: '<path d="M5 17h14M6 17v2M18 17v2M4 13l2-5a2 2 0 0 1 1.9-1.3h8.2A2 2 0 0 1 18 8l2 5v4H4z"/><circle cx="8" cy="14" r=".6"/><circle cx="16" cy="14" r=".6"/>',
+  meal: '<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1-3 3-3 6v3h3v9"/>'
+};
+const svg = (k, c) => `<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>`;
+const P = window.POST;
+document.body.dataset.format = P.format;
+const $ = id => document.getElementById(id);
+$('photo').style.backgroundImage = `url("${P.photo}")`;
+if (P.photo_position) $('photo').style.setProperty('--photo-pos', P.photo_position);
+$('logo').src = P.logo_white;
+$('airline').innerHTML = svg('plane', '#fff') + P.airline;
+$('kicker').textContent = P.kicker;
+$('title').textContent = P.title;
+$('duration').textContent = P.duration;
+$('amount').parentElement.firstChild.before(document.createTextNode(P.from_price));
+$('amount').textContent = 'دينار';
+$('per').textContent = 'للشخص · ' + (P.from_room || '');
+$('includes').innerHTML = P.includes.map(i => `<div class="inc">${svg(i.icon, '#253066')}${i.text}</div>`).join('');
+$('wa').textContent = P.whatsapp;
+$('loc').textContent = P.location;
+$('fbname').textContent = P.facebook_name || '';
+$('credit').textContent = P.photo_credit || '';
+Promise.all([
+  document.fonts.ready,
+  ...[P.photo, P.logo_white].map(src => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = src; }))
+]).then(() => setTimeout(() => { window.__ready = true; }, 150));
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+{
+  "slug": "rj-makkah-sample",
+  "kicker": "برنامج عمرة",
+  "title": "مكة المكرمة",
+  "duration": "5 أيام / 4 ليالٍ",
+  "price_note": "الأسعار للشخص بالدينار الأردني",
+  "airline": "الملكية الأردنية",
+  "columns": [
+    "رباعي",
+    "ثلاثي",
+    "ثنائي"
+  ],
+  "hotels": [
+    {
+      "name": "فيوليت 2",
+      "area": "الحفاير",
+      "meals": "",
+      "prices": [
+        380,
+        390,
+        410
+      ]
+    },
+    {
+      "name": "رمادا زاد التيسير",
+      "area": "التيسير",
+      "meals": "",
+      "prices": [
+        390,
+        400,
+        430
+      ]
+    },
+    {
+      "name": "تاج بارك",
+      "area": "",
+      "meals": "",
+      "prices": [
+        400,
+        410,
+        440
+      ]
+    },
+    {
+      "name": "أنجم",
+      "area": "",
+      "meals": "شامل الفطور",
+      "prices": [
+        540,
+        560,
+        650
+      ]
+    },
+    {
+      "name": "أبراج الساعة أو الصفوة",
+      "area": "",
+      "meals": "شامل الفطور",
+      "prices": [
+        625,
+        665,
+        749
+      ]
+    }
+  ],
+  "includes": [
+    {
+      "icon": "plane",
+      "text": "تذكرة الطيران"
+    },
+    {
+      "icon": "hotel",
+      "text": "الفندق"
+    },
+    {
+      "icon": "visa",
+      "text": "التأشيرة"
+    },
+    {
+      "icon": "car",
+      "text": "التوصيل من وإلى المطار"
+    }
+  ],
+  "whatsapp": "0798337711",
+  "phones": [
+    "0795207900",
+    "0798691003"
+  ],
+  "location": "الرمثا",
+  "photo": "public/hotels/makkah/clock-tower.webp",
+  "photo_position": "center 30%",
+  "photo_credit": "Photo: King Eliot / Wikimedia Commons, CC BY-SA 4.0",
+  "outputs": [
+    {
+      "template": "program",
+      "format": "feed"
+    },
+    {
+      "template": "program",
+      "format": "story"
+    }
+  ],
+  "facebook_name": "شركة قيصر للسياحة والسفر"
+}

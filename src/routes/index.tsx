@@ -24,7 +24,7 @@ import {
 import { useState, useEffect } from "react";
 import { SERVICE_CARDS } from "@/data/service-cards";
 
-import logo from "@/assets/caesar-mark-256.png";
+import logo from "@/assets/caesar-plane-mark-white.png";
 import heroImg from "@/assets/hero-hajj.jpg";
 import galleryMedina from "@/assets/gallery-medina.jpg";
 import galleryFlight from "@/assets/gallery-flight.jpg";
